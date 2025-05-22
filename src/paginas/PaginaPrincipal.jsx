@@ -1,4 +1,5 @@
 import React from 'react'
+import fondoEstadio from '../assets/imagenes/fondoprincipal.png'
 
 export default function Home() {
   const camisetas = [
@@ -9,7 +10,16 @@ export default function Home() {
   ]
 
   return (
-    <div style={{ padding: '1rem' }}>
+      <div
+        style={{
+          padding: '1rem',
+          backgroundImage: `url(${fondoEstadio})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          minHeight: '100vh',
+          color: 'white'
+        }}
+      >
       <header style={{
         display: 'flex',
         justifyContent: 'space-between',
