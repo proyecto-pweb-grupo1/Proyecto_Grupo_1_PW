@@ -1,0 +1,64 @@
+.contenedor-principal {
+  min-height: 100vh;
+  padding: 2rem;
+  background-size: cover;
+  background-position: center;
+}
+
+.titulo-pagina {
+  text-align: center;
+  color: white;
+  margin-bottom: 2rem;
+  font-size: 2rem;
+}
+
+.grid-camisetas {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.card-camiseta {
+  background-color: white;
+  border-radius: 1rem;
+  width: 200px;
+  text-align: center;
+  padding: 1rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+.card-camiseta h3 {
+  margin-bottom: 0.5rem;
+  color: #222; /* texto oscuro */
+  font-weight: bold;
+}
+.card-camiseta p {
+  margin-bottom: 1rem;
+  color: #222; /* texto oscuro visible en fondo blanco */
+  font-weight: bold;
+}
+
+
+.card-camiseta img {
+  width: 100%;
+  height: 150px;
+  object-fit: contain;
+  margin-bottom: 1rem;
+}
+
+.card-camiseta h3 {
+  margin-bottom: 0.5rem;
+}
+
+.card-camiseta p {
+  margin-bottom: 1rem;
+}
+
+.card-camiseta button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}

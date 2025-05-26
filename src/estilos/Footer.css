@@ -1,0 +1,27 @@
+.footer {
+  background-color: #003366;
+  color: white;
+  text-align: center;
+  padding: 20px;
+  font-size: 14px;
+  margin-top: 40px;
+}
+
+.footer a {
+  color: white;
+  text-decoration: none;
+  margin: 0 10px;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
+.footer-links,
+.footer-social {
+  margin-bottom: 10px;
+}
+
+.footer-social span {
+  margin-right: 10px;
+}
