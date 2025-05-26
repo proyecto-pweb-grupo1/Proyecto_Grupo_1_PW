@@ -1,9 +1,14 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import fondoEstadio from '../assets/imagenes/fondoprincipal.png'
 
 export default function Home() {
   const navigate = useNavigate();
+  const [usuario, setUsuario] = useState(null);
+  useEffect(() => {
+    setUsuario(localStorage.getItem('usuario'));
+  }, []);
+
   const camisetas = [
     { club: 'Universitario', precio: 80, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Logo_oficial_de_Universitario.png/500px-Logo_oficial_de_Universitario.png' },
     { club: 'Barcelona', precio: 90, img: 'https://www.shutterstock.com/image-vector/barcelona-fc-cup-icon-logo-600nw-2267672941.jpg' },
@@ -34,7 +39,11 @@ export default function Home() {
         <div style={{ display: 'flex', gap: '1rem' }}>
           <input placeholder="Buscar camisetas..." style={{ padding: '0.5rem' }} />
           <button>🛒</button>
-          <button onClick={() => navigate('/login')}>👤 Iniciar sesión</button>
+          {usuario ? (
+            <span style={{alignSelf:'center'}}>👤 {usuario}</span>
+          ) : (
+            <button onClick={() => navigate('/login')}>👤 Iniciar sesión</button>
+          )}
         </div>
       </header>
 

@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../estilos/Login.css';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -14,7 +16,8 @@ export default function Login() {
       return;
     }
     setError('');
-    alert('Inicio de sesión simulado');
+    localStorage.setItem('usuario', email); // Guardar usuario simulado
+    navigate('/'); // Redirigir a principal
   };
 
   return (
