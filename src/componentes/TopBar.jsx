@@ -1,11 +1,16 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import '../estilos/TopBar.css';
 
 export default function TopBar() {
   const navigate = useNavigate();
   const [mostrarDropdown, setMostrarDropdown] = useState(false);
   const [termino, setTermino] = useState('');
+  const [usuario, setUsuario] = useState(null);
+  useEffect(() => {
+    setUsuario(localStorage.getItem('usuario'));
+  }, []);
+
 
   const handleCategoriaClick = (categoria) => {
     setMostrarDropdown(false);
@@ -75,8 +80,13 @@ export default function TopBar() {
             🛒 Carrito <span className="monto-carrito">$0.00</span>
         </button>
 
-        <button className="topbar-btn" onClick={() => navigate('/login')}>
-                Cuenta
+        {usuario ? (
+            <span style={{alignSelf:'center'}}>👤 {usuario}</span>
+          ) : (
+            <button onClick={() => navigate('/login')}>👤 Iniciar sesión</button>
+          )}
+        <button className="topbar-btn" onClick={() => navigate('/register')}>
+            Registrarse 
         </button>
       </div>
     </div>
