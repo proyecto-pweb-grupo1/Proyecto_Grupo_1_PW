@@ -22,21 +22,44 @@ export default function TopBar() {
   return (
     <div className="topbar">
       <div className="topbar-left">
-        <Link to="/" className="topbar-button">Inicio</Link>
+        <span className="logo">Grupo 1</span>
+        <Link to="/" className="topbar-btn">Inicio</Link>
 
         <div
-          className="topbar-dropdown"
-          onMouseEnter={() => setMostrarDropdown(true)}
-          onMouseLeave={() => setMostrarDropdown(false)}
-        >
-          <button className="topbar-button">Categorías ⏷</button>
-          {mostrarDropdown && (
-            <div className="dropdown-content">
-              <button onClick={() => handleCategoriaClick('nacionales')}>Nacionales</button>
-              <button onClick={() => handleCategoriaClick('internacionales')}>Internacionales</button>
-            </div>
-          )}
-        </div>
+  className="topbar-dropdown"
+  onMouseEnter={() => setMostrarDropdown(true)}
+  onMouseLeave={() => setMostrarDropdown(false)}
+>
+  <button className="topbar-btn">Categorías ⏷</button>
+  {mostrarDropdown && (
+    <div className="dropdown-menu">
+      <div className="dropdown-col">
+        <strong>Selecciones</strong>
+        <button onClick={() => navigate('/categoria/sudamerica')}>Sudamérica</button>
+        <button onClick={() => navigate('/categoria/europa')}>Europa</button>
+        <button onClick={() => navigate('/categoria/resto')}>Resto del mundo</button>
+      </div>
+      <div className="dropdown-col">
+        <strong>Internacional</strong>
+        <button onClick={() => navigate('/categoria/laliga')}>La Liga</button>
+        <button onClick={() => navigate('/categoria/premier')}>Premier League</button>
+        <button onClick={() => navigate('/categoria/seriea')}>Serie A</button>
+        <button onClick={() => navigate('/categoria/bundesliga')}>Bundesliga</button>
+        <button onClick={() => navigate('/categoria/ligue1')}>Ligue 1</button>
+        <button onClick={() => navigate('/categoria/primeira')}>Primeira Liga</button>
+      </div>
+      <div className="dropdown-col">
+        <strong>Locales</strong>
+        <button onClick={() => navigate('/categoria/liga1')}>Liga 1</button>
+        <button onClick={() => navigate('/categoria/liga2')}>Liga 2</button>
+      </div>
+    </div>
+  )}
+      </div>
+      </div>
+
+      <div className="topbar-center">
+        <h1 className="titulo-header">Tienda Oficial de Camisetas</h1>
       </div>
 
       <div className="topbar-right">
@@ -48,17 +71,12 @@ export default function TopBar() {
           onChange={(e) => setTermino(e.target.value)}
           onKeyDown={handleBuscar}
         />
-        <button className="cart-button" onClick={() => navigate('/carrito')}>
-          <img
-            src="https://cdn-icons-png.flaticon.com/512/107/107831.png"
-            alt="Carrito"
-          />
+        <button className="topbar-btn" onClick={() => navigate('/carrito')}>
+            🛒 Carrito <span className="monto-carrito">$0.00</span>
         </button>
-        <button className="topbar-button" onClick={() => navigate('/login')}>
-          Iniciar sesión
-        </button>
-        <button className="topbar-button" onClick={() => navigate('/register')}>
-          Registrarse
+
+        <button className="topbar-btn" onClick={() => navigate('/login')}>
+                Cuenta
         </button>
       </div>
     </div>

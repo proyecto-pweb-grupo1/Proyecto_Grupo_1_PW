@@ -12,7 +12,7 @@ function Rutas() {
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={<PaginaPrincipal />} />
-        <Route path="producto/:id" element={<DetalleProducto />} />
+        <Route path="detalle/:id" element={<DetalleProducto />} />
         <Route path="buscar" element={<ResultadosBusqueda />} />
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
