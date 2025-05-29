@@ -6,6 +6,12 @@ import ResultadosBusqueda from "../paginas/ResultadosBusqueda";
 import Login from "../paginas/Login";
 import Register from "../paginas/Register";
 import RecuperarContraseña from "../paginas/RecuperarContraseña";
+import ListadoCategoriasAdmin from "../paginas/ListadoCategoriasAdmin";
+import AgregarCategoria from "../paginas/AgregarCategoria";
+import DatosUsuario from "../paginas/DatosUsuario";
+import CambiarPassword from "../paginas/CambiarPassword";
+import DetalleOrden from "../paginas/DetalleOrden";
+
 
 function Rutas() {
   return (
@@ -17,6 +23,13 @@ function Rutas() {
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
         <Route path="recuperar" element={<RecuperarContraseña />} />
+
+        <Route path="admin/categorias" element={<ListadoCategoriasAdmin />} />
+        <Route path="admin/agregar-categoria" element={<AgregarCategoria />} />
+        <Route path="usuario/datos" element={<DatosUsuario />} />
+        <Route path="usuario/password" element={<CambiarPassword />} />
+        <Route path="usuario/orden" element={<DetalleOrden />} />
+
       </Route>
     </Routes>
   );
