@@ -6,6 +6,15 @@ import ResultadosBusqueda from "../paginas/ResultadosBusqueda";
 import Login from "../paginas/Login";
 import Register from "../paginas/Register";
 import RecuperarContraseña from "../paginas/RecuperarContraseña";
+import ListadoCategoriasAdmin from "../paginas/ListadoCategoriasAdmin";
+import AgregarCategoria from "../paginas/AgregarCategoria";
+import DatosUsuario from "../paginas/DatosUsuario";
+import CambiarPassword from "../paginas/CambiarPassword";
+import DetalleOrden from "../paginas/DetalleOrden";
+import Carrito from "../paginas/Carrito";
+import Checkout from "../paginas/Checkout";
+import FinCompra from "../paginas/FinCompra";
+
 import AdminDashboard from "../paginas/AdminDashboard";
 import AdminProductos from "../paginas/AdminProductos";
 import AdminAgregarProducto from '../paginas/AdminAgregarProducto';
@@ -17,12 +26,12 @@ function Rutas() {
         <Route index element={<PaginaPrincipal />} />
         <Route path="detalle/:id" element={<DetalleProducto />} />
         <Route path="buscar" element={<ResultadosBusqueda />} />
+        <Route path="carrito" element={<Carrito />} />
+        <Route path="checkout" element={<Checkout />} />
+        <Route path="fincompra" element={<FinCompra />} />
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
         <Route path="recuperar" element={<RecuperarContraseña />} />
-        <Route path="admin/dashboard" element={<AdminDashboard />} />
-        <Route path="/admin/productos" element={<AdminProductos />} />
-        <Route path="/admin/productos/agregar" element={<AdminAgregarProducto />} />
       </Route>
     </Routes>
   );

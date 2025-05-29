@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../context/UserContext';
 import '../estilos/Login.css';
 
 export default function Login() {
@@ -7,17 +8,25 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { login } = useContext(UserContext);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Aquí iría la lógica de autenticación
     if (!email || !password) {
       setError('Por favor, completa todos los campos.');
       return;
     }
-    setError('');
-    localStorage.setItem('usuario', email); // Guardar usuario simulado
-    navigate('/'); // Redirigir a principal
+
+    const usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+    const encontrado = usuarios.find(u => u.email === email && u.password === password);
+
+    if (!encontrado) {
+      setError('Correo o contraseña incorrectos.');
+      return;
+    }
+
+    login(email); 
+    navigate('/'); 
   };
 
   return (
