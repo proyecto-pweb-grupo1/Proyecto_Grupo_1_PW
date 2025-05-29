@@ -6,9 +6,9 @@ const usuarios = [
     rol: "admin"
   },
   {
-    nombre: "Juan",
-    email: "juan@example.com",
-    password: "456",
+    nombre: "Hector",
+    email: "hector@example.com",
+    password: "123456",
     rol: "usuario"
   }
 ];
