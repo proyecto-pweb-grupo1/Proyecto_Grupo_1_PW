@@ -1,0 +1,63 @@
+.Contenido {
+    min-height: 100vh;
+    padding: 2rem;
+    background-size: cover;
+    background-position: center;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.Contenido h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.Contenido h2 {
+    font-size: 1.8rem;
+    margin-bottom: 2rem;
+}
+
+.Contenido ul {
+    list-style: none;
+    margin-bottom: 3rem;
+    width: 100%;
+    max-width: 600px;
+    color: black;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 1rem;
+    padding: 1rem 2rem;
+}
+
+.Contenido li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 0.5rem;
+}
+
+.Contenido li img {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    margin-right: 1rem;
+}
+
+.Contenido button {
+    background-color: #007bff;
+    color: white;
+    padding: 0.8rem 2rem;
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.Contenido button:hover {
+    background-color: #0056b3;
+}
+

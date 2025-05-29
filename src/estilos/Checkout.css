@@ -1,0 +1,126 @@
+.Contenido {
+    min-height: 100vh;
+    padding: 2rem;
+    background-size: cover;
+    background-position: center;
+    color: white;
+    overflow-x: hidden;
+}
+
+.Contenido h1 {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+}
+
+.Resumen {
+    max-width: 1000px;
+    width: 90vw;
+    margin: 0 auto;
+    padding: 2rem;
+    background-color: rgba(255, 255, 255, 0.9);
+    color: black;
+    border-radius: 1rem;
+    box-sizing: border-box;
+    overflow-x: hidden;
+}
+
+.Resumen ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.Resumen li {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #ccc;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-wrap: break-word;
+}
+
+.Resumen img {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.info-producto {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+
+.BotonLimpiar {
+    background-color: #dc3545;
+    color: white;
+    padding: 0.6rem 1.2rem;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-weight: bold;
+    display: block;
+    margin: 1rem auto;
+}
+
+.BotonLimpiar:hover {
+    background-color: #c82333;
+}
+
+.Formulario {
+    background-color: rgba(255, 255, 255, 0.95);
+    color: black;
+    padding: 2rem;
+    border-radius: 1rem;
+    max-width: 600px;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+.Formulario input[type="text"] {
+    width: 100%;
+    padding: 0.6rem;
+    margin: 0.5rem 0;
+    border-radius: 0.4rem;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+.Formulario h3,
+.Formulario h4 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    color: #222;
+}
+
+.Formulario label {
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.Formulario button {
+    margin-top: 1rem;
+    background-color: #007bff;
+    color: white;
+    padding: 0.6rem 1.2rem;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+}
+
+.Formulario button:hover {
+    background-color: #0056b3;
+}
+
+.Formulario p {
+    margin-top: 1rem;
+}

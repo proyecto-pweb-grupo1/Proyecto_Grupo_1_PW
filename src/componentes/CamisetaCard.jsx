@@ -1,7 +1,7 @@
 
 import { useNavigate } from 'react-router-dom';
 
-export default function CamisetaCard({ club, precio, img }) {
+export default function CamisetaCard({ club, precio, img, agregar}) {
   const navigate = useNavigate();
 
   return (
@@ -13,6 +13,7 @@ export default function CamisetaCard({ club, precio, img }) {
       <button onClick={() => navigate(`/detalle/${club}`)}>
         Ver Detalle
       </button>
+        <button onClick={()=>agregar({club, precio, img})}>Agregar al carrito</button>
     </div>
   );
 }
