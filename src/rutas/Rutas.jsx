@@ -6,6 +6,9 @@ import ResultadosBusqueda from "../paginas/ResultadosBusqueda";
 import Login from "../paginas/Login";
 import Register from "../paginas/Register";
 import RecuperarContraseña from "../paginas/RecuperarContraseña";
+import AdminDashboard from "../paginas/AdminDashboard";
+import AdminProductos from "../paginas/AdminProductos";
+import AdminAgregarProducto from '../paginas/AdminAgregarProducto';
 
 function Rutas() {
   return (
@@ -17,6 +20,9 @@ function Rutas() {
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
         <Route path="recuperar" element={<RecuperarContraseña />} />
+        <Route path="admin/dashboard" element={<AdminDashboard />} />
+        <Route path="/admin/productos" element={<AdminProductos />} />
+        <Route path="/admin/productos/agregar" element={<AdminAgregarProducto />} />
       </Route>
     </Routes>
   );
