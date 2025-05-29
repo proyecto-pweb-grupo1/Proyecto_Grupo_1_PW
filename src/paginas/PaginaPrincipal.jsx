@@ -1,13 +1,28 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import fondoEstadio from '../assets/imagenes/fondoprincipal.png';
 import '../estilos/PaginaPrincipal.css';
 import CamisetaCard from '../componentes/CamisetaCard';
 import CategoriaCard from '../componentes/CategoriaCard';
 import camisetas from '../data/camisetas';
 import categorias from '../data/categorias';
+import {CarritoContexto} from "../context/CarritoContexto";
+
 
 
 export default function Home() {
+
+    const { listaProductos, setLista } = useContext(CarritoContexto);
+
+    function addCarrito(productoAdd){
+        const existe = listaProductos.find(producto => producto.club === productoAdd.club);
+        if(existe){
+            const proToAdd = listaProductos.map(producto => producto.club === productoAdd.club ? {...producto, cantidad: producto.cantidad + 1} : producto);
+            setLista(proToAdd);
+        }else{
+            setLista([...listaProductos, {...productoAdd, cantidad: 1}]);
+        }
+    }
+
   return (
     <>
       <div
@@ -42,6 +57,7 @@ export default function Home() {
               club={item.club}
               precio={item.precio}
               img={item.img}
+              agregar={addCarrito}
             />
           ))}
         </div>

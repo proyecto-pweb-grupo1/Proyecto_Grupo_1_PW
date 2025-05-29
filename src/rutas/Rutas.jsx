@@ -11,6 +11,9 @@ import AgregarCategoria from "../paginas/AgregarCategoria";
 import DatosUsuario from "../paginas/DatosUsuario";
 import CambiarPassword from "../paginas/CambiarPassword";
 import DetalleOrden from "../paginas/DetalleOrden";
+import Carrito from "../paginas/Carrito";
+import Checkout from "../paginas/Checkout";
+import FinCompra from "../paginas/FinCompra";
 
 
 function Rutas() {
@@ -20,6 +23,9 @@ function Rutas() {
         <Route index element={<PaginaPrincipal />} />
         <Route path="detalle/:id" element={<DetalleProducto />} />
         <Route path="buscar" element={<ResultadosBusqueda />} />
+        <Route path="carrito" element={<Carrito />} />
+        <Route path="checkout" element={<Checkout />} />
+        <Route path="fincompra" element={<FinCompra />} />
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
         <Route path="recuperar" element={<RecuperarContraseña />} />
