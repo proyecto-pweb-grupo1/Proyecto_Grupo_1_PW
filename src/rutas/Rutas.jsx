@@ -15,9 +15,11 @@ import Carrito from "../paginas/Carrito";
 import Checkout from "../paginas/Checkout";
 import FinCompra from "../paginas/FinCompra";
 
+// Admin
 import AdminDashboard from "../paginas/AdminDashboard";
 import AdminProductos from "../paginas/AdminProductos";
-import AdminAgregarProducto from '../paginas/AdminAgregarProducto';
+import AdminAgregarProducto from "../paginas/AdminAgregarProducto";
+import AdminEditarProducto from "../paginas/AdminEditarProducto";
 
 function Rutas() {
   return (
@@ -32,7 +34,16 @@ function Rutas() {
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
         <Route path="recuperar" element={<RecuperarContraseña />} />
+        <Route path="usuario" element={<DatosUsuario />} />
+        <Route path="cambiar-password" element={<CambiarPassword />} />
+        <Route path="orden/:id" element={<DetalleOrden />} />
       </Route>
+      <Route path="/admin/dashboard" element={<AdminDashboard />} />
+      <Route path="/admin/productos" element={<AdminProductos />} />
+      <Route path="/admin/productos/agregar" element={<AdminAgregarProducto />} />
+      <Route path="/admin/productos/editar/:id" element={<AdminEditarProducto />} />
+      <Route path="/admin/categorias" element={<ListadoCategoriasAdmin />} />
+      <Route path="/admin/categorias/agregar" element={<AgregarCategoria />} />
     </Routes>
   );
 }
