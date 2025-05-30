@@ -1,3 +1,4 @@
+import '../estilos/EstilosAdmin.css';
 import React, { useState } from 'react';
 import { esAdmin } from '../helpers/auth';
 import '../estilos/AdminCategorias.css';
