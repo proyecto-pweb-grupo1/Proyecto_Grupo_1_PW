@@ -2,10 +2,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useContext, useState } from 'react';
 import { UserContext } from '../context/UserContext';
 import '../estilos/TopBar.css';
-import {CarritoContexto} from '../context/CarritoContexto';
 
 export default function TopBar() {
-  const {listaProductos, setLista} = useContext(CarritoContexto);
   const navigate = useNavigate();
   const { usuario, logout } = useContext(UserContext);
 
@@ -21,8 +19,6 @@ export default function TopBar() {
       setTermino('');
     }
   };
-
-  const montoTotal = listaProductos.reduce((suma, producto) => suma + producto.precio * producto.cantidad, 0);
 
   return (
     <div className="topbar">
@@ -78,7 +74,7 @@ export default function TopBar() {
         />
 
         <button className="topbar-btn" onClick={() => navigate('/carrito')}>
-          🛒 Carrito <span className="monto-carrito">${montoTotal.toFixed(2)}</span>
+          🛒 Carrito <span className="monto-carrito">$0.00</span>
         </button>
 
         {usuario ? (

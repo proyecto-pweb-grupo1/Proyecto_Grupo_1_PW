@@ -13,7 +13,6 @@ export default function CambiarPassword() {
   const cambiar = (e) => {
     e.preventDefault();
 
-    // Paso 1: Obtener contraseña actual desde localStorage o archivo usuarios.js
     let guardada = localStorage.getItem(`password-${correo}`);
     if (guardada) {
       guardada = JSON.parse(guardada);
@@ -22,19 +21,16 @@ export default function CambiarPassword() {
       guardada = usuario?.password || '';
     }
 
-    // Paso 2: Validar contraseña actual
     if (actual !== guardada) {
       setMensaje('Contraseña actual incorrecta.');
       return;
     }
 
-    // Paso 3: Validar nueva contraseña
     if (nueva.length < 6 || nueva !== confirmar) {
       setMensaje('Nueva contraseña inválida o no coincide.');
       return;
     }
 
-    // Paso 4: Guardar nueva contraseña
     localStorage.setItem(`password-${correo}`, JSON.stringify(nueva));
     setMensaje('Contraseña actualizada correctamente.');
     setActual('');
