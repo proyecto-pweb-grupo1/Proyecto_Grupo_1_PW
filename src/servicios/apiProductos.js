@@ -91,9 +91,39 @@ export async function obtenerEquipos() {
   return res.json();
 }
 
+export async function crearEquipo(equipo) {
+  const res = await fetch(`${BASE_URL}/equipos`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(equipo),
+  });
+  if (!res.ok) throw new Error("Error al crear equipo");
+  return res.json();
+}
+
+export async function crearEquipoRegion(equipoRegion) {
+  const res = await fetch(`${BASE_URL}/equipo-region`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(equipoRegion),
+  });
+  if (!res.ok) throw new Error("Error al crear equipo-region");
+  return res.json();
+}
+
 export async function obtenerTemporadas() {
   const res = await fetch(`${BASE_URL}/temporadas`);
   if (!res.ok) throw new Error("Error al obtener temporadas");
+  return res.json();
+}
+
+export async function crearTemporada(temporada) {
+  const res = await fetch(`${BASE_URL}/temporadas`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(temporada),
+  });
+  if (!res.ok) throw new Error("Error al crear temporada");
   return res.json();
 }
 
@@ -115,9 +145,37 @@ export async function obtenerMarcas() {
   return res.json();
 }
 
+export async function crearMarca(marca) {
+  const res = await fetch(`${BASE_URL}/marcas`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(marca),
+  });
+  if (!res.ok) throw new Error("Error al crear marca");
+  return res.json();
+}
+
 export async function obtenerTiposCamiseta() {
   const res = await fetch(`${BASE_URL}/tipos-camiseta`);
   if (!res.ok) throw new Error("Error al obtener tipos de camiseta");
+  return res.json();
+}
+
+export async function obtenerPaises() {
+  const res = await fetch(`${BASE_URL}/paises`);
+  if (!res.ok) throw new Error("Error al obtener países");
+  return res.json();
+}
+
+export async function obtenerRegiones() {
+  const res = await fetch(`${BASE_URL}/regiones`);
+  if (!res.ok) throw new Error("Error al obtener regiones");
+  return res.json();
+}
+
+export async function obtenerTipoClubs() {
+  const res = await fetch(`${BASE_URL}/tipo-club`);
+  if (!res.ok) throw new Error("Error al obtener tipos de club");
   return res.json();
 }
 

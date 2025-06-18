@@ -1,12 +1,16 @@
 .admin-productos-bg {
+  width: 100vw;
   min-height: 100vh;
-  background-image: url('/src/assets/dashboard/bg-admin-dashboard-completo.jpg');
-  background-size: cover;
-  background-position: top;
+  background-image: url('/src/assets/dashboard/bg-productos-modulo.png');
+  background-size: 100vw auto;
+  background-repeat: no-repeat;
+  background-position: top center;
+  background-color: #b79973;
   position: relative;
   display: flex;
   padding: 0;
 }
+
 
 .admin-productos-overlay {
   width: calc(100vw - 210px);
@@ -141,7 +145,7 @@
 .admin-productos-lista {
   width: 95vw;
   max-width: 1050px;
-  background: rgba(255,255,255,0.97);
+  background: rgba(255,255,255,0.89);
   border-radius: 17px;
   box-shadow: 0 2px 12px #1112;
   padding: 1.2rem 1rem;
@@ -293,4 +297,37 @@
 }
 .admin-dashboard-sidebar {
   z-index: 10;
+}
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(30, 30, 50, 0.40);
+  z-index: 1001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+}
+.modal-centro {
+  background: #fff;
+  padding: 1.8rem 2rem;
+  border-radius: 22px;
+  box-shadow: 0 2px 30px #3334;
+  min-width: 320px;
+  max-width: 98vw;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  align-items: center;
+  position: relative;
+}
+.form-error {
+  color: #d32f2f;
+  font-size: 1.01rem;
+  margin-top: 6px;
+  display: block;
+}
+.select-buscador {
+  min-width: 190px;
+  flex: 2 1 0%;
 }

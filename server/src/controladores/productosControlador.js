@@ -88,10 +88,149 @@ async function eliminarProducto(req, res) {
   }
 }
 
+async function obtenerEquipos(req, res) {
+  try {
+    const { rows } = await pool.query('SELECT * FROM equipo');
+    res.json(rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}
+
+async function crearEquipo(req, res) {
+  try {
+    const { nombre_equipo, id_pais, id_tipo_club } = req.body;
+    const existe = await pool.query('SELECT * FROM equipo WHERE nombre_equipo = $1', [nombre_equipo]);
+    if (existe.rows.length) return res.status(400).json({ error: "El equipo ya existe" });
+
+    const { rows } = await pool.query(
+      `INSERT INTO equipo (nombre_equipo, id_pais, id_tipo_club)
+      VALUES ($1, $2, $3)
+      RETURNING *`,
+      [nombre_equipo, id_pais, id_tipo_club]
+    );
+    res.status(201).json(rows[0]);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}
+
+async function obtenerMarcas(req, res) {
+  try {
+    const { rows } = await pool.query('SELECT * FROM marca');
+    res.json(rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}
+
+async function crearMarca(req, res) {
+  try {
+    const { nombre_marca } = req.body;
+    const existe = await pool.query('SELECT * FROM marca WHERE nombre_marca = $1', [nombre_marca]);
+    if (existe.rows.length) return res.status(400).json({ error: "La marca ya existe" });
+
+    const { rows } = await pool.query(
+      `INSERT INTO marca (nombre_marca)
+      VALUES ($1)
+      RETURNING *`,
+      [nombre_marca]
+    );
+    res.status(201).json(rows[0]);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}
+
+async function obtenerTemporadas(req, res) {
+  try {
+    const { rows } = await pool.query('SELECT * FROM temporada');
+    res.json(rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}
+
+async function crearTemporada(req, res) {
+  try {
+    const { descripcion_temporada, año_inicio, año_fin } = req.body;
+    const existe = await pool.query('SELECT * FROM temporada WHERE descripcion_temporada = $1', [descripcion_temporada]);
+    if (existe.rows.length) return res.status(400).json({ error: "La temporada ya existe" });
+
+    const { rows } = await pool.query(
+      `INSERT INTO temporada (descripcion_temporada, año_inicio, año_fin)
+      VALUES ($1, $2, $3)
+      RETURNING *`,
+      [descripcion_temporada, año_inicio, año_fin]
+    );
+    res.status(201).json(rows[0]);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}
+
+async function obtenerPaises(req, res) {
+  try {
+    const { rows } = await pool.query('SELECT * FROM pais');
+    res.json(rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}
+
+async function obtenerRegiones(req, res) {
+  try {
+    const { rows } = await pool.query('SELECT * FROM region');
+    res.json(rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}
+
+async function obtenerTipoClubs(req, res) {
+  try {
+    const { rows } = await pool.query('SELECT * FROM tipo_club');
+    res.json(rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}
+
+async function crearEquipoRegion(req, res) {
+  try {
+    const { id_equipo, id_region } = req.body;
+    const existe = await pool.query(
+      'SELECT * FROM equipo_region WHERE id_equipo = $1 AND id_region = $2',
+      [id_equipo, id_region]
+    );
+    if (existe.rows.length) return res.status(400).json({ error: "Ya existe esa relación" });
+
+    const { rows } = await pool.query(
+      `INSERT INTO equipo_region (id_equipo, id_region)
+      VALUES ($1, $2)
+      RETURNING *`,
+      [id_equipo, id_region]
+    );
+    res.status(201).json(rows[0]);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}
+
 module.exports = {
   obtenerProductos,
   obtenerProductoPorId,
   crearProducto,
   editarProducto,
   eliminarProducto,
+  obtenerEquipos, 
+  crearEquipo,
+  obtenerMarcas, 
+  crearMarca,
+  obtenerTemporadas, 
+  crearTemporada,
+  obtenerPaises,
+  obtenerRegiones,
+  obtenerTipoClubs,
+  crearEquipoRegion
 };

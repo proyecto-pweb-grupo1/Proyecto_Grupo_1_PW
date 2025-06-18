@@ -18,7 +18,7 @@ function FinCompra(){
                 backgroundPosition: 'center',
                 padding: '2rem'
             }}>
-        >
+        
             <h1>Compra realizada</h1>
             <h2>Resumen de tu compra</h2>
             <ul>
