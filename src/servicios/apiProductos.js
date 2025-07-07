@@ -1,4 +1,4 @@
-const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3001/api";
+const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
 
 
 
@@ -8,6 +8,15 @@ const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3001/api";
 
 export async function obtenerProductos() {
   const res = await fetch(`${BASE_URL}/productos`);
+  if (!res.ok) throw new Error("Error al obtener productos");
+  return res.json();
+}
+
+export async function obtenerProductosPorNombre(nombre) {
+  const url = nombre
+    ? `${BASE_URL}/productos?nombre=${encodeURIComponent(nombre)}`
+    : `${BASE_URL}/productos`;
+  const res = await fetch(url);
   if (!res.ok) throw new Error("Error al obtener productos");
   return res.json();
 }

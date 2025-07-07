@@ -1,6 +1,5 @@
 import express from "express";
-import { Producto } from "../models/Producto.js";
-import { Categoria } from "../models/Categoria.js";
+import { Producto, Categoria } from "../models/index.js";
 import { validarRolHeader } from "../middlewares/validarRolHeader.js";
 import { Op } from "sequelize";
 
@@ -9,7 +8,7 @@ const router = express.Router();
 router.get("/", async (req, res) => {
   const { nombre, categoriaId, orden } = req.query;
 
-  const where = { activo: true };
+  const where = {};
   if (nombre) where.nombre = { [Op.iLike]: `%${nombre}%` };
   if (categoriaId) where.categoriaId = categoriaId;
 

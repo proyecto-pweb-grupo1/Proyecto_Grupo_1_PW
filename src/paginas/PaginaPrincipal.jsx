@@ -1,13 +1,25 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import fondoEstadio from '../assets/imagenes/fondoprincipal.png';
 import '../estilos/PaginaPrincipal.css';
 import CamisetaCard from '../componentes/CamisetaCard';
 import CategoriaCard from '../componentes/CategoriaCard';
 import camisetas from '../data/camisetas';
-import categorias from '../data/categorias';
-
+import { obtenerCategorias } from '../servicios/apiProductos';
 
 export default function Home() {
+  const [categorias, setCategorias] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    setLoading(true);
+    setError(null);
+    obtenerCategorias()
+      .then(setCategorias)
+      .catch(err => setError(err.message))
+      .finally(() => setLoading(false));
+  }, []);
+
   return (
     <>
       <div
@@ -19,18 +31,21 @@ export default function Home() {
           padding: '2rem'
         }}
       >
-        
         <section className="explora-categorias">
           <h2 className="titulo-explorar-categoria">Explora las categorías</h2>
+          {loading && <p>Cargando categorías...</p>}
+          {error && <p style={{color: 'red'}}>Error: {error}</p>}
           <div className="categorias-grid">
-           {categorias.map((cat, index) => (
-            <CategoriaCard
-              key={index}
-              nombre={cat.nombre}
-              imagen={cat.imagen}
-              ruta={cat.ruta}
-            />
-            ))}
+            {!loading && !error && categorias.length > 0 ? (
+              categorias.map((cat) => (
+                <CategoriaCard
+                  key={cat.id}
+                  nombre={cat.nombre}
+                  imagen={cat.imagen_url}
+                  ruta={cat.ruta || `/categoria/${cat.id}`}
+                />
+              ))
+            ) : (!loading && !error && <p>No hay categorías.</p>)}
           </div>
         </section>
 

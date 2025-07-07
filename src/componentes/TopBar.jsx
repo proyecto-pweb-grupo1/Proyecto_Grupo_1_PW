@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { UserContext } from '../context/UserContext';
+import { obtenerCategorias } from '../servicios/apiProductos';
 import '../estilos/TopBar.css';
 
 export default function TopBar() {
@@ -10,8 +11,20 @@ export default function TopBar() {
   const [mostrarDropdown, setMostrarDropdown] = useState(false);
   const [mostrarMenuUsuario, setMostrarMenuUsuario] = useState(false);
   const [termino, setTermino] = useState('');
+  const [categorias, setCategorias] = useState([]);
+  const [catLoading, setCatLoading] = useState(false);
+  const [catError, setCatError] = useState(null);
 
   const esAdmin = usuario?.toLowerCase().includes('admin');
+
+  useEffect(() => {
+    setCatLoading(true);
+    setCatError(null);
+    obtenerCategorias()
+      .then(data => setCategorias(data.slice(0, 3))) // Solo las 3 primeras
+      .catch(err => setCatError(err.message))
+      .finally(() => setCatLoading(false));
+  }, []);
 
   const handleBuscar = (e) => {
     if (e.key === 'Enter' && termino.trim() !== '') {
@@ -33,27 +46,16 @@ export default function TopBar() {
         >
           <button className="topbar-btn">Categorías ⏷</button>
           {mostrarDropdown && (
-            <div className="dropdown-menu">
-              <div className="dropdown-col">
-                <strong>Selecciones</strong>
-                <button onClick={() => navigate('/categoria/sudamerica')}>Sudamérica</button>
-                <button onClick={() => navigate('/categoria/europa')}>Europa</button>
-                <button onClick={() => navigate('/categoria/resto')}>Resto del mundo</button>
-              </div>
-              <div className="dropdown-col">
-                <strong>Internacional</strong>
-                <button onClick={() => navigate('/categoria/laliga')}>La Liga</button>
-                <button onClick={() => navigate('/categoria/premier')}>Premier League</button>
-                <button onClick={() => navigate('/categoria/seriea')}>Serie A</button>
-                <button onClick={() => navigate('/categoria/bundesliga')}>Bundesliga</button>
-                <button onClick={() => navigate('/categoria/ligue1')}>Ligue 1</button>
-                <button onClick={() => navigate('/categoria/primeira')}>Primeira Liga</button>
-              </div>
-              <div className="dropdown-col">
-                <strong>Locales</strong>
-                <button onClick={() => navigate('/categoria/liga1')}>Liga 1</button>
-                <button onClick={() => navigate('/categoria/liga2')}>Liga 2</button>
-              </div>
+            <div className="dropdown-menu" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              {catLoading && <p style={{padding:'1rem'}}>Cargando...</p>}
+              {catError && <p style={{color:'red',padding:'1rem'}}>Error: {catError}</p>}
+              {!catLoading && !catError && categorias.length > 0 ? (
+                categorias.map(cat => (
+                  <button key={cat.id} style={{ width: '100%', textAlign: 'left' }} onClick={() => navigate(`/categoria/${cat.id}`)}>
+                    {cat.nombre}
+                  </button>
+                ))
+              ) : (!catLoading && !catError && <p style={{padding:'1rem'}}>No hay categorías</p>)}
             </div>
           )}
         </div>
