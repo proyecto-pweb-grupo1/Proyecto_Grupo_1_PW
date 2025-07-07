@@ -10,33 +10,57 @@ export default function CambiarPassword() {
   const [confirmar, setConfirmar] = useState('');
   const [mensaje, setMensaje] = useState('');
   const correo = localStorage.getItem('usuario');
+  // Obtener el id del usuario antes de cambiar la contraseña
+  const [idUsuario, setIdUsuario] = useState(null);
 
-  const cambiar = (e) => {
+  React.useEffect(() => {
+    // Buscar el id del usuario por correo al montar el componente usando POST
+    if (correo) {
+      fetch("http://localhost:3000/api/usuarios/buscar-por-correo", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ correo })
+      })
+        .then(async res => {
+          const data = await res.json();
+          console.log('Respuesta buscar-por-correo:', data);
+          if (data && data.id) setIdUsuario(data.id);
+        })
+        .catch(err => {
+          console.error('Error en fetch buscar-por-correo:', err);
+        });
+    }
+  }, [correo]);
+
+  const cambiar = async (e) => {
     e.preventDefault();
-
-    let guardada = localStorage.getItem(`password-${correo}`);
-    if (guardada) {
-      guardada = JSON.parse(guardada);
-    } else {
-      const usuario = usuarios.find(u => u.email === correo);
-      guardada = usuario?.password || '';
-    }
-
-    if (actual !== guardada) {
-      setMensaje('Contraseña actual incorrecta.');
-      return;
-    }
-
+    setMensaje('');
     if (nueva.length < 6 || nueva !== confirmar) {
       setMensaje('Nueva contraseña inválida o no coincide.');
       return;
     }
-
-    localStorage.setItem(`password-${correo}`, JSON.stringify(nueva));
-    setMensaje('Contraseña actualizada correctamente.');
-    setActual('');
-    setNueva('');
-    setConfirmar('');
+    if (!idUsuario) {
+      setMensaje('No se pudo identificar al usuario.');
+      return;
+    }
+    try {
+      const response = await fetch(`http://localhost:3000/api/usuarios/cambiar-password/${idUsuario}` , {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ passwordActual: actual, nuevaPassword: nueva })
+      });
+      if (!response.ok) {
+        const data = await response.json();
+        setMensaje(data.error || 'Error al cambiar la contraseña.');
+        return;
+      }
+      setMensaje('Contraseña actualizada correctamente.');
+      setActual('');
+      setNueva('');
+      setConfirmar('');
+    } catch (err) {
+      setMensaje('Error de conexión con el servidor');
+    }
   };
 
   if (!estaLogueado()) {

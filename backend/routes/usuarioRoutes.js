@@ -54,5 +54,18 @@ router.post("/", async (req, res) => {
   res.json(usuario);
 });
 
+router.get("/correo/:correo", async (req, res) => {
+  const usuario = await Usuario.findOne({ where: { correo: req.params.correo } });
+  if (!usuario) return res.status(404).json({ error: "Usuario no encontrado" });
+  res.json(usuario);
+});
+
+router.post("/buscar-por-correo", async (req, res) => {
+  const { correo } = req.body;
+  const usuario = await Usuario.findOne({ where: { correo } });
+  if (!usuario) return res.status(404).json({ error: "Usuario no encontrado" });
+  res.json(usuario);
+});
+
 export default router;
 

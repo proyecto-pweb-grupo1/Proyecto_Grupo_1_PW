@@ -3,14 +3,14 @@ import '../estilos/Register.css';
 
 export default function Register() {
   const [nombre, setNombre] = useState('');
-  const [email, setEmail] = useState('');
+  const [correo, setCorreo] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!nombre || !email || !password || !confirmPassword) {
+    if (!nombre || !correo || !password || !confirmPassword) {
       setError('Por favor, completa todos los campos.');
       return;
     }
@@ -19,7 +19,22 @@ export default function Register() {
       return;
     }
     setError('');
-    alert('Registro simulado');
+    try {
+      const response = await fetch('http://localhost:3000/api/usuarios', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nombre, correo, password, rol: 'usuario' })
+      });
+      if (!response.ok) {
+        const data = await response.json();
+        setError(data.message || 'Error al registrar usuario');
+        return;
+      }
+      // Registro exitoso
+      window.location.href = '/login';
+    } catch (err) {
+      setError('Error de conexión con el servidor');
+    }
   };
 
   return (
@@ -36,8 +51,8 @@ export default function Register() {
         <input
           type="email"
           placeholder="Correo electrónico"
-          value={email}
-          onChange={e => setEmail(e.target.value)}
+          value={correo}
+          onChange={e => setCorreo(e.target.value)}
         />
         <input
           type="password"

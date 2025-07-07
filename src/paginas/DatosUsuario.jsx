@@ -6,20 +6,50 @@ export default function DatosUsuario() {
   const [nombre, setNombre] = useState('');
   const [correo, setCorreo] = useState('');
   const [mensaje, setMensaje] = useState('');
+  // Obtener el id del usuario antes de cargar los datos y para actualizar
+  const [idUsuario, setIdUsuario] = useState(null);
 
   useEffect(() => {
     const user = localStorage.getItem('usuario');
     if (user) {
       setCorreo(user);
-      const datos = JSON.parse(localStorage.getItem(`perfil-${user}`)) || {};
-      setNombre(datos.nombre || '');
+      // Buscar el usuario en el backend
+      fetch("http://localhost:3000/api/usuarios/buscar-por-correo", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ correo: user })
+      })
+        .then(res => res.json())
+        .then(usuario => {
+          if (usuario && usuario.id) {
+            setIdUsuario(usuario.id);
+            setNombre(usuario.nombre || '');
+          }
+        });
     }
   }, []);
 
-  const guardar = (e) => {
+  const guardar = async (e) => {
     e.preventDefault();
-    localStorage.setItem(`perfil-${correo}`, JSON.stringify({ nombre }));
-    setMensaje('Datos actualizados correctamente.');
+    if (!idUsuario) {
+      setMensaje('No se pudo identificar al usuario.');
+      return;
+    }
+    try {
+      const response = await fetch(`http://localhost:3000/api/usuarios/${idUsuario}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nombre, correo })
+      });
+      if (!response.ok) {
+        const data = await response.json();
+        setMensaje(data.error || 'Error al actualizar datos.');
+        return;
+      }
+      setMensaje('Datos actualizados correctamente.');
+    } catch (err) {
+      setMensaje('Error de conexión con el servidor');
+    }
   };
 
   if (!estaLogueado()) {

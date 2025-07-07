@@ -6,7 +6,7 @@ export default function RecuperarContraseña() {
   const [mensaje, setMensaje] = useState('');
   const [error, setError] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!email) {
       setError('Por favor, ingresa tu correo electrónico.');
@@ -14,7 +14,23 @@ export default function RecuperarContraseña() {
       return;
     }
     setError('');
-    setMensaje('Se ha enviado un correo para recupearar tu contraseña.');
+    try {
+      const response = await fetch('http://localhost:3000/api/recuperar-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ correo: email })
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        setError(data.error || 'No se pudo enviar el correo de recuperación.');
+        setMensaje('');
+        return;
+      }
+      setMensaje(data.mensaje || 'Se ha enviado un correo para recuperar tu contraseña.');
+    } catch (err) {
+      setError('Error de conexión con el servidor');
+      setMensaje('');
+    }
   };
 
   return (

@@ -10,23 +10,30 @@ export default function Login() {
   const navigate = useNavigate();
   const { login } = useContext(UserContext);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!email || !password) {
       setError('Por favor, completa todos los campos.');
       return;
     }
 
-    const usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
-    const encontrado = usuarios.find(u => u.email === email && u.password === password);
-
-    if (!encontrado) {
-      setError('Correo o contraseña incorrectos.');
-      return;
+    try {
+      const response = await fetch('http://localhost:3000/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ correo: email, password })
+      });
+      if (!response.ok) {
+        const data = await response.json();
+        setError(data.message || 'Correo o contraseña incorrectos.');
+        return;
+      }
+      // Si el login es exitoso, puedes guardar el usuario en contexto
+      login(email); 
+      navigate('/');
+    } catch (err) {
+      setError('Error de conexión con el servidor');
     }
-
-    login(email); 
-    navigate('/'); 
   };
 
   return (
