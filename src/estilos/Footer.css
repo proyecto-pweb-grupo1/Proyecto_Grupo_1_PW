@@ -25,3 +25,30 @@
 .footer-social span {
   margin-right: 10px;
 }
+
+.footer-content-box {
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem 2.5rem;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.25);
+}
+
+.footer-content-box h2 {
+  margin-top: 0;
+  color: #e0e6f7;
+  border-bottom: 2px solid #3a5a8c;
+  padding-bottom: 0.5rem;
+}
+
+.footer-content-box ul {
+  margin-left: 1.5rem;
+  margin-bottom: 0;
+}
+
+.footer-content-box p {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}

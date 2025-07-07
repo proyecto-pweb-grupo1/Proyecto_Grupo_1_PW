@@ -29,7 +29,8 @@
 
 .resultado-card h3 {
   margin-bottom: 0.5rem;
-  color: #222;
+  color: #222 !important;
+  text-shadow: none !important;
 }
 
 .resultado-card p {
