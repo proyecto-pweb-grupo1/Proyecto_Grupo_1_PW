@@ -11,6 +11,7 @@ import AgregarCategoria from "../paginas/AgregarCategoria";
 import DatosUsuario from "../paginas/DatosUsuario";
 import CambiarPassword from "../paginas/CambiarPassword";
 import DetalleOrden from "../paginas/DetalleOrden";
+import CategoriaProductos from "../paginas/CategoriaProductos";
 
 
 function Rutas() {
@@ -29,6 +30,7 @@ function Rutas() {
         <Route path="usuario/datos" element={<DatosUsuario />} />
         <Route path="usuario/password" element={<CambiarPassword />} />
         <Route path="usuario/orden" element={<DetalleOrden />} />
+        <Route path="categoria/:id" element={<CategoriaProductos />} />
 
       </Route>
     </Routes>

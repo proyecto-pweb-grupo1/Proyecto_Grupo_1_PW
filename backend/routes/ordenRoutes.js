@@ -1,6 +1,5 @@
 import express from "express";
-import { Orden } from "../models/Orden.js";
-import { Usuario } from "../models/Usuario.js";
+import { Orden, Usuario } from "../models/index.js";
 import { validarRolHeader } from "../middlewares/validarRolHeader.js";
 
 

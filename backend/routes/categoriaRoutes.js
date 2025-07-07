@@ -1,5 +1,5 @@
 import express from "express";
-import { Categoria } from "../models/Categoria.js";
+import { Categoria } from "../models/index.js";
 import { validarRolHeader } from "../middlewares/validarRolHeader.js";
 
 const router = express.Router();

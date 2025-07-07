@@ -1,7 +1,5 @@
 import express from "express";
-import { DetalleOrden } from "../models/DetalleOrden.js";
-import { Orden } from "../models/Orden.js";
-import { Producto } from "../models/Producto.js";
+import { DetalleOrden, Orden, Producto } from "../models/index.js";
 
 const router = express.Router();
 

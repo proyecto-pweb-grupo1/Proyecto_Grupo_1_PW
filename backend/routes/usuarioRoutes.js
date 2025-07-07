@@ -1,7 +1,6 @@
 import express from "express";
-import { Usuario } from "../models/Usuario.js";
+import { Usuario, Orden } from "../models/index.js";
 import { validarRolHeader } from "../middlewares/validarRolHeader.js";
-import { Orden } from "../models/Orden.js";
 
 
 const router = express.Router();
