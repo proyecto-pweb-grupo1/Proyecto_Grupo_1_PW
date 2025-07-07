@@ -27,6 +27,10 @@
   padding: 1rem;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
+.card-camiseta h3, .card-camiseta p {
+  color: #222 !important;
+  text-shadow: none !important;
+}
 .card-camiseta h3 {
   margin-bottom: 0.5rem;
   color: #222; 

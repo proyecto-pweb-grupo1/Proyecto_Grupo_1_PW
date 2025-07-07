@@ -66,14 +66,34 @@ export default function TopBar() {
       </div>
 
       <div className="topbar-right">
-        <input
-          type="text"
-          placeholder="Buscar camisetas..."
-          className="search-input"
-          value={termino}
-          onChange={(e) => setTermino(e.target.value)}
-          onKeyDown={handleBuscar}
-        />
+        <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+          <input
+            type="text"
+            placeholder="Buscar camisetas..."
+            className="search-input"
+            value={termino}
+            onChange={(e) => setTermino(e.target.value)}
+            onKeyDown={handleBuscar}
+            style={{ paddingRight: '38px' }}
+          />
+          <button
+            className="search-icon-btn"
+            aria-label="Buscar"
+            onClick={() => {
+              if (termino.trim() !== '') {
+                navigate(`/buscar?q=${encodeURIComponent(termino)}`);
+                setTermino('');
+              }
+            }}
+            style={{ position: 'absolute', right: 6, background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+          >
+            {/* SVG lupa icon */}
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="10" cy="10" r="7" stroke="#003366" strokeWidth="2" />
+              <line x1="15.2929" y1="15.7071" x2="20" y2="20.4142" stroke="#003366" strokeWidth="2" strokeLinecap="round" />
+            </svg>
+          </button>
+        </div>
 
         <button className="topbar-btn" onClick={() => navigate('/carrito')}>
           🛒 Carrito <span className="monto-carrito">$0.00</span>
@@ -106,7 +126,9 @@ export default function TopBar() {
           </div>
         ) : (
           <>
-            <button onClick={() => navigate('/login')}>👤 Iniciar sesión</button>
+            <button className="topbar-btn" onClick={() => navigate('/login')}>
+              👤 Iniciar sesión
+            </button>
             <button className="topbar-btn" onClick={() => navigate('/register')}>
               Registrarse
             </button>
