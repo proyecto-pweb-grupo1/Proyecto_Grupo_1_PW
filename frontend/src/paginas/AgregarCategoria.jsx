@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
 import { crearCategoria } from '../servicios/apiCategorias';
 import '../estilos/AgregarCategoria.css';
+import SidebarAdmin from "../componentes/SidebarAdmin";
 
 export default function AgregarCategoria() {
   const [nombre, setNombre] = useState('');

@@ -67,9 +67,10 @@ export default function TopBar() {
     <div className="topbar">
       {esAdminDashboard ? (
         <>
-          <div className="topbar-left" />
+          <div className="topbar-left">
           <span className="logo">Grupo 1</span>
             <Link to="/" className="topbar-btn">Inicio</Link>
+          </div>
           <div className="topbar-center">
             <span className="titulo-header" style={{ color: "#fff", fontWeight: 600 }}>
               Bienvenido, {usuario?.nombre ? usuario.nombre : "Administrador"}

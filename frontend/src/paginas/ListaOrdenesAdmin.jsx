@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import { UserContext } from '../context/UserContext';
 import { useNavigate } from 'react-router-dom';
 import '../estilos/ListaOrdenesAdmin.css';
+import SidebarAdmin from "../componentes/SidebarAdmin";
 
 const ListaOrdenesAdmin = () => {
   const { usuario } = useContext(UserContext);
@@ -40,6 +41,8 @@ const ListaOrdenesAdmin = () => {
 
   return (
     <div className="lista-ordenes-admin">
+      <SidebarAdmin />
+
       <h2>Órdenes Registradas</h2>
       <input
         type="text"

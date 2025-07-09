@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
 import '../estilos/DetalleOrdenAdmin.css';
+import SidebarAdmin from "../componentes/SidebarAdmin";
 
 const DetalleOrdenAdmin = () => {
   const { usuario } = useContext(UserContext);
@@ -63,6 +64,8 @@ const DetalleOrdenAdmin = () => {
 
   return (
     <div className="detalle-orden-admin">
+      <SidebarAdmin />
+
       <h2>Detalle de Orden #{orden.id_orden}</h2>
 
       <section className="info-seccion">

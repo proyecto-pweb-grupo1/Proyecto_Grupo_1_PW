@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
 import '../estilos/DetalleUsuarioAdmin.css';
+import SidebarAdmin from "../componentes/SidebarAdmin";
 
 const DetalleUsuarioAdmin = () => {
   const { id } = useParams();
@@ -36,6 +37,7 @@ const DetalleUsuarioAdmin = () => {
 
   return (
     <div className="detalle-usuario-admin">
+      <SidebarAdmin />
       <h2>Detalle del Usuario</h2>
 
       <div className="datos-usuario">

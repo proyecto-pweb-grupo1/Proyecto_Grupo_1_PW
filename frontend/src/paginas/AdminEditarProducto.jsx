@@ -4,12 +4,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import { obtenerParametros } from "../servicios/apiParametros";
 import { UserContext } from "../context/UserContext";
 import "../estilos/AdminProductos.css";
+import SidebarAdmin from "../componentes/SidebarAdmin";
 
 export default function AdminEditarProducto() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { usuario } = useContext(UserContext);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
 
   const [form, setForm] = useState({
     sku: "",
@@ -114,44 +114,9 @@ export default function AdminEditarProducto() {
     }
   };
 
-  const opcionesSidebar = [
-    { nombre: "Dashboard", ruta: "/admin/dashboard", icono: "/src/assets/dashboard/icon-dashboard.png" },
-    { nombre: "Productos", ruta: "/admin/productos", icono: "/src/assets/dashboard/icon-productos.png" },
-    { nombre: "Órdenes", ruta: "/admin/ordenes", icono: "/src/assets/dashboard/icon-ordenes.png" },
-    { nombre: "Usuarios", ruta: "/admin/usuarios", icono: "/src/assets/dashboard/icon-usuarios.png" },
-  ];
-
   return (
     <div className="admin-productos-bg">
-      <AnimatePresence>
-        {sidebarOpen && (
-          <motion.aside
-            className="admin-dashboard-sidebar"
-            initial={{ x: -220, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: -220, opacity: 0 }}
-            transition={{ duration: 0.3, type: "spring" }}
-          >
-            <img src="/src/assets/branding/logo-blanco.png" alt="Logo" className="sidebar-logo" />
-            <nav>
-              {opcionesSidebar.map((op) => (
-                <a key={op.nombre} href={op.ruta} className="sidebar-link">
-                  <img src={op.icono} alt={op.nombre} />
-                  <span>{op.nombre}</span>
-                </a>
-              ))}
-            </nav>
-            <img src="/src/assets/dashboard/sidebar-futbol.png" className="sidebar-bg" alt="" />
-            <button className="sidebar-close-btn" onClick={() => setSidebarOpen(false)}>×</button>
-          </motion.aside>
-        )}
-      </AnimatePresence>
-
-      {!sidebarOpen && (
-        <button className="sidebar-open-btn" onClick={() => setSidebarOpen(true)}>
-          ☰
-        </button>
-      )}
+      <SidebarAdmin />
 
       <div className="admin-productos-overlay">
         <motion.header

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { UserContext } from "../context/UserContext";
 import "../estilos/AdminProductos.css";
+import SidebarAdmin from "../componentes/SidebarAdmin";
 
 function generarSKU({ equipos, temporadas, tiposCamiseta, generos, tallas, form }) {
   const equipoObj = equipos.find(e => e.id_equipo === Number(form.id_equipo));
@@ -152,35 +153,9 @@ const handleSubmit = async (e) => {
 };
 
 
-
-
-  const opcionesSidebar = [
-    { nombre: "Dashboard", ruta: "/admin/dashboard", icono: "/src/assets/dashboard/icon-dashboard.png" },
-    { nombre: "Productos", ruta: "/admin/productos", icono: "/src/assets/dashboard/icon-productos.png" },
-    { nombre: "Órdenes", ruta: "/admin/ordenes", icono: "/src/assets/dashboard/icon-ordenes.png" },
-    { nombre: "Usuarios", ruta: "/admin/usuarios", icono: "/src/assets/dashboard/icon-usuarios.png" },
-  ];
-
   return (
     <div className="admin-productos-bg">
-      {sidebarOpen && (
-        <aside className="admin-dashboard-sidebar">
-          <img src="/src/assets/branding/logo-blanco.png" alt="Logo" className="sidebar-logo" />
-          <nav>
-            {opcionesSidebar.map((op) => (
-              <a key={op.nombre} href={op.ruta} className="sidebar-link">
-                <img src={op.icono} alt={op.nombre} />
-                <span>{op.nombre}</span>
-              </a>
-            ))}
-          </nav>
-          <img src="/src/assets/dashboard/sidebar-futbol.png" className="sidebar-bg" alt="" />
-          <button className="sidebar-close-btn" onClick={() => setSidebarOpen(false)}>×</button>
-        </aside>
-      )}
-      {!sidebarOpen && (
-        <button className="sidebar-open-btn" onClick={() => setSidebarOpen(true)}>☰</button>
-      )}
+      <SidebarAdmin />
 
       <div className="admin-productos-overlay">
         <motion.form

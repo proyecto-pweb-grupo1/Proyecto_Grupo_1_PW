@@ -7,6 +7,7 @@ import {
 } from "../servicios/apiProductos";
 import { UserContext } from "../context/UserContext";
 import "../estilos/AdminProductos.css";
+import SidebarAdmin from "../componentes/SidebarAdmin";
 
 export default function AdminProductos() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -75,34 +76,7 @@ export default function AdminProductos() {
 
   return (
     <div className="admin-productos-bg">
-      <AnimatePresence>
-        {sidebarOpen && (
-          <motion.aside
-            className="admin-dashboard-sidebar"
-            initial={{ x: -220, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: -220, opacity: 0 }}
-            transition={{ duration: 0.3, type: "spring" }}
-          >
-            <img src="/src/assets/branding/logo-blanco.png" alt="Logo" className="sidebar-logo" />
-            <nav>
-              {opcionesSidebar.map((op) => (
-                <Link key={op.nombre} to={op.ruta} className="sidebar-link">
-                  <img src={op.icono} alt={op.nombre} />
-                  <span>{op.nombre}</span>
-                </Link>
-              ))}
-            </nav>
-            <img src="/src/assets/dashboard/sidebar-futbol.png" className="sidebar-bg" alt="" />
-            <button className="sidebar-close-btn" onClick={() => setSidebarOpen(false)}>×</button>
-          </motion.aside>
-        )}
-      </AnimatePresence>
-      {!sidebarOpen && (
-        <button className="sidebar-open-btn" onClick={() => setSidebarOpen(true)}>
-          ☰
-        </button>
-      )}
+      <SidebarAdmin />
       <div className="admin-productos-overlay">
         <motion.header
           initial={{ y: -80, opacity: 0 }}
