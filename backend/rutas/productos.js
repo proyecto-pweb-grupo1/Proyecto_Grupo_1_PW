@@ -157,5 +157,47 @@ router.get('/', async (req, res) => {
   }
 });
 
+// Obtener todos los productos con TODAS las relaciones profundas
+router.get('/detallado', async (req, res) => {
+  try {
+    const productos = await PRODUCTO.findAll({
+      include: [
+        {
+          model: CAMISETA,
+          include: [
+            {
+              model: EQUIPO,
+              include: [
+                { model: PAIS },
+                { model: TIPO_CLUB },
+                { 
+                  model: REGION, 
+                  through: { attributes: [] } // para que traiga regions relacionadas al equipo
+                }
+              ]
+            },
+            { model: TEMPORADA },
+            { model: CATEGORIA },
+            { model: MARCA },
+            { model: TIPO_CAMISETA }
+          ]
+        },
+        { model: TALLA },
+        { model: GENERO },
+        // Si tienes SERIES relacionadas al PRODUCTO, puedes traerlas así:
+        {
+          model: SERIE,
+          through: { attributes: [] } // para traer las series del producto
+        }
+      ]
+    });
+    res.json(productos);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al obtener productos detallados' });
+  }
+});
+
+
 
 export default router;

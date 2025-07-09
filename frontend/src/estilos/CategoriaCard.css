@@ -30,8 +30,35 @@
   object-fit: contain;
 }
 
+.card-categoria h3,
+.card-categoria .categoria-nombre,
 .categoria-nombre {
-  font-size: 28px;
-  font-weight: 500;
-  color: white;
+  color: #111 !important;
+  text-shadow: none !important;
+  font-weight: bold !important;
+  margin: 0 !important;
+  letter-spacing: -0.5px;
+}
+.dropdown-menu button:hover,
+.dropdown-menu button:active,
+.dropdown-menu button:focus {
+  background: #e0e6f7 !important;
+  color: #1a2a4d !important;
+}
+.dropdown-menu button,
+.dropdown-menu button * {
+  color: #003366 !important;
+}
+
+.card-categoria .MuiButtonBase-root:active {
+  background: transparent !important;
+}
+.dropdown-menu button,
+.dropdown-menu button span,
+.dropdown-menu button * {
+  color: #003366 !important;
+}
+
+.dropdown-menu {
+  color: #003366 !important;
 }

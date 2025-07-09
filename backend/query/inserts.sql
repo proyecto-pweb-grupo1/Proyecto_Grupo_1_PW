@@ -99436,7 +99436,7 @@ INSERT INTO "USUARIO" (nombre, apellido, correo, password, id_rol) VALUES
 ('Guido Alejandro', 'Aquice Campos', '20213244@aloe.ulima.edu.pe', 'adminpass', 2),
 ('Alexis Raul', 'Chaberlin Huangal', '20213398@aloe.ulima.edu.pe', 'adminpass', 2),
 ('Jairo', 'Gutierrez Toribio', '20221190@aloe.ulima.edu.pe', 'adminpass', 2),
-('Erick Obradovich', 'Luna', '20221751@aloe.ulima.edu.pe', 'adminpass', 2),
+('Erick', 'Obradovich Luna', '20221751@aloe.ulima.edu.pe', 'adminpass', 2),
 ('Sebastian', 'Montenegro Carrillo', '20223756@aloe.ulima.edu.pe', 'adminpass', 2);
 INSERT INTO "METODO_PAGO" (id_metodo_pago, nombre_metodo) VALUES (1, 'Tarjeta de Crédito/Débito'), (2, 'PagoEfectivo'), (3, 'Yape/Plin');
 INSERT INTO "METODO_ENVIO" (id_metodo_envio, nombre_envio, costo, descripcion) VALUES
