@@ -8,6 +8,7 @@ const opcionesSidebar = [
   { nombre: "Productos", ruta: "/admin/productos", icono: "/src/assets/dashboard/icon-productos.png" },
   { nombre: "Órdenes", ruta: "/admin/ordenes", icono: "/src/assets/dashboard/icon-ordenes.png" },
   { nombre: "Usuarios", ruta: "/admin/usuarios", icono: "/src/assets/dashboard/icon-usuarios.png" },
+  { nombre: "Categorías", ruta: "/admin/categorias", icono: "/src/assets/dashboard/icon-categorias.png" },
 ];
 
 export default function SidebarAdmin({ defaultOpen = true }) {
