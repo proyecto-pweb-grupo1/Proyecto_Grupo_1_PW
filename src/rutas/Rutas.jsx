@@ -15,6 +15,9 @@ import CategoriaProductos from "../paginas/CategoriaProductos";
 import Terminos from "../paginas/Terminos";
 import Privacidad from "../paginas/Privacidad";
 import Contacto from "../paginas/Contacto";
+import Consultas from "../paginas/Consultas";
+import DetalleConsultaUser from "../paginas/Detalle_consulta_User";
+import ListaOrdenes from "../paginas/Lista_ordenes";
 
 
 function Rutas() {
@@ -37,6 +40,11 @@ function Rutas() {
         <Route path="terminos" element={<Terminos />} />
         <Route path="privacidad" element={<Privacidad />} />
         <Route path="contacto" element={<Contacto />} />
+        <Route path="consultas" element={<Consultas />} />
+        <Route path="consultas/usuario/:id" element={<DetalleConsultaUser />} />
+        <Route path="admin/usuario/:id/ordenes" element={<ListaOrdenes />} />
+        <Route path="consultas/usuario/:id/ordenes" element={<ListaOrdenes />} />
+
       </Route>
     </Routes>
   );

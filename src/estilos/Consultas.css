@@ -1,0 +1,38 @@
+.AdminUsers-container {
+  padding: 2rem;
+}
+
+.AdminUsers-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.AdminUsers-table th,
+.AdminUsers-table td {
+  border: 1px solid #ffffff;
+  padding: 0.75rem;
+  text-align: left;
+}
+
+.AdminUsers-table th {
+  background-color: #0066cc;
+}
+
+.AdminUsers-btn {
+  background-color: #0066cc;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.AdminUsers-btn:hover {
+  background-color: #004999;
+}
+
+.AdminUsers-container h2 {
+  color: white;
+}

@@ -66,4 +66,17 @@ router.get("/admin/filtro", validarRolHeader("admin"), async (req, res) => {
   res.json(ordenes);
 });
 
+router.get("/usuario/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const ordenes = await Orden.findAll({
+      where: { usuarioId: id },
+    });
+    res.json(ordenes);
+  } catch (error) {
+    console.error("Error al obtener órdenes del usuario:", error);
+    res.status(500).json({ error: "Error" });
+  }
+});
+
 export default router;

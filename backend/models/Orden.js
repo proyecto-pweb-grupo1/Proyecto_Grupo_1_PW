@@ -9,7 +9,10 @@ export const Orden = sequelize.define("Orden", {
     references: { model: "Usuario", key: "id" }
   },
   fecha: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW },
+  metodo_pago: { type: DataTypes.STRING, allowNull: false },
   total: { type: DataTypes.DECIMAL(10,2), allowNull: false },
+  direccion: { type: DataTypes.STRING, allowNull: false },
+  metodo_envio: { type: DataTypes.STRING, allowNull: false },
   estado: { type: DataTypes.STRING, allowNull: false, defaultValue: "pendiente" }
 }, {
   freezeTableName: true,

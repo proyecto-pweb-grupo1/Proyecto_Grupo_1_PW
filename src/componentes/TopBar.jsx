@@ -99,6 +99,12 @@ export default function TopBar() {
           🛒 Carrito <span className="monto-carrito">$0.00</span>
         </button>
 
+        {usuario && (
+          <button className="topbar-btn" onClick={() => navigate('/consultas')}>
+            📬 Consultas
+          </button>
+        )}
+
         {usuario ? (
           <div
             className="dropdown-user"
