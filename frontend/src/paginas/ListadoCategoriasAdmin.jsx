@@ -1,15 +1,15 @@
-import '../estilos/EstilosAdmin.css';
+// ListadoCategoriasAdmin.jsx
 import React, { useEffect, useState } from 'react';
-import categoriasBase from '../data/categorias';
 import '../estilos/AdminCategorias.css';
 
 export default function ListadoCategoriasAdmin() {
   const [categorias, setCategorias] = useState([]);
 
   useEffect(() => {
-    const guardadas = JSON.parse(localStorage.getItem('categorias_agregadas')) || [];
-    const combinadas = [...categoriasBase, ...guardadas];
-    setCategorias(combinadas);
+    fetch('http://localhost:3000/api/categorias')
+      .then(res => res.json())
+      .then(data => setCategorias(data))
+      .catch(err => console.error('Error al cargar categorías:', err));
   }, []);
 
   return (
@@ -19,10 +19,10 @@ export default function ListadoCategoriasAdmin() {
         <p style={{ color: '#555' }}>No hay categorías aún.</p>
       ) : (
         <div className="admin-cat-grid">
-          {categorias.map((cat, index) => (
-            <div className="admin-cat-card" key={index}>
-              <img src={cat.imagen} alt={cat.nombre} />
-              <p>{cat.nombre}</p>
+          {categorias.map((cat) => (
+            <div className="admin-cat-card" key={cat.id_categoria}>
+              <img src={cat.imagen_url} alt={cat.nombre_categoria} />
+              <p>{cat.nombre_categoria}</p>
             </div>
           ))}
         </div>

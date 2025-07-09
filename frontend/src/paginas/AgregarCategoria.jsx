@@ -1,6 +1,5 @@
-import '../estilos/EstilosAdmin.css';
+// AgregarCategoria.jsx
 import React, { useState } from 'react';
-import { esAdmin } from '../helpers/auth';
 import '../estilos/AdminCategorias.css';
 
 export default function AgregarCategoria() {
@@ -8,27 +7,39 @@ export default function AgregarCategoria() {
   const [imagen, setImagen] = useState('');
   const [mensaje, setMensaje] = useState('');
 
-  const guardarCategoria = () => {
-    if (!nombre || !imagen) return;
-    const nuevas = JSON.parse(localStorage.getItem("categorias_agregadas")) || [];
-    nuevas.push({ nombre, imagen });
-    localStorage.setItem("categorias_agregadas", JSON.stringify(nuevas));
-    setMensaje("Categoría registrada correctamente.");
-    setNombre('');
-    setImagen('');
-  };
+  const guardarCategoria = async () => {
+    if (!nombre || !imagen) {
+      setMensaje('Completa todos los campos');
+      return;
+    }
 
-  if (!esAdmin()) {
-    return <h2 style={{ color: 'red', padding: '2rem' }}>Acceso denegado. Solo para administradores.</h2>;
-  }
+    try {
+      const res = await fetch('http://localhost:3000/api/categorias', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nombre_categoria: nombre,
+          imagen_url: imagen
+        })
+      });
+
+      if (!res.ok) throw new Error('No se pudo guardar');
+
+      setMensaje('Categoría registrada correctamente');
+      setNombre('');
+      setImagen('');
+    } catch (err) {
+      setMensaje('Error al guardar categoría');
+    }
+  };
 
   return (
     <div className="admin-cat-container">
       <h2>Agregar Nueva Categoría</h2>
+      {mensaje && <p className="mensaje">{mensaje}</p>}
       <input type="text" placeholder="Nombre" value={nombre} onChange={e => setNombre(e.target.value)} />
       <input type="text" placeholder="URL de imagen" value={imagen} onChange={e => setImagen(e.target.value)} />
       <button onClick={guardarCategoria}>Guardar</button>
-      {mensaje && <p className="mensaje">{mensaje}</p>}
     </div>
   );
 }

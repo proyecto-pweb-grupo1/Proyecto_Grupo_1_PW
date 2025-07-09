@@ -6,13 +6,13 @@ import Rutas from "./rutas/Rutas";
 
 function App() {
   return (
-    <BrowserRouter>
+
       <UserProvider>
         <CarritoProvider>
           <Rutas />
         </CarritoProvider>
       </UserProvider>
-    </BrowserRouter>
+
   );
 }
 

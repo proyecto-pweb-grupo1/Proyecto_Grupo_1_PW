@@ -1,6 +1,6 @@
 import {useNavigate} from "react-router-dom";
 import React, {useContext} from "react";
-import {CarritoContexto} from "../context/carritoContexto.jsx";
+import {CarritoContexto} from "../context/CarritoContexto.jsx";
 import '../estilos/Checkout.css';
 import fondoEstadio from "../assets/imagenes/fondoprincipal.png";
 
