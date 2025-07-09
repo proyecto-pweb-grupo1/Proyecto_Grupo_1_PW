@@ -17,12 +17,15 @@ router.get('/', async (req, res) => {
 // POST /api/categorias – Agregar nueva categoría
 router.post('/', async (req, res) => {
   try {
-    const nueva = await CATEGORIA.create(req.body);
-    res.status(201).json(nueva);
+    const { nombre_categoria, imagen_url } = req.body;
+    const nueva = await CATEGORIA.create({ nombre_categoria, imagen_url });
+    res.json(nueva);
   } catch (error) {
-    res.status(500).json({ error: 'Error al crear categoría' });
+    console.error("❌ Error al crear categoría:", error);
+    res.status(500).json({ mensaje: "Error interno" });
   }
 });
+
 
 // PUT /api/categorias/:id – Actualizar categoría
 router.put('/:id', async (req, res) => {

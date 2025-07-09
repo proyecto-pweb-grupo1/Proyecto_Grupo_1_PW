@@ -2,12 +2,14 @@ import { sequelize } from '../config/database.js';
 import { DataTypes } from 'sequelize';
 
 export const PAIS = sequelize.define('PAIS', {
-  id_pais: { type: DataTypes.INTEGER, primaryKey: true },
+  id_pais: { type: DataTypes.INTEGER, primaryKey: true,
+    autoIncrement: true },
   nombre_pais: { type: DataTypes.STRING(100), unique: true }
 }, { freezeTableName: true, timestamps: false });
 
 export const REGION = sequelize.define('REGION', {
-  id_region: { type: DataTypes.INTEGER, primaryKey: true },
+  id_region: { type: DataTypes.INTEGER, primaryKey: true,
+    autoIncrement: true },
   nombre_region: { type: DataTypes.STRING(100), unique: true }
 }, { freezeTableName: true, timestamps: false });
 
@@ -17,7 +19,8 @@ export const TIPO_CLUB = sequelize.define('TIPO_CLUB', {
 }, { freezeTableName: true, timestamps: false });
 
 export const EQUIPO = sequelize.define('EQUIPO', {
-  id_equipo: { type: DataTypes.INTEGER, primaryKey: true },
+  id_equipo: { type: DataTypes.INTEGER, primaryKey: true,
+    autoIncrement: true },
   nombre_equipo: { type: DataTypes.STRING(100), unique: true },
   id_pais: { type: DataTypes.INTEGER },
   id_tipo_club: { type: DataTypes.INTEGER }
@@ -27,14 +30,19 @@ EQUIPO.belongsTo(PAIS, { foreignKey: 'id_pais' });
 EQUIPO.belongsTo(TIPO_CLUB, { foreignKey: 'id_tipo_club' });
 
 export const TEMPORADA = sequelize.define('TEMPORADA', {
-  id_temporada: { type: DataTypes.INTEGER, primaryKey: true },
+  id_temporada: { type: DataTypes.INTEGER, primaryKey: true,
+    autoIncrement: true },
   descripcion_temporada: { type: DataTypes.STRING(20), unique: true },
   año_inicio: DataTypes.INTEGER,
   año_fin: DataTypes.INTEGER
 }, { freezeTableName: true, timestamps: false });
 
 export const CATEGORIA = sequelize.define('CATEGORIA', {
-  id_categoria: { type: DataTypes.INTEGER, primaryKey: true },
+  id_categoria: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true 
+  },
   nombre_categoria: { type: DataTypes.STRING(30), unique: true },
   imagen_url: DataTypes.STRING(250)
 }, { freezeTableName: true, timestamps: false });
@@ -45,22 +53,26 @@ export const MARCA = sequelize.define('MARCA', {
 }, { freezeTableName: true, timestamps: false });
 
 export const GENERO = sequelize.define('GENERO', {
-  id_genero: { type: DataTypes.INTEGER, primaryKey: true },
+  id_genero: { type: DataTypes.INTEGER, primaryKey: true,
+    autoIncrement: true },
   descripcion_genero: { type: DataTypes.STRING(20), unique: true }
 }, { freezeTableName: true, timestamps: false });
 
 export const TALLA = sequelize.define('TALLA', {
-  id_talla: { type: DataTypes.INTEGER, primaryKey: true },
+  id_talla: { type: DataTypes.INTEGER, primaryKey: true,
+    autoIncrement: true },
   descripcion_talla: { type: DataTypes.STRING(5), unique: true }
 }, { freezeTableName: true, timestamps: false });
 
 export const TIPO_CAMISETA = sequelize.define('TIPO_CAMISETA', {
-  id_tipo_camiseta: { type: DataTypes.INTEGER, primaryKey: true },
+  id_tipo_camiseta: { type: DataTypes.INTEGER, primaryKey: true,
+    autoIncrement: true },
   descripcion_tipo: { type: DataTypes.STRING(30), unique: true }
 }, { freezeTableName: true, timestamps: false });
 
 export const CAMISETA = sequelize.define('CAMISETA', {
-  id_camiseta: { type: DataTypes.INTEGER, primaryKey: true },
+  id_camiseta: { type: DataTypes.INTEGER, primaryKey: true,
+    autoIncrement: true },
   id_equipo: DataTypes.INTEGER,
   id_temporada: DataTypes.INTEGER,
   id_categoria: DataTypes.INTEGER,
@@ -77,7 +89,8 @@ CAMISETA.belongsTo(MARCA, { foreignKey: 'id_marca' });
 CAMISETA.belongsTo(TIPO_CAMISETA, { foreignKey: 'id_tipo_camiseta' });
 
 export const PRODUCTO = sequelize.define('PRODUCTO', {
-  id_producto: { type: DataTypes.INTEGER, primaryKey: true },
+  id_producto: { type: DataTypes.INTEGER, primaryKey: true,
+    autoIncrement: true },
   id_camiseta: DataTypes.INTEGER,
   id_genero: DataTypes.INTEGER,
   id_talla: DataTypes.INTEGER,
@@ -92,7 +105,8 @@ PRODUCTO.belongsTo(GENERO, { foreignKey: 'id_genero' });
 PRODUCTO.belongsTo(TALLA, { foreignKey: 'id_talla' });
 
 export const EQUIPO_REGION = sequelize.define('EQUIPO_REGION', {
-  id_equipo: { type: DataTypes.INTEGER, primaryKey: true },
+  id_equipo: { type: DataTypes.INTEGER, primaryKey: true,
+    autoIncrement: true },
   id_region: { type: DataTypes.INTEGER, primaryKey: true }
 }, { freezeTableName: true, timestamps: false });
 
@@ -100,7 +114,8 @@ EQUIPO.belongsToMany(REGION, { through: EQUIPO_REGION, foreignKey: 'id_equipo' }
 REGION.belongsToMany(EQUIPO, { through: EQUIPO_REGION, foreignKey: 'id_region' });
 
 export const ROL = sequelize.define('ROL', {
-  id_rol: { type: DataTypes.INTEGER, primaryKey: true },
+  id_rol: { type: DataTypes.INTEGER, primaryKey: true,
+    autoIncrement: true },
   nombre_rol: { type: DataTypes.STRING(20), unique: true }
 }, { freezeTableName: true, timestamps: false });
 
@@ -145,19 +160,22 @@ export const CARRITO_ITEM = sequelize.define('CARRITO_ITEM', {
 }, { freezeTableName: true, timestamps: false });
 
 export const METODO_PAGO = sequelize.define('METODO_PAGO', {
-  id_metodo_pago: { type: DataTypes.INTEGER, primaryKey: true },
+  id_metodo_pago: { type: DataTypes.INTEGER, primaryKey: true,
+    autoIncrement: true },
   nombre_metodo: { type: DataTypes.STRING(30), unique: true }
 }, { freezeTableName: true, timestamps: false });
 
 export const METODO_ENVIO = sequelize.define('METODO_ENVIO', {
-  id_metodo_envio: { type: DataTypes.INTEGER, primaryKey: true },
+  id_metodo_envio: { type: DataTypes.INTEGER, primaryKey: true,
+    autoIncrement: true },
   nombre_envio: { type: DataTypes.STRING(50), unique: true },
   costo: DataTypes.DECIMAL(10,2),
   descripcion: DataTypes.STRING(200)
 }, { freezeTableName: true, timestamps: false });
 
 export const ESTADO_ORDEN = sequelize.define('ESTADO_ORDEN', {
-  id_estado_orden: { type: DataTypes.INTEGER, primaryKey: true },
+  id_estado_orden: { type: DataTypes.INTEGER, primaryKey: true,
+    autoIncrement: true },
   nombre_estado: { type: DataTypes.STRING(30), unique: true }
 }, { freezeTableName: true, timestamps: false });
 
