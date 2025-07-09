@@ -1,5 +1,6 @@
-export const verificarUsuario = (req, res, next) => {
-  const { rol } = req.body;
-  if (rol !== "admin") return res.status(403).json({ mensaje: "Acceso denegado" });
+export function verificarUsuario(req, res, next) {
+  if (!req.user) {
+    return res.status(401).json({ error: "No autorizado" });
+  }
   next();
-};
+}

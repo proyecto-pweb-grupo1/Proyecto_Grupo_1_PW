@@ -6,6 +6,8 @@ import "../estilos/AdminDashboard.css";
 import {obtenerProductos} from "../servicios/apiProductos";
 import {obtenerUsuarios} from "../servicios/apiUsuarios";
 import {obtenerOrdenes} from "../servicios/apiOrdenes";
+import { obtenerKPIs } from "../servicios/apiProductos";
+
 
 const AnimatedNumber = ({ value }) => {
   const [display, setDisplay] = useState(0);
@@ -29,28 +31,24 @@ const AnimatedNumber = ({ value }) => {
   return <span>{display}</span>;
 };
 
+
 export default function AdminDashboard() {
-  const [productos, setProductos] = useState([]);
-  const [usuarios, setUsuarios] = useState([]);
-  const [ordenes, setOrdenes] = useState([]);
-  const [stockTotal, setStockTotal] = useState(0);
+    const [kpis, setKpis] = useState({
+    productos: 0,
+    stock: 0,
+    usuarios: 0,
+    ordenes: 0,
+  });
 
   useEffect(() => {
-    async function fetchAll() {
+    async function fetchKPIs() {
       try {
-        const [prod, user, ord] = await Promise.all([
-          obtenerProductos(),
-          obtenerUsuarios(),
-          obtenerOrdenes(),
-        ]);
-        setProductos(prod);
-        setUsuarios(user);
-        setOrdenes(ord);
-        setStockTotal(prod.reduce((acum, p) => acum + (p.stock || 0), 0));
+        const data = await obtenerKPIs();
+        setKpis(data);
       } catch (err) {
       }
     }
-    fetchAll();
+    fetchKPIs();
   }, []);
 
   const opciones = [
@@ -85,32 +83,33 @@ export default function AdminDashboard() {
   ];
 
 
-  const metricas = [
+    const metricas = [
     {
       nombre: "Stock total",
-      valor: stockTotal,
+      valor: kpis.stock,
       icono: "/src/assets/dashboard/icon-stock.png",
       color: "#43a047"
     },
     {
       nombre: "Productos",
-      valor: productos.length,
+      valor: kpis.productos,
       icono: "/src/assets/dashboard/icon-productos.png",
       color: "#E91E63"
     },
     {
       nombre: "Órdenes",
-      valor: ordenes.length,
+      valor: kpis.ordenes,
       icono: "/src/assets/dashboard/icon-ordenes.png",
       color: "#009688"
     },
     {
       nombre: "Usuarios",
-      valor: usuarios.length,
+      valor: kpis.usuarios,
       icono: "/src/assets/dashboard/icon-usuarios.png",
       color: "#FF9800"
     }
   ];
+
 
   return (
     <div className="admin-dashboard-bg">

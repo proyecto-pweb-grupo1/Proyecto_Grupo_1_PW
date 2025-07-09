@@ -1,16 +1,10 @@
+// src/paginas/AdminProductos.jsx
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   obtenerProductos,
   eliminarProducto,
-  obtenerCategorias,
-  obtenerEquipos,
-  obtenerTallas,
-  obtenerGeneros,
-  obtenerMarcas,
-  obtenerTiposCamiseta,
-  obtenerTemporadas
 } from "../servicios/apiProductos";
 import "../estilos/AdminProductos.css";
 
@@ -19,9 +13,12 @@ export default function AdminProductos() {
   const [productos, setProductos] = useState([]);
   const [busqueda, setBusqueda] = useState("");
   const [cargando, setCargando] = useState(true);
+  const [paginaActual, setPaginaActual] = useState(1);
+  const itemsPorPagina = 50;
 
   useEffect(() => {
     cargarProductos();
+    // eslint-disable-next-line
   }, []);
 
   const cargarProductos = async () => {
@@ -37,27 +34,26 @@ export default function AdminProductos() {
 
   const handleEliminar = async (idProducto) => {
     if (window.confirm("¿Seguro que quieres eliminar este producto?")) {
-      await eliminarProducto(idProducto);
-      cargarProductos();
+      try {
+        await eliminarProducto(idProducto);
+        await cargarProductos();
+      } catch (e) {
+        alert(e.message || "No se pudo eliminar");
+      }
     }
   };
 
-  const opcionesSidebar = [
-    { nombre: "Dashboard", ruta: "/admin/dashboard", icono: "/src/assets/dashboard/icon-dashboard.png" },
-    { nombre: "Productos", ruta: "/admin/productos", icono: "/src/assets/dashboard/icon-productos.png" },
-    { nombre: "Órdenes", ruta: "/admin/ordenes", icono: "/src/assets/dashboard/icon-ordenes.png" },
-    { nombre: "Usuarios", ruta: "/admin/usuarios", icono: "/src/assets/dashboard/icon-usuarios.png" },
-  ];
-
-    const productosFiltrados = productos.filter(
-    p =>
-      p.sku?.toLowerCase().includes(busqueda.toLowerCase()) ||
-      p.descripcion_camiseta?.toLowerCase().includes(busqueda.toLowerCase()) ||
+  // Adaptación para búsqueda real usando campos de producto + camiseta relacionada
+  const productosFiltrados = productos.filter((p) => {
+    // p.CAMISETA puede estar como p.CAMISETA o p.camiseta, depende del backend. Usar ambos:
+    const camiseta = p.CAMISETA || p.camiseta || {};
+    return (
+      (p.sku && p.sku.toLowerCase().includes(busqueda.toLowerCase())) ||
+      (camiseta.descripcion_camiseta &&
+        camiseta.descripcion_camiseta.toLowerCase().includes(busqueda.toLowerCase())) ||
       (p.id_producto + "").includes(busqueda)
-  );
-
-  const [paginaActual, setPaginaActual] = useState(1);
-  const itemsPorPagina = 50;
+    );
+  });
 
   const totalPaginas = Math.ceil(productosFiltrados.length / itemsPorPagina);
 
@@ -65,6 +61,13 @@ export default function AdminProductos() {
     (paginaActual - 1) * itemsPorPagina,
     paginaActual * itemsPorPagina
   );
+
+  const opcionesSidebar = [
+    { nombre: "Dashboard", ruta: "/admin/dashboard", icono: "/src/assets/dashboard/icon-dashboard.png" },
+    { nombre: "Productos", ruta: "/admin/productos", icono: "/src/assets/dashboard/icon-productos.png" },
+    { nombre: "Órdenes", ruta: "/admin/ordenes", icono: "/src/assets/dashboard/icon-ordenes.png" },
+    { nombre: "Usuarios", ruta: "/admin/usuarios", icono: "/src/assets/dashboard/icon-usuarios.png" },
+  ];
 
   return (
     <div className="admin-productos-bg">
@@ -154,30 +157,39 @@ export default function AdminProductos() {
                   <td colSpan={8}><span className="no-productos">No hay productos</span></td>
                 </tr>
               ) : (
-                productosPaginados.map((p) => (
-                  <motion.tr key={p.id_producto} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
-                    <td>{p.id_producto}</td>
-                    <td>
-                      <img src={p.imagen_url || "/src/assets/dashboard/icon-productos.png"} alt="Camiseta" className="producto-imagen-mini" />
-                    </td>
-                    <td>{p.sku}</td>
-                    <td>{p.descripcion_camiseta}</td>
-                    <td>S/ {Number(p.precio).toFixed(2)}</td>
-                    <td>{p.stock}</td>
-                    <td>
-                      <Link to={`/admin/productos/editar/${p.id_producto}`} className="btn-editar">
-                        <img src="/src/assets/dashboard/icon-editar.png" alt="Editar" />
-                        Editar
-                      </Link>
-                    </td>
-                    <td>
-                      <button className="btn-eliminar" onClick={() => handleEliminar(p.id_producto)}>
-                        <img src="/src/assets/dashboard/icon-eliminar.jpg" alt="Eliminar" />
-                        Eliminar
-                      </button>
-                    </td>
-                  </motion.tr>
-                ))
+                productosPaginados.map((p) => {
+                  const camiseta = p.CAMISETA || p.camiseta || {};
+                  // Si imagen_url viene desde la camiseta relacionada:
+                  const imgUrl = camiseta.imagen_url || "/src/assets/dashboard/icon-productos.png";
+                  return (
+                    <motion.tr key={p.id_producto} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
+                      <td>{p.id_producto}</td>
+                      <td>
+                        <img
+                          src={imgUrl}
+                          alt="Camiseta"
+                          className="producto-imagen-mini"
+                        />
+                      </td>
+                      <td>{p.sku}</td>
+                      <td>{camiseta.descripcion_camiseta}</td>
+                      <td>S/ {Number(p.precio).toFixed(2)}</td>
+                      <td>{p.stock}</td>
+                      <td>
+                        <Link to={`/admin/productos/editar/${p.id_producto}`} className="btn-editar">
+                          <img src="/src/assets/dashboard/icon-editar.png" alt="Editar" />
+                          Editar
+                        </Link>
+                      </td>
+                      <td>
+                        <button className="btn-eliminar" onClick={() => handleEliminar(p.id_producto)}>
+                          <img src="/src/assets/dashboard/icon-eliminar.jpg" alt="Eliminar" />
+                          Eliminar
+                        </button>
+                      </td>
+                    </motion.tr>
+                  );
+                })
               )}
             </tbody>
           </table>

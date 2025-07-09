@@ -1,8 +1,10 @@
+// src/componentes/CategoriaCard.jsx
 import { motion } from "framer-motion";
 import ButtonBase from '@mui/material/ButtonBase';
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-export default function CategoriaCard({ nombre, imagen, ruta }) {
+export default function CategoriaCard({ nombre, imagen, id }) {
+  const navigate = useNavigate();
   return (
     <motion.div
       className="card-categoria"
@@ -20,8 +22,7 @@ export default function CategoriaCard({ nombre, imagen, ruta }) {
           display: 'flex',
           flexDirection: 'column',
         }}
-        component={Link}
-        to={ruta}
+        onClick={() => navigate(`/productos?categoria=${id}`)}
       >
         <img
           src={imagen}
@@ -57,7 +58,6 @@ export default function CategoriaCard({ nombre, imagen, ruta }) {
         >
           {nombre}
         </h3>
-
       </ButtonBase>
     </motion.div>
   );

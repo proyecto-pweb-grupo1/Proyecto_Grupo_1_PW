@@ -1,5 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import Layout from "../componentes/Layout";
+import Productos from "../paginas/Productos";
 
 // Alumno 1: Sebastian Montenegro Carrillo
 import PaginaPrincipal from "../paginas/PaginaPrincipal";
@@ -76,6 +77,7 @@ function Rutas() {
 
         {/* --------- Alumno 5: Erick Obradovich Luna --------- */}
         <Route path="categoria/:id" element={<CategoriaProductos />} />
+        <Route path="productos" element={<Productos />} />
         <Route path="admin/dashboard" element={<AdminDashboard />} />
         <Route path="admin/productos" element={<AdminProductos />} />
         <Route path="admin/productos/agregar" element={<AdminAgregarProducto />} />

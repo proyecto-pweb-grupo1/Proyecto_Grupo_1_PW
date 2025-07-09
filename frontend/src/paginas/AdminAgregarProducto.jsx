@@ -57,8 +57,20 @@ export default function AdminAgregarProducto() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const prod = { ...form, precio: parseFloat(form.precio), stock: parseInt(form.stock, 10) };
-    await crearProducto(prod);
+    // Asegúrate que los datos numéricos van como número
+    const prod = {
+      ...form,
+      precio: parseFloat(form.precio),
+      stock: parseInt(form.stock, 10),
+      id_equipo: parseInt(form.id_equipo),
+      id_temporada: parseInt(form.id_temporada),
+      id_categoria: parseInt(form.id_categoria),
+      id_marca: parseInt(form.id_marca),
+      id_tipo_camiseta: parseInt(form.id_tipo_camiseta),
+      id_genero: parseInt(form.id_genero),
+      id_talla: parseInt(form.id_talla)
+    };
+    await crearProductoCompleto(prod);
     navigate("/admin/productos");
   };
 

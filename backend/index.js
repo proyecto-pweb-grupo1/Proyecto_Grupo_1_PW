@@ -8,6 +8,8 @@ import productosRutas from './rutas/productos.js';
 import carritoRutas from "./rutas/carritoRoutes.js";
 import categoriasRutas from './rutas/categorias.js';
 import ordenesRoutes from './rutas/ordenesRoutes.js';
+import metricasRouter from './rutas/metricas.js';
+import camisetasRoutes from './rutas/camisetas.js';
 
 const app = express();
 
@@ -21,6 +23,12 @@ app.use('/api/categorias', categoriasRutas);
 app.use("/api/productos", productosRutas);
 app.use("/api/carrito", carritoRutas);
 app.use('/api/ordenes', ordenesRoutes);
+app.use('/api/metricas', metricasRouter);
+app.use('/api/camisetas', camisetasRoutes);
+
+app.get('/', (req, res) => {
+  res.send('🚀 Backend funcionando. Usa las rutas /api/* para consumir datos.');
+});
 
 const PORT = process.env.PORT || 3000;
 

@@ -1,37 +1,17 @@
-import express from 'express';
-import * as catalogoCtrl from '../controladores/productosControlador.js';
+// backend/rutas/datosReferencia.js
+import { Router } from 'express';
+import * as ctrl from '../controladores/datosReferenciaControlador.js';
 
-const router = express.Router();
+const router = Router();
 
-// PRODUCTOS
-router.get('/productos', catalogoCtrl.obtenerProductos);
-router.get('/productos/:id', catalogoCtrl.obtenerProductoPorId);
-router.post('/productos', catalogoCtrl.crearProducto);
-router.put('/productos/:id', catalogoCtrl.editarProducto);
-router.delete('/productos/:id', catalogoCtrl.eliminarProducto);
-
-// EQUIPOS
-router.get('/equipos', catalogoCtrl.obtenerEquipos);
-router.post('/equipos', catalogoCtrl.crearEquipo);
-
-// MARCAS
-router.get('/marcas', catalogoCtrl.obtenerMarcas);
-router.post('/marcas', catalogoCtrl.crearMarca);
-
-// TEMPORADAS
-router.get('/temporadas', catalogoCtrl.obtenerTemporadas);
-router.post('/temporadas', catalogoCtrl.crearTemporada);
-
-// PAISES
-router.get('/paises', catalogoCtrl.obtenerPaises);
-
-// REGIONES
-router.get('/regiones', catalogoCtrl.obtenerRegiones);
-
-// TIPO_CLUB
-router.get('/tipo-club', catalogoCtrl.obtenerTipoClubes);
-
-// EQUIPO_REGION
-router.post('/equipo-region', catalogoCtrl.crearEquipoRegion);
+router.get('/paises', ctrl.listarPaises);
+router.get('/regiones', ctrl.listarRegiones);
+router.get('/tipos_club', ctrl.listarTipoClubs);
+router.get('/generos', ctrl.listarGeneros);
+router.get('/tallas', ctrl.listarTallas);
+router.get('/tipos_camiseta', ctrl.listarTiposCamiseta);
+router.get('/marcas', ctrl.listarMarcas);
+router.get('/temporadas', ctrl.listarTemporadas);
+router.get('/categorias', ctrl.listarCategorias);
 
 export default router;

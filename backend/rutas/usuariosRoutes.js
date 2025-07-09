@@ -1,14 +1,13 @@
-import express from 'express';
-import * as usuarioCtrl from '../controladores/usuariosControlador.js';
+// backend/rutas/usuariosRoutes.js
+import { Router } from 'express';
+import * as ctrl from '../controladores/usuariosControlador.js';
 
-const router = express.Router();
+const router = Router();
 
-router.post('/', usuarioCtrl.crearUsuario);
-router.post('/login', usuarioCtrl.loginUsuario);
-
-// 🚨 NUEVAS RUTAS Alumno 4
-router.get('/:id', usuarioCtrl.obtenerUsuario);
-router.put('/:id', usuarioCtrl.actualizarUsuario);
-router.put('/:id/password', usuarioCtrl.cambiarPassword);
+router.get('/', ctrl.listarUsuarios);
+router.get('/:id', ctrl.obtenerUsuario);
+router.post('/', ctrl.crearUsuario);
+router.put('/:id', ctrl.actualizarUsuario);
+router.delete('/:id', ctrl.eliminarUsuario);
 
 export default router;
