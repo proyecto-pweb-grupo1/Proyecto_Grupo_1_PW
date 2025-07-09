@@ -173,7 +173,11 @@ export default function AdminEditarProducto() {
         >
           <div className="form-row">
             <label>SKU</label>
-            <input type="text" name="sku" value={form.sku} onChange={handleChange} required />
+            <input type="text" name="sku" value={form.sku} readOnly
+              style={{
+                background: "#eeeeeeff",
+                cursor: "not-allowed",
+              }} />
             <label>Descripción</label>
             <input type="text" name="descripcion_camiseta" value={form.descripcion_camiseta} onChange={handleChange} required />
           </div>

@@ -206,7 +206,6 @@ const handleSubmit = async (e) => {
               }}
               tabIndex={-1}
             />
-            {!form.sku && <span style={{ color: "#d00", fontSize: "0.8em" }}>Selecciona todas las opciones para generar el SKU</span>}
             <label>Descripción</label>
             <input type="text" name="descripcion_camiseta" value={form.descripcion_camiseta} onChange={handleChange} required />
           </div>
