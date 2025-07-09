@@ -1,4 +1,10 @@
 import { createContext, useState, useEffect } from "react";
+import {
+  obtenerCarrito,
+  agregarProductoAlCarrito,
+  actualizarCantidadCarrito,
+  eliminarDelCarrito as eliminarProductoDelCarrito
+} from "../servicios/apiCarrito";
 
 export const CarritoContexto = createContext(null);
 
@@ -7,64 +13,55 @@ export function CarritoProvider({ children }) {
   const [guardados, setGuardados] = useState([]);
 
   useEffect(() => {
-    const carritoLocal = localStorage.getItem("carrito");
-    const guardadosLocal = localStorage.getItem("guardados");
-    if (carritoLocal) setCarrito(JSON.parse(carritoLocal));
-    if (guardadosLocal) setGuardados(JSON.parse(guardadosLocal));
+    recargarCarrito();
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem("carrito", JSON.stringify(carrito));
-    localStorage.setItem("guardados", JSON.stringify(guardados));
-  }, [carrito, guardados]);
-
-  const agregarAlCarrito = (producto) => {
-    const existente = carrito.find((p) => p.id_producto === producto.id_producto);
-    if (existente) {
-      setCarrito(
-        carrito.map((p) =>
-          p.id_producto === producto.id_producto
-            ? { ...p, cantidad: p.cantidad + 1 }
-            : p
-        )
-      );
-    } else {
-      setCarrito([...carrito, { ...producto, cantidad: 1 }]);
+  const recargarCarrito = async () => {
+    const usuario = JSON.parse(localStorage.getItem("usuario"));
+    if (!usuario || !usuario.id_usuario) return;
+    try {
+      const actualizado = await obtenerCarrito(usuario.id_usuario);
+      setCarrito(actualizado.CARRITO_ITEM || []);
+    } catch (e) {
+      console.error("Error al recargar carrito:", e);
     }
   };
 
-  const cambiarCantidad = (id_producto, nuevaCantidad) => {
-    setCarrito(
-      carrito.map((p) =>
-        p.id_producto === id_producto
-          ? { ...p, cantidad: nuevaCantidad }
-          : p
-      )
-    );
-  };
-
-  const eliminarDelCarrito = (id_producto) => {
-    setCarrito(carrito.filter((p) => p.id_producto !== id_producto));
-  };
-
-  const moverAGuardados = (producto) => {
-    eliminarDelCarrito(producto.id_producto);
-    if (!guardados.some((p) => p.id_producto === producto.id_producto)) {
-      setGuardados([...guardados, producto]);
+  const agregarAlCarrito = async (producto) => {
+    const usuario = JSON.parse(localStorage.getItem("usuario"));
+    try {
+      await agregarProductoAlCarrito(usuario.id_usuario, producto.id_producto, 1);
+      await recargarCarrito();
+    } catch (error) {
+      console.error("Error al agregar al carrito:", error);
     }
   };
 
-  const moverAlCarrito = (producto) => {
-    setGuardados(guardados.filter((p) => p.id_producto !== producto.id_producto));
-    agregarAlCarrito(producto);
+  const cambiarCantidad = async (id_producto, nuevaCantidad) => {
+    const usuario = JSON.parse(localStorage.getItem("usuario"));
+    const carritoBase = await obtenerCarrito(usuario.id_usuario);
+    const carritoID = carritoBase?.id_carrito;    
+    try {
+      await actualizarCantidadCarrito(carritoID, id_producto, nuevaCantidad, usuario.id_usuario);
+      await recargarCarrito();
+    } catch (e) {
+      console.error("Error al actualizar cantidad:", e);
+    }
   };
 
-  const eliminarGuardado = (id_producto) => {
-    setGuardados(guardados.filter((p) => p.id_producto !== id_producto));
+  const eliminarDelCarrito = async (id_producto) => {
+    const usuario = JSON.parse(localStorage.getItem("usuario"));
+    const carritoID = carrito[0]?.id_carrito;
+    try {
+      await eliminarProductoDelCarrito(carritoID, id_producto, usuario.id_usuario);
+      await recargarCarrito();
+    } catch (e) {
+      console.error("Error al eliminar del carrito:", e);
+    }
   };
 
   const totalCarrito = carrito.reduce(
-    (acc, prod) => acc + prod.precio * prod.cantidad,
+    (acc, prod) => acc + prod.PRODUCTO?.precio * prod.cantidad,
     0
   );
 
@@ -72,14 +69,11 @@ export function CarritoProvider({ children }) {
     <CarritoContexto.Provider
       value={{
         carrito,
-        guardados,
         agregarAlCarrito,
         cambiarCantidad,
         eliminarDelCarrito,
-        moverAGuardados,
-        moverAlCarrito,
-        eliminarGuardado,
         totalCarrito,
+        recargarCarrito
       }}
     >
       {children}

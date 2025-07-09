@@ -3,23 +3,39 @@ import { Op } from "sequelize";
 
 export async function listarOrdenes(req, res) {
   const { filtro } = req.query;
+
   const condicion = filtro
     ? {
         [Op.or]: [
           { '$USUARIO.nombre$': { [Op.iLike]: `%${filtro}%` } },
           { '$USUARIO.apellido$': { [Op.iLike]: `%${filtro}%` } },
-          { id_orden: { [Op.eq]: filtro } }
+          { id_orden: isNaN(filtro) ? -1 : parseInt(filtro) }
         ]
       }
     : {};
 
-  const ordenes = await ORDEN.findAll({
-    where: condicion,
-    include: [USUARIO, DIRECCION, METODO_PAGO, METODO_ENVIO, ESTADO_ORDEN]
-  });
+  try {
+    const ordenes = await ORDEN.findAll({
+      where: condicion,
+      include: [
+        {
+          model: USUARIO,
+          required: true
+        },
+        DIRECCION,
+        METODO_PAGO,
+        METODO_ENVIO,
+        ESTADO_ORDEN
+      ]
+    });
 
-  res.json(ordenes);
+    res.json(ordenes);
+  } catch (error) {
+    console.error("Error en listarOrdenes:", error);
+    res.status(500).json({ error: "Error interno del servidor" });
+  }
 }
+
 
 export async function detalleOrdenAdmin(req, res) {
   const { id } = req.params;

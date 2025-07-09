@@ -23,6 +23,13 @@ import Privacidad from "../paginas/Privacidad";
 import Contacto from "../paginas/Contacto";
 import ListaOrdenes from '../paginas/MiPerfil';
 import DetalleOrden from '../paginas/DetalleOrden';
+import ListaUsuariosAdmin from "../paginas/ListaUsuariosAdmin";
+import DetalleUsuarioAdmin from "../paginas/DetalleUsuarioAdmin";
+import ListaOrdenesAdmin from "../paginas/ListaOrdenesAdmin";
+import DetalleOrdenAdmin from '../paginas/DetalleOrdenAdmin';
+
+
+
 
 function Rutas() {
   return (
@@ -46,6 +53,10 @@ function Rutas() {
         <Route path="/usuario/orden/:id" element={<DetalleOrden />} />
         <Route path="categoria/:id" element={<CategoriaProductos />} />
         <Route path="admin/dashboard" element={<AdminDashboard />} />
+        <Route path="/admin/usuarios" element={<ListaUsuariosAdmin />} />
+        <Route path="/admin/usuarios/:id" element={<DetalleUsuarioAdmin />} />
+        <Route path="/admin/ordenes" element={<ListaOrdenesAdmin />} />
+        <Route path="/admin/ordenes/:id" element={<DetalleOrdenAdmin />} />
         <Route path="admin/productos" element={<AdminProductos />} />
         <Route path="admin/productos/agregar" element={<AdminAgregarProducto />} />
         <Route path="admin/productos/editar/:id" element={<AdminEditarProducto />} />

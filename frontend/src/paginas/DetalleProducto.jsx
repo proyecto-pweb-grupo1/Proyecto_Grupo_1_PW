@@ -1,7 +1,8 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import fondoEstadio from '../assets/imagenes/fondoprincipal.png';
 import '../estilos/DetalleProducto.css';
+import { CarritoContexto } from "../context/CarritoContexto";
 
 export default function DetalleProducto() {
   const { id } = useParams();
@@ -9,6 +10,7 @@ export default function DetalleProducto() {
   const [producto, setProducto] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { agregarAlCarrito } = useContext(CarritoContexto);
 
   useEffect(() => {
     setLoading(true);
@@ -16,15 +18,11 @@ export default function DetalleProducto() {
 
     fetch(`http://localhost:3000/api/producto/${id}`)
       .then(res => {
-        if (!res.ok) {
-          throw new Error('Producto no encontrado');
-        }
+        if (!res.ok) throw new Error('Producto no encontrado');
         return res.json();
       })
       .then((data) => {
-        if (!data) {
-          throw new Error('Producto no encontrado');
-        }
+        if (!data) throw new Error('Producto no encontrado');
         setProducto(data);
         setLoading(false);
       })
@@ -42,19 +40,29 @@ export default function DetalleProducto() {
   return (
     <div
       className="fondo-estadio"
-      style={{
-        backgroundImage: `url(${fondoEstadio})`
-      }}
+      style={{ backgroundImage: `url(${fondoEstadio})` }}
     >
       <div className="detalle-container">
         <div className="detalle-card">
-          <img src={producto.CAMISETum?.imagen_url || ''} alt={producto.CAMISETum?.descripcion_camiseta} className="detalle-imagen" />
+          <img
+            src={producto.CAMISETum?.imagen_url || ''}
+            alt={producto.CAMISETum?.descripcion_camiseta}
+            className="detalle-imagen"
+          />
           <div className="detalle-info">
             <h2>{producto.CAMISETum?.descripcion_camiseta}</h2>
-            <p className="detalle-desc">Camiseta oficial. Tallas: S, M, L, XL.</p>
+            <p className="detalle-desc">
+              Camiseta oficial. Tallas: S, M, L, XL. Género: {producto.GENERO?.descripcion_genero}
+            </p>
             <p className="detalle-precio">S/ {parseFloat(producto.precio || 0).toFixed(2)}</p>
-            <p className="detalle-stock">Stock: {producto.stock}</p>
-            <button className="btn-agregar">Agregar al carrito 🛒</button>
+            <p className="detalle-stock">Stock disponible: {producto.stock}</p>
+            <button
+              className="btn-agregar"
+              onClick={() => agregarAlCarrito(producto)}
+              disabled={producto.stock === 0}
+            >
+              {producto.stock > 0 ? "Agregar al carrito 🛒" : "Sin stock"}
+            </button>
           </div>
         </div>
       </div>

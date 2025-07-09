@@ -2,12 +2,14 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useContext, useState, useEffect, useRef } from 'react';
 import { UserContext } from '../context/UserContext';
 import { obtenerCategorias } from '../servicios/apiCategorias';
+import { CarritoContexto } from '../context/CarritoContexto';
 import '../estilos/TopBar.css';
 import '../estilos/index.css';
 
 export default function TopBar() {
   const navigate = useNavigate();
   const { usuario, logout } = useContext(UserContext);
+  const { totalCarrito } = useContext(CarritoContexto);
 
   const [mostrarDropdown, setMostrarDropdown] = useState(false);
   const [mostrarMenuUsuario, setMostrarMenuUsuario] = useState(false);
@@ -139,7 +141,7 @@ export default function TopBar() {
         )}
 
         <button className="topbar-btn" onClick={() => navigate('/carrito')}>
-          🛒 Carrito <span className="monto-carrito">$0.00</span>
+          🛒 Carrito <span className="monto-carrito">S/ {totalCarrito.toFixed(2)}</span>
         </button>
 
         {usuario ? (
