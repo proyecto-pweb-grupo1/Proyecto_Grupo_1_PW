@@ -71,6 +71,7 @@ function Rutas() {
         <Route path="admin/agregar-categoria" element={<AgregarCategoria />} />
         <Route path="usuario/password" element={<CambiarPassword />} />
         <Route path="usuario/orden" element={<DetalleOrden />} />
+        <Route path="usuario/datos" element={<DatosUsuario />} />
         {/* Opción alternativa para detalle de orden con id */}
         <Route path="orden/:id" element={<DetalleOrden />} />
 

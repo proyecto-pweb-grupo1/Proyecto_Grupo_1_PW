@@ -16,7 +16,7 @@ export default function TopBar() {
   const [catError, setCatError] = useState(null);
 
   const nombreUsuario = usuario?.nombre || usuario?.correo || "Usuario";
-  const esAdmin = usuario?.rol === 'admin' || usuario?.id_rol === 1;
+  const esAdmin = usuario?.rol === 'admin' || usuario?.id_rol === 2;
 
   useEffect(() => {
     setCatLoading(true);

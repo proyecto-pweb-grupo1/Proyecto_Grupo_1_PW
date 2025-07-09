@@ -3,7 +3,6 @@ import { ORDEN, DETALLE_ORDEN, PRODUCTO } from '../models/index.js';
 
 const router = express.Router();
 
-// GET /api/ordenes/:id – Ver detalle de orden
 router.get('/:id', async (req, res) => {
   const idOrden = req.params.id;
 
@@ -23,7 +22,6 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// DELETE /api/ordenes/:id – Cancelar orden (opcional si aún no enviada)
 router.delete('/:id', async (req, res) => {
   try {
     const orden = await ORDEN.findByPk(req.params.id);

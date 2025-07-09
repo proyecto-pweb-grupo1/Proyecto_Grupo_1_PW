@@ -3,7 +3,6 @@ import { CARRITO, CARRITO_ITEM, PRODUCTO } from '../models/index.js';
 
 const router = express.Router();
 
-// Obtener el carrito de un usuario por su ID
 router.get('/:id_usuario', async (req, res) => {
   const { id_usuario } = req.params;
   try {
@@ -26,13 +25,11 @@ router.get('/:id_usuario', async (req, res) => {
   }
 });
 
-// Agregar producto al carrito
 router.post('/agregar', async (req, res) => {
   const { id_usuario, id_producto, cantidad } = req.body;
   try {
     let carrito = await CARRITO.findOne({ where: { id_usuario } });
 
-    // Si el usuario no tiene carrito aún, lo creamos
     if (!carrito) {
       carrito = await CARRITO.create({ id_usuario });
     }
@@ -53,7 +50,6 @@ router.post('/agregar', async (req, res) => {
   }
 });
 
-// Eliminar un producto del carrito
 router.delete('/eliminar', async (req, res) => {
   const { id_usuario, id_producto } = req.body;
   try {
@@ -70,7 +66,6 @@ router.delete('/eliminar', async (req, res) => {
   }
 });
 
-// Guardar producto para después (no se elimina, solo se marca como guardado)
 router.put('/guardar', async (req, res) => {
   const { id_usuario, id_producto } = req.body;
   try {

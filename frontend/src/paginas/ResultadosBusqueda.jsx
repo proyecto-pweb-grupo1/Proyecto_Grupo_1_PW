@@ -12,7 +12,7 @@ export default function ResultadosBusqueda() {
   const query = useQuery();
   const termino = query.get('q')?.toLowerCase() || '';
   const [productos, setProductos] = useState([]);
-  const [orden, setOrden] = useState('nombre'); // nombre o precio
+  const [orden, setOrden] = useState('nombre');
 
   useEffect(() => {
     const buscar = async () => {

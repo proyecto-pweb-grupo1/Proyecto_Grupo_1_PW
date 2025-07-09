@@ -45,7 +45,6 @@ export const obtenerUsuario = async (req, res) => {
   }
 };
 
-// PUT /api/usuarios/:id
 export const actualizarUsuario = async (req, res) => {
   try {
     await USUARIO.update(req.body, {
@@ -57,7 +56,6 @@ export const actualizarUsuario = async (req, res) => {
   }
 };
 
-// PUT /api/usuarios/:id/password
 export const cambiarPassword = async (req, res) => {
   const { nuevaPassword } = req.body;
   try {

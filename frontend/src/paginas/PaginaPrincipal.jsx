@@ -17,6 +17,7 @@ export default function PaginaPrincipal() {
     setError(null);
     Promise.all([obtenerCategorias(), obtenerProductos()])
       .then(([cats, prods]) => {
+        console.log('🚀 Productos:', prods);
         setCategorias(cats);
         setProductos(prods);
       })
@@ -70,9 +71,9 @@ export default function PaginaPrincipal() {
           <CamisetaCard
             key={item.id_producto}
             id={item.id_producto}
-            club={item.camiseta?.descripcion_camiseta || item.nombre || 'Producto'}
+            club={item.CAMISETum?.descripcion_camiseta || item.nombre || 'Producto'}
             precio={item.precio}
-            img={item.camiseta?.imagen_url || item.imagen_url || '/img/default.png'}
+            img={item.CAMISETum?.imagen_url || item.imagen_url || '/img/default.png'}
           />
         ))}
       </div>
@@ -83,9 +84,9 @@ export default function PaginaPrincipal() {
           <CamisetaCard
             key={item.id_producto}
             id={item.id_producto}
-            club={item.camiseta?.descripcion_camiseta || item.nombre || 'Producto'}
+            club={item.CAMISETum?.descripcion_camiseta || item.nombre || 'Producto'}
             precio={item.precio}
-            img={item.camiseta?.imagen_url || item.imagen_url || '/img/default.png'}
+            img={item.CAMISETum?.imagen_url || item.imagen_url || '/img/default.png'}
           />
         ))}
       </div>

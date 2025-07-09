@@ -3,7 +3,6 @@ import { CATEGORIA } from '../models/index.js';
 
 const router = express.Router();
 
-// GET /api/categorias – Listar todas las categorías
 router.get('/', async (req, res) => {
   try {
     const categorias = await CATEGORIA.findAll();
@@ -14,20 +13,18 @@ router.get('/', async (req, res) => {
   }
 });
 
-// POST /api/categorias – Agregar nueva categoría
 router.post('/', async (req, res) => {
   try {
     const { nombre_categoria, imagen_url } = req.body;
     const nueva = await CATEGORIA.create({ nombre_categoria, imagen_url });
     res.json(nueva);
   } catch (error) {
-    console.error("❌ Error al crear categoría:", error);
+    console.error("Error al crear categoría:", error);
     res.status(500).json({ mensaje: "Error interno" });
   }
 });
 
 
-// PUT /api/categorias/:id – Actualizar categoría
 router.put('/:id', async (req, res) => {
   const { id } = req.params;
   try {
@@ -38,7 +35,6 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-// DELETE /api/categorias/:id – Eliminar categoría
 router.delete('/:id', async (req, res) => {
   const { id } = req.params;
   try {
