@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { obtenerCategorias } from '../servicios/apiCategorias';
 import '../estilos/ListadoCategoriasAdmin.css';
 
 export default function ListadoCategoriasAdmin() {
@@ -7,16 +8,15 @@ export default function ListadoCategoriasAdmin() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchCategorias = async () => {
+    const cargarCategorias = async () => {
       try {
-        const res = await fetch('http://localhost:3000/api/categoria');
-        const data = await res.json();
+        const data = await obtenerCategorias();
         setCategorias(data);
       } catch (error) {
-        console.error('Error al obtener categorías:', error);
+        console.error('Error al obtener categorías:', error.message);
       }
     };
-    fetchCategorias();
+    cargarCategorias();
   }, []);
 
   return (
@@ -28,7 +28,12 @@ export default function ListadoCategoriasAdmin() {
           <p>No hay categorías registradas.</p>
         ) : (
           categorias.map((cat) => (
-            <div key={cat.id_categoria} className="categoria-card">
+            <div
+              key={cat.id_categoria}
+              className="categoria-card"
+              onClick={() => navigate(`/categoria/${cat.id_categoria}`)}
+              style={{ cursor: 'pointer' }}
+            >
               <img src={cat.imagen_url} alt={cat.nombre_categoria} />
               <p>{cat.nombre_categoria}</p>
             </div>

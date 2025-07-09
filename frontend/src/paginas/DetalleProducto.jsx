@@ -58,7 +58,7 @@ export default function DetalleProducto() {
             <p className="detalle-stock">Stock disponible: {producto.stock}</p>
             <button
               className="btn-agregar"
-              onClick={() => agregarAlCarrito(producto)}
+              onClick={() => {agregarAlCarrito(producto); alert("Producto agregado al carrito");}}
               disabled={producto.stock === 0}
             >
               {producto.stock > 0 ? "Agregar al carrito 🛒" : "Sin stock"}

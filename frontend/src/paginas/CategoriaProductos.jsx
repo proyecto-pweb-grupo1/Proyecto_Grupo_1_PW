@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { obtenerProductos } from '../servicios/apiProductos';
-import '../estilos/PaginaPrincipal.css';
+import '../estilos/CategoriaProductos.css';
 import CamisetaCard from '../componentes/CamisetaCard';
 
 const opcionesOrden = [
@@ -20,21 +20,44 @@ export default function CategoriaProductos() {
   const [orden, setOrden] = useState('');
 
   useEffect(() => {
-    setLoading(true);
-    setError(null);
-    obtenerProductos()
-      .then(data => setProductos(data.filter(p => String(p.categoriaId) === String(id))))
-      .catch(err => setError(err.message))
-      .finally(() => setLoading(false));
+    const cargarProductos = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const data = await obtenerProductos();
+        const filtrados = data
+          .filter((p) => String(p?.CAMISETum?.CATEGORIum?.id_categoria) === String(id))
+          .slice(0, 100); 
+        setProductos(filtrados);
+      } catch (err) {
+        setError('Error al cargar productos');
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    cargarProductos();
   }, [id]);
 
-  function ordenarProductos(lista, orden) {
-    if (orden === 'precio_desc') return [...lista].sort((a, b) => b.precio - a.precio);
-    if (orden === 'precio_asc') return [...lista].sort((a, b) => a.precio - b.precio);
-    if (orden === 'nombre_asc') return [...lista].sort((a, b) => a.nombre.localeCompare(b.nombre));
-    if (orden === 'nombre_desc') return [...lista].sort((a, b) => b.nombre.localeCompare(a.nombre));
-    return lista;
-  }
+  const ordenarProductos = (lista, criterio) => {
+    switch (criterio) {
+      case 'precio_desc':
+        return [...lista].sort((a, b) => parseFloat(b.precio) - parseFloat(a.precio));
+      case 'precio_asc':
+        return [...lista].sort((a, b) => parseFloat(a.precio) - parseFloat(b.precio));
+      case 'nombre_asc':
+        return [...lista].sort((a, b) =>
+          a.CAMISETum?.descripcion_camiseta?.localeCompare(b.CAMISETum?.descripcion_camiseta)
+        );
+      case 'nombre_desc':
+        return [...lista].sort((a, b) =>
+          b.CAMISETum?.descripcion_camiseta?.localeCompare(a.CAMISETum?.descripcion_camiseta)
+        );
+      default:
+        return lista;
+    }
+  };
 
   const productosOrdenados = ordenarProductos(productos, orden);
 
@@ -42,28 +65,39 @@ export default function CategoriaProductos() {
     <div className="contenedor-principal" style={{ padding: '2rem', display: 'flex', gap: '2rem' }}>
       <div style={{ minWidth: 220 }}>
         <h3>Ordenar por</h3>
-        <select value={orden} onChange={e => setOrden(e.target.value)} style={{ width: '100%', padding: '0.5rem', borderRadius: 8 }}>
-          {opcionesOrden.map(opt => (
-            <option key={opt.value} value={opt.value}>{opt.label}</option>
+        <select
+          value={orden}
+          onChange={(e) => setOrden(e.target.value)}
+          style={{ width: '100%', padding: '0.5rem', borderRadius: 8 }}
+        >
+          {opcionesOrden.map((opt) => (
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
+            </option>
           ))}
         </select>
       </div>
+
       <div style={{ flex: 1 }}>
         <h2>Productos de la categoría</h2>
         {loading && <p>Cargando productos...</p>}
-        {error && <p style={{color:'red'}}>Error: {error}</p>}
+        {error && <p style={{ color: 'red' }}>{error}</p>}
+
         <div className="grid-camisetas">
           {!loading && !error && productosOrdenados.length > 0 ? (
             productosOrdenados.map((item) => (
               <CamisetaCard
-                key={item.id}
-                id={item.id}
-                club={item.nombre}
+                key={item.id_producto}
+                id={item.id_producto}
+                club={item.CAMISETum?.descripcion_camiseta || 'Sin nombre'}
                 precio={item.precio}
-                img={item.imagen_url}
+                img={item.CAMISETum?.imagen_url}
               />
             ))
-          ) : (!loading && !error && <p>No hay productos en esta categoría.</p>)}
+          ) : (
+            !loading &&
+            !error && <p>No hay productos disponibles en esta categoría.</p>
+          )}
         </div>
       </div>
     </div>

@@ -9,7 +9,7 @@ import '../estilos/index.css';
 export default function TopBar() {
   const navigate = useNavigate();
   const { usuario, logout } = useContext(UserContext);
-  const { totalCarrito } = useContext(CarritoContexto);
+  const { totalCarrito, limpiarCarrito } = useContext(CarritoContexto);
 
   const [mostrarDropdown, setMostrarDropdown] = useState(false);
   const [mostrarMenuUsuario, setMostrarMenuUsuario] = useState(false);
@@ -40,7 +40,6 @@ export default function TopBar() {
     }
   };
 
-  // Menú Usuario
   const abrirMenuUsuario = () => {
     clearTimeout(timeoutUsuarioRef.current);
     setMostrarMenuUsuario(true);
@@ -50,7 +49,6 @@ export default function TopBar() {
     timeoutUsuarioRef.current = setTimeout(() => setMostrarMenuUsuario(false), 300);
   };
 
-  // Menú Categorías
   const abrirMenuCategorias = () => {
     clearTimeout(timeoutCategoriasRef.current);
     setMostrarDropdown(true);
@@ -72,7 +70,6 @@ export default function TopBar() {
           onMouseLeave={cerrarMenuCategorias}
         >
           <button className="topbar-btn">Categorías ⏷</button>
-
           {mostrarDropdown && (
             <div className="dropdown-menu">
               {catLoading && <p className="dropdown-info">Cargando...</p>}
@@ -84,13 +81,13 @@ export default function TopBar() {
                     className="dropdown-item"
                     onClick={() => navigate(`/categoria/${cat.id_categoria}`)}
                   >
-                    {cat.icono_url &&
+                    {cat.icono_url && (
                       <img
                         src={cat.icono_url}
                         alt={cat.nombre_categoria}
                         className="categoria-icono"
                       />
-                    }
+                    )}
                     <span>{cat.nombre_categoria}</span>
                   </button>
                 ))
@@ -162,7 +159,11 @@ export default function TopBar() {
                     <button onClick={() => navigate('/admin/agregar-categoria')}>➕ Agregar Categoría</button>
                   </>
                 )}
-                <button onClick={() => { logout(); navigate('/'); }}>
+                <button onClick={() => {
+                  logout();
+                  limpiarCarrito();
+                  navigate('/');
+                }}>
                   🚪 Cerrar sesión
                 </button>
               </div>

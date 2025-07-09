@@ -5,7 +5,6 @@ import ResultadosBusqueda from "../paginas/ResultadosBusqueda";
 import DetalleProducto from "../paginas/DetalleProducto";
 import Carrito from "../paginas/Carrito";
 import Checkout from "../paginas/Checkout";
-import FinCompra from "../paginas/FinCompra";
 import Login from "../paginas/Login";
 import Register from "../paginas/Register";
 import RecuperarContraseña from "../paginas/RecuperarContraseña";
@@ -27,6 +26,7 @@ import ListaUsuariosAdmin from "../paginas/ListaUsuariosAdmin";
 import DetalleUsuarioAdmin from "../paginas/DetalleUsuarioAdmin";
 import ListaOrdenesAdmin from "../paginas/ListaOrdenesAdmin";
 import DetalleOrdenAdmin from '../paginas/DetalleOrdenAdmin';
+import PedidoCompletado from "../paginas/PedidoCompletado";
 
 
 
@@ -41,7 +41,7 @@ function Rutas() {
         <Route path="detalle/:id" element={<DetalleProducto />} />
         <Route path="carrito" element={<Carrito />} />
         <Route path="checkout" element={<Checkout />} />
-        <Route path="fincompra" element={<FinCompra />} />
+        <Route path="/pedido-completado" element={<PedidoCompletado />} />
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
         <Route path="recuperar" element={<RecuperarContraseña />} />

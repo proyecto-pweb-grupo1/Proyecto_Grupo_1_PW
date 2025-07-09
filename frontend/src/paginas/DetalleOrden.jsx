@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
+import { obtenerDetalleOrden, cancelarOrden } from '../servicios/apiOrden';
 import '../estilos/DetalleOrden.css';
 
 export default function DetalleOrden() {
@@ -19,38 +20,25 @@ export default function DetalleOrden() {
       return;
     }
 
-    const cargarDetalle = async () => {
-      try {
-        const res = await fetch(`http://localhost:3000/api/orden/detalle/${id}`, {
-          headers: { id_usuario: usuario.id_usuario }
-        });
-
-        const data = await res.json();
-        if (res.ok) setOrden(data);
-        else setMensaje('No se encontró la orden');
-      } catch {
-        setMensaje('Error al cargar detalles');
+    const cargar = async () => {
+      const resultado = await obtenerDetalleOrden(id, usuario.id_usuario);
+      if (resultado.success) {
+        setOrden(resultado.data);
+      } else {
+        setMensaje(resultado.mensaje);
       }
     };
 
-    cargarDetalle();
+    cargar();
   }, [id, usuario]);
 
-  const cancelarOrden = async () => {
-    try {
-      const res = await fetch(`http://localhost:3000/api/orden/cancelar/${id}`, {
-        method: 'PUT',
-        headers: { id_usuario: usuario.id_usuario }
-      });
-
-      if (res.ok) {
-        alert('Orden cancelada');
-        navigate('/usuario/ordenes');
-      } else {
-        alert('No se pudo cancelar');
-      }
-    } catch {
-      alert('Error en el servidor');
+  const cancelar = async () => {
+    const resultado = await cancelarOrden(id, usuario.id_usuario);
+    if (resultado.success) {
+      alert('Orden cancelada');
+      navigate('/usuario/ordenes');
+    } else {
+      alert(resultado.mensaje);
     }
   };
 
@@ -125,7 +113,7 @@ export default function DetalleOrden() {
 
       <div className="acciones-orden">
         {!estaCancelada && (
-          <button className="btn-cancelar" onClick={cancelarOrden}>Cancelar Orden</button>
+          <button className="btn-cancelar" onClick={cancelar}>Cancelar Orden</button>
         )}
         <button className="btn-volver" onClick={() => navigate('/')}>Volver al inicio</button>
       </div>
