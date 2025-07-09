@@ -1,6 +1,5 @@
 import '../estilos/EstilosAdmin.css';
 import React, { useEffect, useState } from 'react';
-import categoriasBase from '../data/categorias';
 import '../estilos/AdminCategorias.css';
 
 export default function ListadoCategoriasAdmin() {

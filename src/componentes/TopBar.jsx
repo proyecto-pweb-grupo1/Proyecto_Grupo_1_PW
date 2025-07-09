@@ -94,6 +94,15 @@ export default function TopBar() {
             </svg>
           </button>
         </div>
+        
+        {esAdmin && (
+          <button
+            className="dashboard-admin-btn"
+            onClick={() => navigate('/admin/dashboard')}
+          >
+            🛠️ Dashboard Admin
+          </button>
+        )}
 
         <button className="topbar-btn" onClick={() => navigate('/carrito')}>
           🛒 Carrito <span className="monto-carrito">$0.00</span>

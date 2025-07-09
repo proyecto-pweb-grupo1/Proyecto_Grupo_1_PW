@@ -74,8 +74,16 @@ export default function AdminDashboard() {
       color: "#FF9800",
       descripcion: "Edita datos y permisos de usuarios",
       fondo: "/src/assets/dashboard/bg-usuarios.png"
+    },
+    {
+      nombre: "Categorías",
+      ruta: "/admin/categorias",
+      color: "#3F51B5",
+      descripcion: "Gestiona categorías de productos",
+      fondo: "/src/assets/dashboard/bg-categorias.png"
     }
   ];
+
 
   const metricas = [
     {

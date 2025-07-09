@@ -60,8 +60,10 @@ CREATE TABLE PRODUCTO (
     id_talla INTEGER REFERENCES TALLA(id_talla),
     precio NUMERIC(10,2),
     stock INT,
-    sku VARCHAR(200) UNIQUE
+    sku VARCHAR(200) UNIQUE,
+    activo BOOLEAN DEFAULT TRUE -- nuevo
 );
+
 CREATE TABLE EQUIPO_REGION (
     id_equipo INTEGER REFERENCES EQUIPO(id_equipo),
     id_region INTEGER REFERENCES REGION(id_region),
@@ -81,7 +83,8 @@ CREATE TABLE USUARIO (
     correo VARCHAR(100) UNIQUE,
     password VARCHAR(200),
     activo BOOLEAN DEFAULT TRUE,
-    id_rol INT REFERENCES ROL(id_rol)
+    id_rol INT REFERENCES ROL(id_rol),
+    fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- nuevo
 );
 
 CREATE TABLE DIRECCION (
@@ -111,6 +114,61 @@ CREATE TABLE CARRITO_ITEM (
 CREATE TABLE METODO_PAGO (
     id_metodo_pago INT PRIMARY KEY,
     nombre_metodo VARCHAR(30) UNIQUE
+);
+
+-- ############# NUEVAS TABLAS PARA FUNCIONALIDAD ECOMMERCE ############## --
+CREATE TABLE METODO_ENVIO ( -- nuevo
+    id_metodo_envio INT PRIMARY KEY,
+    nombre_envio VARCHAR(50) UNIQUE,
+    costo NUMERIC(10,2),
+    descripcion VARCHAR(200)
+);
+
+CREATE TABLE ESTADO_ORDEN ( -- nuevo
+    id_estado_orden INT PRIMARY KEY,
+    nombre_estado VARCHAR(30) UNIQUE
+);
+
+CREATE TABLE ORDEN ( -- nuevo
+    id_orden SERIAL PRIMARY KEY,
+    id_usuario INT REFERENCES USUARIO(id_usuario),
+    id_direccion INT REFERENCES DIRECCION(id_direccion),
+    id_metodo_pago INT REFERENCES METODO_PAGO(id_metodo_pago),
+    id_metodo_envio INT REFERENCES METODO_ENVIO(id_metodo_envio),
+    id_estado_orden INT REFERENCES ESTADO_ORDEN(id_estado_orden),
+    total NUMERIC(10,2),
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE DETALLE_ORDEN ( -- nuevo
+    id_detalle SERIAL PRIMARY KEY,
+    id_orden INT REFERENCES ORDEN(id_orden),
+    id_producto INT REFERENCES PRODUCTO(id_producto),
+    cantidad INT,
+    precio_unitario NUMERIC(10,2),
+    subtotal NUMERIC(10,2)
+);
+
+CREATE TABLE SERIE ( -- nuevo
+    id_serie SERIAL PRIMARY KEY,
+    nombre_serie VARCHAR(100) UNIQUE,
+    descripcion VARCHAR(200),
+    imagen_url VARCHAR(1000)
+);
+
+CREATE TABLE SERIE_PRODUCTO ( -- nuevo
+    id_serie INT REFERENCES SERIE(id_serie),
+    id_producto INT REFERENCES PRODUCTO(id_producto),
+    PRIMARY KEY (id_serie, id_producto)
+);
+
+-- ############# OPCIONAL: LOGS/VENTAS/DASHBOARD ############## --
+CREATE TABLE LOG_ACTIVIDAD ( -- nuevo (opcional)
+    id_log SERIAL PRIMARY KEY,
+    id_usuario INT REFERENCES USUARIO(id_usuario),
+    tipo_actividad VARCHAR(100),
+    descripcion VARCHAR(200),
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 ------------------------------------------ INSERTS ------------------------------------------

@@ -1,7 +1,6 @@
 import '../estilos/EstilosAdmin.css';
 import React, { useState } from 'react';
 import { estaLogueado } from '../helpers/auth';
-import usuarios from '../data/usuarios';
 import '../estilos/CambiarPassword.css';
 
 export default function CambiarPassword() {
