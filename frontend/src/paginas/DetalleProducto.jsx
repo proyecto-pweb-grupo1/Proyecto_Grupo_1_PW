@@ -18,12 +18,12 @@ function DetalleProducto() {
     obtenerProductoPorId(id)
       .then((data) => {
         setProducto(data);
-        if (data && data.camiseta?.id_categoria) {
+        if (data && data.CAMISETum?.id_categoria) {
           obtenerProductos()
             .then((todos) => {
               const similaresFiltrados = todos.filter(
                 (item) =>
-                  item.camiseta?.id_categoria === data.camiseta.id_categoria &&
+                  item.CAMISETum?.id_categoria === data.CAMISETum.id_categoria &&
                   item.id_producto !== data.id_producto
               );
               setSimilares(similaresFiltrados);
@@ -57,9 +57,9 @@ function DetalleProducto() {
     >
       <div className="detalle-container">
         <div className="detalle-card">
-          <img src={producto.camiseta?.imagen_url || ''} alt={producto.camiseta?.descripcion_camiseta} className="detalle-imagen" />
+          <img src={producto.CAMISETum?.imagen_url || ''} alt={producto.CAMISETum?.descripcion_camiseta} className="detalle-imagen" />
           <div className="detalle-info">
-            <h2>{producto.camiseta?.descripcion_camiseta}</h2>
+            <h2>{producto.CAMISETum?.descripcion_camiseta}</h2>
             <p className="detalle-desc">Camiseta oficial. Tallas: S, M, L, XL.</p>
             <p className="detalle-precio">${producto.precio}</p>
             <p className="detalle-stock">Stock: {producto.stock}</p>
@@ -72,8 +72,8 @@ function DetalleProducto() {
           <div className="similares-grid">
             {similares.length > 0 ? similares.map((item) => (
               <div className="similar-card" key={item.id_producto}>
-                <img src={item.camiseta?.imagen_url || ''} alt={item.camiseta?.descripcion_camiseta} />
-                <p>{item.camiseta?.descripcion_camiseta}</p>
+                <img src={item.CAMISETum?.imagen_url || ''} alt={item.CAMISETum?.descripcion_camiseta} />
+                <p>{item.CAMISETum?.descripcion_camiseta}</p>
                 <p>${item.precio}</p>
                 <button onClick={() => navigate(`/detalle/${item.id_producto}`)}>Ver detalle</button>
               </div>

@@ -4,10 +4,11 @@ import * as ctrl from '../controladores/usuariosControlador.js';
 
 const router = Router();
 
-router.get('/', ctrl.listarUsuarios);
-router.get('/:id', ctrl.obtenerUsuario);
-router.post('/', ctrl.crearUsuario);
-router.put('/:id', ctrl.actualizarUsuario);
-router.delete('/:id', ctrl.eliminarUsuario);
+router.post('/', usuarioCtrl.crearUsuario);
+router.post('/login', usuarioCtrl.loginUsuario);
+
+router.get('/:id', usuarioCtrl.obtenerUsuario);
+router.put('/:id', usuarioCtrl.actualizarUsuario);
+router.put('/:id/password', usuarioCtrl.cambiarPassword);
 
 export default router;

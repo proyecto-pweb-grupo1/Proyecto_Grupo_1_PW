@@ -4,14 +4,27 @@ import * as ctrl from '../controladores/datosReferenciaControlador.js';
 
 const router = Router();
 
-router.get('/paises', ctrl.listarPaises);
-router.get('/regiones', ctrl.listarRegiones);
-router.get('/tipos_club', ctrl.listarTipoClubs);
-router.get('/generos', ctrl.listarGeneros);
-router.get('/tallas', ctrl.listarTallas);
-router.get('/tipos_camiseta', ctrl.listarTiposCamiseta);
-router.get('/marcas', ctrl.listarMarcas);
-router.get('/temporadas', ctrl.listarTemporadas);
-router.get('/categorias', ctrl.listarCategorias);
+router.get('/productos', catalogoCtrl.obtenerProductos);
+router.get('/productos/:id', catalogoCtrl.obtenerProductoPorId);
+router.post('/productos', catalogoCtrl.crearProducto);
+router.put('/productos/:id', catalogoCtrl.editarProducto);
+router.delete('/productos/:id', catalogoCtrl.eliminarProducto);
+
+router.get('/equipos', catalogoCtrl.obtenerEquipos);
+router.post('/equipos', catalogoCtrl.crearEquipo);
+
+router.get('/marcas', catalogoCtrl.obtenerMarcas);
+router.post('/marcas', catalogoCtrl.crearMarca);
+
+router.get('/temporadas', catalogoCtrl.obtenerTemporadas);
+router.post('/temporadas', catalogoCtrl.crearTemporada);
+
+router.get('/paises', catalogoCtrl.obtenerPaises);
+
+router.get('/regiones', catalogoCtrl.obtenerRegiones);
+
+router.get('/tipo-club', catalogoCtrl.obtenerTipoClubes);
+
+router.post('/equipo-region', catalogoCtrl.crearEquipoRegion);
 
 export default router;

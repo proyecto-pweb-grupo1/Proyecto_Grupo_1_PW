@@ -44,13 +44,25 @@ export async function actualizarUsuario(req, res) {
   }
 }
 
-// DELETE /api/usuarios/:id
-export async function eliminarUsuario(req, res) {
+export const actualizarUsuario = async (req, res) => {
   try {
-    const usuario = await USUARIO.findByPk(req.params.id);
-    if (!usuario) return res.status(404).json({ error: "No existe el usuario" });
-    await usuario.destroy();
-    res.json({ mensaje: "Usuario eliminado" });
+    await USUARIO.update(req.body, {
+      where: { id_usuario: req.params.id }
+    });
+    res.json({ mensaje: 'Datos actualizados correctamente' });
+  } catch (error) {
+    res.status(500).json({ error: 'Error al actualizar datos' });
+  }
+};
+
+export const cambiarPassword = async (req, res) => {
+  const { nuevaPassword } = req.body;
+  try {
+    await USUARIO.update(
+      { password: nuevaPassword },
+      { where: { id_usuario: req.params.id } }
+    );
+    res.json({ mensaje: 'Contraseña actualizada correctamente' });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
