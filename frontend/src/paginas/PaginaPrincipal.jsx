@@ -87,6 +87,7 @@ export default function PaginaPrincipal() {
               club={item.CAMISETum?.descripcion_camiseta || 'Producto'}
               precio={item.precio}
               img={item.CAMISETum?.imagen_url || '/img/default.png'}
+  
             />
           ))}
         </div>
