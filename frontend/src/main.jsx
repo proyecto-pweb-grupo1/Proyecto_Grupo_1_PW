@@ -7,8 +7,8 @@ if (!localStorage.getItem('usuarios')) {
   localStorage.setItem('usuarios', JSON.stringify(usuarios));
 }
 
-ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <BrowserRouter>
     <App />
-  </React.StrictMode>
+  </BrowserRouter>
 );

@@ -9,20 +9,34 @@ import { obtenerCategorias, obtenerProductos } from '../servicios/apiProductos';
 export default function PaginaPrincipal() {
   const [categorias, setCategorias] = useState([]);
   const [productos, setProductos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    obtenerCategorias().then(setCategorias).catch(console.error);
-    obtenerProductos().then(setProductos).catch(console.error);
+    setLoading(true);
+    setError(null);
+    Promise.all([obtenerCategorias(), obtenerProductos()])
+      .then(([cats, prods]) => {
+        setCategorias(cats);
+        setProductos(prods);
+      })
+      .catch(err => setError(err.message))
+      .finally(() => setLoading(false));
   }, []);
 
-  const categoriasDestacadas = categorias.slice(0, 5);
-  const productosTop = productos
-    .sort((a, b) => b.ventas - a.ventas) // asumiendo campo ventas
+  const categoriasDestacadas = [...categorias].slice(0, 5);
+  const productosTop = [...productos]
+    .filter(p => p.activo !== false)
+    .sort((a, b) => b.ventas - a.ventas)
     .slice(0, 12);
 
-  const productosNuevos = productos
+  const productosNuevos = [...productos]
+    .filter(p => p.activo !== false)
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
     .slice(0, 6);
+
+  if (loading) return <p style={{ padding: '2rem' }}>Cargando tienda...</p>;
+  if (error) return <p style={{ color: 'red', padding: '2rem' }}>Error: {error}</p>;
 
   return (
     <div
@@ -35,6 +49,7 @@ export default function PaginaPrincipal() {
       }}
     >
       <BannerCarousel />
+
       <section className="explora-categorias">
         <h2 className="titulo-explorar-categoria">Categorías destacadas</h2>
         <div className="categorias-grid">
@@ -55,9 +70,9 @@ export default function PaginaPrincipal() {
           <CamisetaCard
             key={item.id_producto}
             id={item.id_producto}
-            club={item.camiseta?.descripcion_camiseta}
+            club={item.camiseta?.descripcion_camiseta || item.nombre || 'Producto'}
             precio={item.precio}
-            img={item.camiseta?.imagen_url}
+            img={item.camiseta?.imagen_url || item.imagen_url || '/img/default.png'}
           />
         ))}
       </div>
@@ -68,9 +83,9 @@ export default function PaginaPrincipal() {
           <CamisetaCard
             key={item.id_producto}
             id={item.id_producto}
-            club={item.camiseta?.descripcion_camiseta}
+            club={item.camiseta?.descripcion_camiseta || item.nombre || 'Producto'}
             precio={item.precio}
-            img={item.camiseta?.imagen_url}
+            img={item.camiseta?.imagen_url || item.imagen_url || '/img/default.png'}
           />
         ))}
       </div>

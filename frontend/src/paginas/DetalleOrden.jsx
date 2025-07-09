@@ -1,82 +1,115 @@
-import '../estilos/EstilosAdmin.css';
-import React from 'react';
-import { estaLogueado } from '../helpers/auth';
+import React, { useEffect, useState, useContext } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { UserContext } from '../context/UserContext';
+import '../estilos/DetalleOrden.css';
 
 export default function DetalleOrden() {
-  if (!estaLogueado()) {
-    return <h2 style={{ padding: '2rem', color: 'red' }}>Debes iniciar sesión para ver tus órdenes.</h2>;
-  }
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { usuario } = useContext(UserContext);
+  const [orden, setOrden] = useState(null);
+  const [mensaje, setMensaje] = useState('');
 
-  const orden = {
-    id: 'ORD-2025-0008',
-    fecha: '29/05/2025',
-    estado: 'Procesado',
-    productos: [
-      {
-        id: 1,
-        nombre: 'Camiseta FC Barcelona Local 2024',
-        imagen: 'https://th.bing.com/th/id/OIP.0c-Bi9Q_81qLW_NzFDMRhgHaI4?rs=1&pid=ImgDetMain',
-        cantidad: 1,
-        precio: 199.90
-      },
-      {
-        id: 2,
-        nombre: 'Camiseta Argentina Campeón 2022',
-        imagen: 'https://th.bing.com/th/id/OIP.jdXFXD2SN5JzX0y3ExYz6gHaHa?rs=1&pid=ImgDetMain',
-        cantidad: 2,
-        precio: 179.50
+  useEffect(() => {
+    const cargarDetalle = async () => {
+      if (!usuario?.id_usuario) {
+        setMensaje('Usuario no autenticado');
+        return;
       }
-    ]
+
+      try {
+        const res = await fetch(`http://localhost:3000/api/ordenes/${id}`);
+        if (res.ok) {
+          const data = await res.json();
+          setOrden(data);
+        } else {
+          setMensaje('No hay orden encontrada');
+        }
+      } catch (error) {
+        setMensaje('Error al cargar detalles de la orden');
+      }
+    };
+
+    cargarDetalle();
+  }, [id, usuario]);
+
+  const cancelarOrden = async () => {
+    try {
+      const res = await fetch(`http://localhost:3000/api/ordenes/${id}`, {
+        method: 'DELETE'
+      });
+      if (res.ok) {
+        setMensaje('✅ Orden cancelada exitosamente');
+        navigate('/usuario/ordenes');
+      } else {
+        setMensaje('❌ No se pudo cancelar la orden');
+      }
+    } catch {
+      setMensaje('❌ Error en el servidor al cancelar');
+    }
   };
 
-  const total = orden.productos.reduce((acc, prod) => acc + prod.precio * prod.cantidad, 0);
+  if (mensaje) {
+    return (
+      <div className="detalle-orden-container">
+        <div className="mensaje-vacio">
+          <h2>{mensaje}</h2>
+          <button className="btn-volver" onClick={() => navigate('/')}>
+            Volver al inicio
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!orden) return null;
 
   return (
-    <div className="order-detail">
+    <div className="detalle-orden-container">
       <h2>Detalle de Orden</h2>
 
-      <div className="detalle-info">
-        <p><strong>Número de Orden:</strong> {orden.id}</p>
-        <p><strong>Fecha de Compra:</strong> {orden.fecha}</p>
-        <p><strong>Estado:</strong> {orden.estado}</p>
+      <div className="info-orden">
+        <p><strong>ID:</strong> {orden.id_orden}</p>
+        <p><strong>Fecha:</strong> {new Date(orden.fecha).toLocaleString()}</p>
+        <p><strong>Estado:</strong> {orden.ESTADO_ORDEN?.nombre_estado}</p>
       </div>
 
-      <h3>Productos</h3>
-      <table className="table">
-        <thead>
-          <tr>
-            <th>Imagen</th>
-            <th>Producto</th>
-            <th>Cantidad</th>
-            <th>Precio Unitario</th>
-            <th>Subtotal</th>
-          </tr>
-        </thead>
-        <tbody>
-          {orden.productos.map((prod) => (
-            <tr key={prod.id}>
-              <td><img src={prod.imagen} alt={prod.nombre} style={{ width: '60px', borderRadius: '8px' }} /></td>
-              <td>{prod.nombre}</td>
-              <td>{prod.cantidad}</td>
-              <td>S/ {prod.precio.toFixed(2)}</td>
-              <td>S/ {(prod.precio * prod.cantidad).toFixed(2)}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {orden.detalles.length === 0 ? (
+        <div className="mensaje-vacio">
+          <p>No hay productos en esta orden.</p>
+        </div>
+      ) : (
+        <>
+          <table className="tabla-detalle">
+            <thead>
+              <tr>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Precio Unitario</th>
+                <th>Subtotal</th>
+              </tr>
+            </thead>
+            <tbody>
+              {orden.detalles.map((item) => (
+                <tr key={item.id_detalle}>
+                  <td>{item.PRODUCTO?.CAMISETA?.descripcion_camiseta}</td>
+                  <td>{item.cantidad}</td>
+                  <td>S/ {item.precio_unitario}</td>
+                  <td>S/ {item.subtotal}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
 
-      <div style={{ textAlign: 'right', marginTop: '20px' }}>
-        <h3>Total: S/ {total.toFixed(2)}</h3>
-      </div>
+          <div className="total-orden">
+            <strong>Total: S/ {orden.total}</strong>
+          </div>
+        </>
+      )}
 
-      <div style={{ marginTop: '30px' }}>
-        <button
-          className="btn cancelar"
-          onClick={() => alert('La orden ha sido cancelada.')}
-        >
-          Cancelar Orden
-        </button>
-
+      <div className="acciones-orden">
+        <button className="btn-cancelar" onClick={cancelarOrden}>Cancelar Orden</button>
+        <button className="btn-volver" onClick={() => navigate('/')}>Volver al inicio</button>
       </div>
     </div>
   );

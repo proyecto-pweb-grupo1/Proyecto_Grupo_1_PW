@@ -7,6 +7,7 @@ import usuariosRoutes from './rutas/usuariosRoutes.js';
 import productosRutas from './rutas/productos.js';
 import carritoRutas from "./rutas/carritoRoutes.js";
 import categoriasRutas from './rutas/categorias.js';
+import ordenesRoutes from './rutas/ordenesRoutes.js';
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use("/api/usuarios", usuariosRoutes);
 app.use('/api/categorias', categoriasRutas);
 app.use("/api/productos", productosRutas);
 app.use("/api/carrito", carritoRutas);
+app.use('/api/ordenes', ordenesRoutes);
 
 const PORT = process.env.PORT || 3000;
 
