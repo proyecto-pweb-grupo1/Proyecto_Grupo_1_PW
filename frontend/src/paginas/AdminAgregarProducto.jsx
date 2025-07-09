@@ -4,6 +4,33 @@ import { motion } from "framer-motion";
 import { UserContext } from "../context/UserContext";
 import "../estilos/AdminProductos.css";
 
+function generarSKU({ equipos, temporadas, tiposCamiseta, generos, tallas, form }) {
+  const equipoObj = equipos.find(e => e.id_equipo === Number(form.id_equipo));
+  const temporadaObj = temporadas.find(t => t.id_temporada === Number(form.id_temporada));
+  const tipoObj = tiposCamiseta.find(t => t.id_tipo_camiseta === Number(form.id_tipo_camiseta));
+  const generoObj = generos.find(g => g.id_genero === Number(form.id_genero));
+  const tallaObj = tallas.find(t => t.id_talla === Number(form.id_talla));
+
+  if (!equipoObj || !temporadaObj || !tipoObj || !generoObj || !tallaObj) return "";
+
+  const normalizar = (texto, guion = false) =>
+    texto
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-zA-Z0-9\s]/g, '')
+      .trim()
+      .split(/\s+/).join(guion ? '-' : '')
+      .toUpperCase();
+
+  const nombreEquipoSKU = normalizar(equipoObj.nombre_equipo, true);
+
+  const temporadaSKU = normalizar(temporadaObj.descripcion_temporada);
+  const tipoSKU = normalizar(tipoObj.descripcion_tipo);
+  const generoSKU = normalizar(generoObj.descripcion_genero);
+  const tallaSKU = normalizar(tallaObj.descripcion_talla);
+
+  return `${nombreEquipoSKU}_${temporadaSKU}_${tipoSKU}_${generoSKU}_${tallaSKU}`;
+}
+
 export default function AdminAgregarProducto() {
   const navigate = useNavigate();
   const { usuario } = useContext(UserContext);
@@ -54,8 +81,31 @@ export default function AdminAgregarProducto() {
     cargarDatos();
   }, []);
 
+  useEffect(() => {
+    if (form.id_equipo && form.id_temporada && form.id_tipo_camiseta && form.id_genero && form.id_talla) {
+      const nuevoSKU = generarSKU({
+        equipos,
+        temporadas,
+        tiposCamiseta,
+        generos,
+        tallas,
+        form
+      });
+      setForm(f => ({ ...f, sku: nuevoSKU }));
+    } else {
+      setForm(f => ({ ...f, sku: "" }));
+    }
+  }, [form.id_equipo, form.id_temporada, form.id_tipo_camiseta, form.id_genero, form.id_talla, equipos, temporadas, tiposCamiseta, generos, tallas]);
+
+
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    let { name, value } = e.target;
+    if (name === "imagen_url") {
+      if (!value.startsWith("https://corsproxy.io/?") && value.length > 0) {
+        value = "https://corsproxy.io/?";
+      }
+    }
+    setForm({ ...form, [name]: value });
   };
 
 const handleSubmit = async (e) => {
@@ -115,7 +165,7 @@ const handleSubmit = async (e) => {
     <div className="admin-productos-bg">
       {sidebarOpen && (
         <aside className="admin-dashboard-sidebar">
-          <img src="/src/assets/dashboard/logo-dashboard.png" alt="Logo" className="sidebar-logo" />
+          <img src="/src/assets/branding/logo-principal.png" alt="Logo" className="sidebar-logo" />
           <nav>
             {opcionesSidebar.map((op) => (
               <a key={op.nombre} href={op.ruta} className="sidebar-link">
@@ -145,7 +195,18 @@ const handleSubmit = async (e) => {
 
           <div className="form-row">
             <label>SKU</label>
-            <input type="text" name="sku" value={form.sku} onChange={handleChange} required />
+            <input
+              type="text"
+              name="sku"
+              value={form.sku}
+              readOnly
+              style={{
+                background: form.sku ? "#8cffbcff" : "#fed2d2ff",
+                cursor: "not-allowed",
+              }}
+              tabIndex={-1}
+            />
+            {!form.sku && <span style={{ color: "#d00", fontSize: "0.8em" }}>Selecciona todas las opciones para generar el SKU</span>}
             <label>Descripción</label>
             <input type="text" name="descripcion_camiseta" value={form.descripcion_camiseta} onChange={handleChange} required />
           </div>

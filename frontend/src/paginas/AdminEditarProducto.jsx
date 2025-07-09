@@ -132,7 +132,7 @@ export default function AdminEditarProducto() {
             exit={{ x: -220, opacity: 0 }}
             transition={{ duration: 0.3, type: "spring" }}
           >
-            <img src="/src/assets/dashboard/logo-dashboard.png" alt="Logo" className="sidebar-logo" />
+            <img src="/src/assets/branding/logo-principal.png" alt="Logo" className="sidebar-logo" />
             <nav>
               {opcionesSidebar.map((op) => (
                 <a key={op.nombre} href={op.ruta} className="sidebar-link">
@@ -160,7 +160,6 @@ export default function AdminEditarProducto() {
           transition={{ duration: 0.7, type: "spring" }}
           className="admin-productos-header"
         >
-          <img src="/src/assets/dashboard/logo-dashboard.png" alt="Logo" className="admin-dashboard-logo" />
           <h1>Editar Producto</h1>
           <p>Modifica los campos del producto</p>
         </motion.header>

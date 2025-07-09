@@ -3,6 +3,7 @@ import { useContext, useState, useEffect, useRef } from 'react';
 import { UserContext } from '../context/UserContext';
 import { obtenerCategorias } from '../servicios/apiCategorias';
 import { CarritoContexto } from '../context/CarritoContexto';
+import logoBanner from '../assets/branding/logo-banner-topbar.png';
 import '../estilos/TopBar.css';
 import '../estilos/index.css';
 
@@ -103,8 +104,20 @@ export default function TopBar() {
       </div>
 
       <div className="topbar-center">
-        <h1 className="titulo-header">Tienda de Camisetas Gepeto</h1>
+        <img
+          src={logoBanner}
+          alt="Logo Tienda"
+          className="logo-banner"
+          style={{
+            height: '60px',
+            maxWidth: '100%',
+            objectFit: 'contain',
+            display: 'block',
+            margin: '0 auto'
+          }}
+        />
       </div>
+
 
       <div className="topbar-right">
         <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
