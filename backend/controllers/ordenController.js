@@ -2,6 +2,7 @@ import { ORDEN, DETALLE_ORDEN, DIRECCION, METODO_PAGO, METODO_ENVIO, ESTADO_ORDE
 import { sequelize } from "../config/database.js";
 import { CAMISETA } from "../models/index.js";
 
+
 export async function listarOrdenesPorUsuario(req, res) {
   const { id_usuario } = req.params;
 
@@ -108,7 +109,7 @@ export async function crearOrden(req, res) {
 
       const carrito = await CARRITO.findOne({ where: { id_usuario } });
       if (carrito) {
-        await CARRITO_ITEM.destroy({ where: { id_carrito: carrito.id_carrito }, transaction: t });
+        await CARRITO_ITEM.destroy({ where: { id_carrito: carrito.id_carrito, guardado: false  }, transaction: t });
       }
 
       return nuevaOrden;

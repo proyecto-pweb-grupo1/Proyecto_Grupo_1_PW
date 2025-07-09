@@ -1,47 +1,63 @@
-import { CARRITO, CARRITO_ITEM, PRODUCTO } from "../models/index.js";
+import { CAMISETA, CARRITO, CARRITO_ITEM, PRODUCTO } from "../models/index.js";
 
 export async function verCarrito(req, res) {
-  const { id } = req.params;
+  const id_usuario = req.usuario.id_usuario;
 
-  let carrito = await CARRITO.findOne({ where: { id_usuario: id } });
+  let carrito = await CARRITO.findOne({ where: { id_usuario } });
   if (!carrito) {
-    carrito = await CARRITO.create({ id_usuario: id });
+    carrito = await CARRITO.create({ id_usuario });
   }
 
-  const carritoCompleto = await CARRITO.findOne({
-    where: { id_usuario: id },
-    include: {
-      model: CARRITO_ITEM,
-      where: { guardado: false },
-      required: false,
-      include: [PRODUCTO]
+const itemsCarrito = await CARRITO_ITEM.findAll({
+  where: { id_carrito: carrito.id_carrito, guardado: false },
+  include: [
+    {
+      model: PRODUCTO,
+      include: [CAMISETA] 
     }
+  ]
+});
+
+
+  const itemsGuardados = await CARRITO_ITEM.findAll({
+    where: { id_carrito: carrito.id_carrito, guardado: true },
+    include: [PRODUCTO]
   });
 
-  res.json(carritoCompleto);
+  const total = itemsCarrito.reduce((acc, item) => {
+    const precio = parseFloat(item.PRODUCTO?.precio || 0);
+    return acc + precio * item.cantidad;
+  }, 0);
+
+  res.json({
+    id_carrito: carrito.id_carrito,
+    carrito: itemsCarrito,
+    guardados: itemsGuardados,
+    total
+  });
 }
 
 export async function agregarAlCarrito(req, res) {
-  const { id } = req.params; 
+  const id_usuario = req.usuario.id_usuario;
   const { id_producto, cantidad } = req.body;
 
   if (!id_producto || !cantidad || cantidad < 1) {
     return res.status(400).json({ mensaje: "Datos inválidos" });
   }
 
-  const [carrito] = await CARRITO.findOrCreate({ where: { id_usuario: id } });
+  const [carrito] = await CARRITO.findOrCreate({ where: { id_usuario } });
 
   const itemGuardado = await CARRITO_ITEM.findOne({
     where: { id_carrito: carrito.id_carrito, id_producto, guardado: true }
   });
 
   if (itemGuardado) {
-    const itemEnCarrito = await CARRITO_ITEM.findOne({
+    const itemCarrito = await CARRITO_ITEM.findOne({
       where: { id_carrito: carrito.id_carrito, id_producto, guardado: false }
     });
 
-    if (itemEnCarrito) {
-      await itemEnCarrito.update({ cantidad: itemEnCarrito.cantidad + cantidad });
+    if (itemCarrito) {
+      await itemCarrito.update({ cantidad: itemCarrito.cantidad + cantidad });
     } else {
       await CARRITO_ITEM.create({
         id_carrito: carrito.id_carrito,
@@ -51,7 +67,7 @@ export async function agregarAlCarrito(req, res) {
       });
     }
 
-    await itemGuardado.destroy(); 
+    await itemGuardado.destroy();
     return res.json({ mensaje: "Producto movido desde guardados al carrito" });
   }
 
@@ -60,9 +76,7 @@ export async function agregarAlCarrito(req, res) {
   });
 
   if (existente) {
-    await existente.update({
-      cantidad: existente.cantidad + cantidad
-    });
+    await existente.update({ cantidad: existente.cantidad + cantidad });
     return res.json({ mensaje: "Cantidad actualizada en el carrito" });
   }
 
@@ -77,15 +91,19 @@ export async function agregarAlCarrito(req, res) {
 }
 
 export async function actualizarCantidad(req, res) {
-  const { id_carrito, id_producto } = req.params;
+  const id_usuario = req.usuario.id_usuario;
+  const { id_producto } = req.params;
   const { cantidad } = req.body;
 
   if (!cantidad || cantidad < 1) {
     return res.status(400).json({ mensaje: "Cantidad inválida" });
   }
 
+  const carrito = await CARRITO.findOne({ where: { id_usuario } });
+  if (!carrito) return res.status(404).json({ mensaje: "Carrito no encontrado" });
+
   const item = await CARRITO_ITEM.findOne({
-    where: { id_carrito, id_producto, guardado: false }
+    where: { id_carrito: carrito.id_carrito, id_producto, guardado: false }
   });
 
   if (!item) {
@@ -97,10 +115,14 @@ export async function actualizarCantidad(req, res) {
 }
 
 export async function eliminarDelCarrito(req, res) {
-  const { id_carrito, id_producto } = req.params;
+  const id_usuario = req.usuario.id_usuario;
+  const { id_producto } = req.params;
+
+  const carrito = await CARRITO.findOne({ where: { id_usuario } });
+  if (!carrito) return res.status(404).json({ mensaje: "Carrito no encontrado" });
 
   const item = await CARRITO_ITEM.findOne({
-    where: { id_carrito, id_producto, guardado: false }
+    where: { id_carrito: carrito.id_carrito, id_producto, guardado: false }
   });
 
   if (!item) {

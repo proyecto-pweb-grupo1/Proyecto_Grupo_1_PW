@@ -1,8 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { obtenerProductosPorCategoria } from '../servicios/apiProductos';
-import { obtenerCategorias } from '../servicios/apiCategorias';
-import '../estilos/PaginaPrincipal.css';
+import { obtenerProductos } from '../servicios/apiProductos';
+import '../estilos/CategoriaProductos.css';
 import CamisetaCard from '../componentes/CamisetaCard';
 
 const opcionesOrden = [
@@ -21,6 +20,44 @@ export default function CategoriaProductos() {
   const [orden, setOrden] = useState('nombre');
 
   useEffect(() => {
+    const cargarProductos = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const data = await obtenerProductos();
+        const filtrados = data
+          .filter((p) => String(p?.CAMISETum?.CATEGORIum?.id_categoria) === String(id))
+          .slice(0, 100); 
+        setProductos(filtrados);
+      } catch (err) {
+        setError('Error al cargar productos');
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    cargarProductos();
+  }, [id]);
+
+  const ordenarProductos = (lista, criterio) => {
+    switch (criterio) {
+      case 'precio_desc':
+        return [...lista].sort((a, b) => parseFloat(b.precio) - parseFloat(a.precio));
+      case 'precio_asc':
+        return [...lista].sort((a, b) => parseFloat(a.precio) - parseFloat(b.precio));
+      case 'nombre_asc':
+        return [...lista].sort((a, b) =>
+          a.CAMISETum?.descripcion_camiseta?.localeCompare(b.CAMISETum?.descripcion_camiseta)
+        );
+      case 'nombre_desc':
+        return [...lista].sort((a, b) =>
+          b.CAMISETum?.descripcion_camiseta?.localeCompare(a.CAMISETum?.descripcion_camiseta)
+        );
+      default:
+        return lista;
+    }
+  };
     const cargarDatos = async () => {
       setLoading(true);
       setError(null);
@@ -56,6 +93,15 @@ export default function CategoriaProductos() {
     <div className="contenedor-principal" style={{ padding: '2rem', display: 'flex', gap: '2rem' }}>
       <div style={{ minWidth: 220 }}>
         <h3>Ordenar por</h3>
+        <select
+          value={orden}
+          onChange={(e) => setOrden(e.target.value)}
+          style={{ width: '100%', padding: '0.5rem', borderRadius: 8 }}
+        >
+          {opcionesOrden.map((opt) => (
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
+            </option>
         <select 
           value={orden} 
           onChange={e => handleOrdenChange(e.target.value)} 
@@ -66,6 +112,7 @@ export default function CategoriaProductos() {
           ))}
         </select>
       </div>
+
       <div style={{ flex: 1 }}>
         <h2>
           {categoria ? `${categoria.nombre_categoria}` : `Productos de la categoría`}
@@ -73,20 +120,29 @@ export default function CategoriaProductos() {
         </h2>
         
         {loading && <p>Cargando productos...</p>}
+        {error && <p style={{ color: 'red' }}>{error}</p>}
+
         {error && <p style={{color:'red'}}>Error: {error}</p>}
         
         <div className="grid-camisetas">
           {!loading && !error && productos.length > 0 ? (
             productos.map((item) => (
               <CamisetaCard
+                key={item.id_producto}
+                id={item.id_producto}
+                club={item.CAMISETum?.descripcion_camiseta || 'Sin nombre'}
                 key={item.esGrupo ? `grupo-${item.id_camiseta}` : item.id_producto}
                 id={item.id_producto}
                 club={item.esGrupo ? item.descripcion_camiseta : item.CAMISETum?.descripcion_camiseta}
                 precio={item.precio}
+                img={item.CAMISETum?.imagen_url}
                 img={item.esGrupo ? item.imagen_url : item.CAMISETum?.imagen_url}
               />
             ))
-          ) : (!loading && !error && <p>No hay productos en esta categoría.</p>)}
+          ) : (
+            !loading &&
+            !error && <p>No hay productos disponibles en esta categoría.</p>
+          )}
         </div>
       </div>
     </div>

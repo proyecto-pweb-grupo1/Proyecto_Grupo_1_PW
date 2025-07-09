@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { UserContext } from '../context/UserContext';
+import { obtenerDatosUsuario, actualizarDatosUsuario } from '../servicios/apiUsuario';
 import '../estilos/EditarPerfil.css';
 
 export default function DatosUsuario() {
@@ -11,35 +12,29 @@ export default function DatosUsuario() {
 
   useEffect(() => {
     if (usuario?.id_usuario) {
-      fetch(`http://localhost:3000/api/usuario/${usuario.id_usuario}`, {
-        headers: {
-          'Content-Type': 'application/json',
-          'id_usuario': usuario.id_usuario
+      const cargarDatos = async () => {
+        const res = await obtenerDatosUsuario(usuario.id_usuario);
+        if (res.success) {
+          setNombre(res.data.nombre);
+          setApellido(res.data.apellido);
+          setCorreo(res.data.correo);
+        } else {
+          setMensaje(res.mensaje);
         }
-      })
-        .then(res => res.json())
-        .then(data => {
-          setNombre(data.nombre);
-          setApellido(data.apellido);
-          setCorreo(data.correo);
-        });
+      };
+      cargarDatos();
     }
   }, [usuario]);
 
   const guardar = async (e) => {
     e.preventDefault();
 
-    const res = await fetch(`http://localhost:3000/api/usuario/${usuario.id_usuario}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'id_usuario': usuario.id_usuario  
-      },
-      body: JSON.stringify({ nombre, apellido, correo })
-    });
-
-    if (res.ok) setMensaje('Datos actualizados correctamente');
-    else setMensaje('Error al actualizar');
+    const res = await actualizarDatosUsuario(usuario.id_usuario, nombre, apellido, correo);
+    if (res.success) {
+      setMensaje('Datos actualizados correctamente');
+    } else {
+      setMensaje(res.mensaje);
+    }
   };
 
   return (

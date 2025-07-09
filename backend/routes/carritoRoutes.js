@@ -9,9 +9,10 @@ import { validarAutenticacion } from "../middlewares/validarAutenticacion.js";
 
 const router = express.Router();
 
-router.get("/:id", validarAutenticacion, verCarrito);
-router.post("/:id", validarAutenticacion, agregarAlCarrito);
-router.put("/:id_carrito/producto/:id_producto", validarAutenticacion, actualizarCantidad);
-router.delete("/:id_carrito/producto/:id_producto", validarAutenticacion, eliminarDelCarrito);
+router.get("/", validarAutenticacion, verCarrito);
+router.post("/", validarAutenticacion, agregarAlCarrito);
+router.put("/producto/:id_producto", validarAutenticacion, actualizarCantidad);
+router.delete("/producto/:id_producto", validarAutenticacion, eliminarDelCarrito);
 
 export default router;
+

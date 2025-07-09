@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { UserContext } from '../context/UserContext';
 import '../estilos/CambiarPassword.css';
+import { cambiarPassword } from '../servicios/apiUsuario';
 
 export default function CambiarPassword() {
   const { usuario } = useContext(UserContext);
@@ -31,28 +32,13 @@ export default function CambiarPassword() {
       return;
     }
 
-    try {
-      const res = await fetch(`http://localhost:3000/api/usuario/${usuario.id_usuario}/password`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'id_usuario': usuario.id_usuario
-      },
-      body: JSON.stringify({ password: nueva })
-    });
-
-
-      if (res.ok) {
-        setMensaje('Contraseña actualizada exitosamente');
-        setNueva('');
-        setConfirmar('');
-      } else {
-        const data = await res.json();
-        setMensaje(data?.error || 'Error al actualizar');
-      }
-    } catch (error) {
-      console.error(error);
-      setMensaje('Error al conectar con el servidor');
+    const respuesta = await cambiarPassword(usuario.id_usuario, nueva);
+    if (respuesta.success) {
+      setMensaje('Contraseña actualizada exitosamente');
+      setNueva('');
+      setConfirmar('');
+    } else {
+      setMensaje(respuesta.mensaje);
     }
   };
 

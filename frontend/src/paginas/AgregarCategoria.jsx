@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
+import { crearCategoria } from '../servicios/apiCategorias';
 import '../estilos/AgregarCategoria.css';
 
 export default function AgregarCategoria() {
@@ -9,11 +10,8 @@ export default function AgregarCategoria() {
   const [mensaje, setMensaje] = useState('');
   const navigate = useNavigate();
   const { usuario } = useContext(UserContext);
-  console.log("Usuario desde contexto:", usuario);
 
-  if (!usuario) {
-    return <p>Cargando usuario...</p>;
-  }
+  if (!usuario) return <p>Cargando usuario...</p>;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,32 +22,18 @@ export default function AgregarCategoria() {
     }
 
     try {
-      const res = await fetch('http://localhost:3000/api/categoria', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'id_usuario': usuario.id_usuario,
-          'rol': usuario.rol  
-        },
-        body: JSON.stringify({
-          nombre_categoria: nombre.trim(),
-          imagen_url: imagenUrl.trim()
-        })
+      await crearCategoria({
+        nombre_categoria: nombre.trim(),
+        imagen_url: imagenUrl.trim(),
+        id_usuario: usuario.id_usuario,
+        rol: usuario.rol
       });
 
-      const data = await res.json();
-
-      if (res.ok) {
-        setMensaje('Categoría agregada con éxito');
-        setNombre('');
-        setImagenUrl('');
-      } else {
-        setMensaje(data.mensaje || 'Error al agregar categoría');
-      }
-
+      setMensaje('Categoría agregada con éxito');
+      setNombre('');
+      setImagenUrl('');
     } catch (error) {
-      console.error(error);
-      setMensaje('Error de red al agregar');
+      setMensaje(error.message);
     }
   };
 
