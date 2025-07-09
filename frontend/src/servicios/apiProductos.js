@@ -6,6 +6,8 @@ export async function obtenerProductos() {
   return res.json();
 }
 
+
+
 export async function obtenerProductoPorId(idProducto) {
   const res = await fetch(`${BASE_URL}/productos/${idProducto}`);
   if (!res.ok) throw new Error("Producto no encontrado");

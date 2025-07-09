@@ -11,7 +11,7 @@ export default function AgregarCategoria() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!nombre || !imagenUrl) {
+    if (!nombre.trim() || !imagenUrl.trim()) {
       setMensaje('❌ Por favor completa todos los campos');
       return;
     }
@@ -20,17 +20,22 @@ export default function AgregarCategoria() {
       const res = await fetch('http://localhost:3000/api/categorias', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nombre_categoria: nombre, imagen_url: imagenUrl })
+        body: JSON.stringify({
+          nombre_categoria: nombre.trim(),
+          imagen_url: imagenUrl.trim()
+        })
       });
+
+      const data = await res.json();
 
       if (res.ok) {
         setMensaje('✅ Categoría agregada con éxito');
         setNombre('');
         setImagenUrl('');
       } else {
-        const data = await res.json();
-        setMensaje(data?.error || '❌ Error al agregar categoría');
+        setMensaje(`❌ ${data.mensaje || 'Error desconocido al agregar'}`);
       }
+
     } catch (error) {
       console.error(error);
       setMensaje('❌ Error de red al agregar');

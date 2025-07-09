@@ -27,6 +27,44 @@ router.get('/', async (req, res) => {
   }
 });
 
+// Ruta optimizada para frontend: /api/productos/dto
+router.get('/dto', async (req, res) => {
+  try {
+    const productos = await PRODUCTO.findAll({
+      where: { activo: true },
+      include: [
+        {
+          model: CAMISETA,
+          include: [EQUIPO, MARCA, CATEGORIA, TIPO_CAMISETA]
+        },
+        { model: TALLA },
+        { model: GENERO }
+      ]
+    });
+
+    const productosSimplificados = productos.map(p => ({
+      id: p.id_producto,
+      nombre: p.camiseta?.descripcion_camiseta || 'Sin nombre',
+      precio: parseFloat(p.precio),
+      imagen: p.camiseta?.imagen_url || '/img/default.png',
+      stock: p.stock,
+      sku: p.sku,
+      genero: p.genero?.descripcion_genero || '',
+      talla: p.talla?.descripcion_talla || '',
+      categoria: p.camiseta?.categoria?.nombre_categoria || '',
+      equipo: p.camiseta?.equipo?.nombre_equipo || '',
+      marca: p.camiseta?.marca?.nombre_marca || '',
+      tipo: p.camiseta?.tipo_camiseta?.descripcion_tipo || ''
+    }));
+
+    res.json(productosSimplificados);
+  } catch (error) {
+    console.error('Error al generar DTO de productos:', error);
+    res.status(500).json({ error: 'Error al generar vista simplificada de productos' });
+  }
+});
+
+
 // Obtener producto por ID
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
@@ -88,5 +126,36 @@ router.delete('/:id', async (req, res) => {
     res.status(500).json({ error: 'Error al eliminar producto' });
   }
 });
+
+// En routes/productos.js
+router.get('/', async (req, res) => {
+  try {
+    const { nombre } = req.query;
+    const where = nombre
+      ? {
+          '$CAMISETA.descripcion_camiseta$': { [Op.iLike]: `%${nombre}%` },
+        }
+      : {};
+
+    const productos = await PRODUCTO.findAll({
+      include: [
+        {
+          model: CAMISETA,
+          as: 'CAMISETA',
+          include: [MARCA, EQUIPO, TIPO_CAMISETA, CATEGORIA, TEMPORADA],
+        },
+        TALLA,
+        GENERO
+      ],
+      where,
+    });
+
+    res.json(productos);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al obtener productos' });
+  }
+});
+
 
 export default router;
