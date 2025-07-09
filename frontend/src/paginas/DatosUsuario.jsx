@@ -1,10 +1,11 @@
-// DatosUsuario.jsx
 import React, { useContext, useEffect, useState } from 'react';
 import { UserContext } from '../context/UserContext';
+import '../estilos/DatosUsuario.css';
 
 export default function DatosUsuario() {
   const { usuario } = useContext(UserContext);
   const [nombre, setNombre] = useState('');
+  const [apellido, setApellido] = useState('');
   const [correo, setCorreo] = useState('');
   const [mensaje, setMensaje] = useState('');
 
@@ -14,6 +15,7 @@ export default function DatosUsuario() {
         .then(res => res.json())
         .then(data => {
           setNombre(data.nombre);
+          setApellido(data.apellido);
           setCorreo(data.correo);
         });
     }
@@ -21,25 +23,33 @@ export default function DatosUsuario() {
 
   const guardar = async (e) => {
     e.preventDefault();
+
     const res = await fetch(`http://localhost:3000/api/usuarios/${usuario.id_usuario}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ nombre, correo })
+      body: JSON.stringify({ nombre, apellido, correo })
     });
-    if (res.ok) setMensaje('Datos actualizados');
-    else setMensaje('Error al actualizar');
+
+    if (res.ok) setMensaje('✅ Datos actualizados correctamente');
+    else setMensaje('❌ Error al actualizar');
   };
 
   return (
-    <div className="user-container">
-      <h2>Mi Perfil</h2>
-      {mensaje && <p>{mensaje}</p>}
-      <form onSubmit={guardar}>
+    <div className="perfil-container">
+      <form onSubmit={guardar} className="perfil-form">
+        <h2>Mi Perfil</h2>
+        {mensaje && <div className="perfil-mensaje">{mensaje}</div>}
+
         <label>Nombre:</label>
         <input value={nombre} onChange={(e) => setNombre(e.target.value)} />
+
+        <label>Apellido:</label>
+        <input value={apellido} onChange={(e) => setApellido(e.target.value)} />
+
         <label>Correo:</label>
-        <input value={correo} disabled />
-        <button type="submit">Guardar</button>
+        <input type="email" value={correo} onChange={(e) => setCorreo(e.target.value)} />
+
+        <button type="submit">Guardar Cambios</button>
       </form>
     </div>
   );
