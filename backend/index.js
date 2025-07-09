@@ -1,38 +1,37 @@
-import express from "express";
-import cors from "cors";
-import { sequelize } from "./config/database.js";
-import adminRoutes from "./routes/adminRoutes.js";
-import guardadoRoutes from "./routes/guardadoRoutes.js";
-import authRoutes from "./routes/authRoutes.js";
-import usuarioRoutes from "./routes/usuarioRoutes.js";
-import categoriaRoutes from "./routes/categoriaRoutes.js";
-import productoRoutes from "./routes/productoRoutes.js";
-import ordenRoutes from "./routes/ordenRoutes.js";
-import detalleOrdenRoutes from "./routes/detalleOrdenRoutes.js";
-import recuperacionRoutes from "./routes/recuperacionRoutes.js";
-
+import express from 'express';
+import cors from 'cors';
+import { sequelize } from './config/database.js';
+import catalogoRoutes from './rutas/datosReferencia.js';
+import authRutas from "./rutas/authRutas.js"; 
+import usuariosRoutes from './rutas/usuariosRoutes.js';
+import productosRutas from './rutas/productos.js';
+import carritoRutas from "./rutas/carritoRoutes.js";
+import categoriasRutas from './rutas/categorias.js';
 
 const app = express();
+
 app.use(cors());
 app.use(express.json());
 
-app.use("/api", authRoutes);
-app.use("/api/admin", adminRoutes);
-app.use("/api/guardados", guardadoRoutes);
-app.use("/api/usuarios", usuarioRoutes);
-app.use("/api/categorias", categoriaRoutes);
-app.use("/api/productos", productoRoutes);
-app.use("/api/ordenes", ordenRoutes);
-app.use("/api/detalle-orden", detalleOrdenRoutes);
-app.use("/api/recuperar-password", recuperacionRoutes);
+app.use('/api', catalogoRoutes);
+app.use("/api/auth", authRutas);
+app.use("/api/usuarios", usuariosRoutes);
+app.use('/api/categorias', categoriasRutas);
+app.use("/api/productos", productosRutas);
+app.use("/api/carrito", carritoRutas);
+
+const PORT = process.env.PORT || 3000;
 
 try {
   await sequelize.authenticate();
-  console.log("Conectado a PostgreSQL");
+  console.log('✅ Conectado a la base de datos PostgreSQL');
+
   await sequelize.sync();
-  app.listen(3000, () => {
-    console.log("Servidor corriendo en http://localhost:3000");
+  console.log('✅ Modelos sincronizados');
+
+  app.listen(PORT, () => {
+    console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
   });
 } catch (error) {
-  console.error("Error al conectar la base de datos:", error);
+  console.error('❌ Error al iniciar el servidor:', error);
 }
