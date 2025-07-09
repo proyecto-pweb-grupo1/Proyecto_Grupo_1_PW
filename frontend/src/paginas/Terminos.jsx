@@ -1,9 +1,9 @@
-import '../estilos/Footer.css';
+import '../estilos/ContenidoLegal.css';
 
 export default function Terminos() {
   return (
-    <div className="fondo-global">
-      <div className="footer-content-box">
+    <div className="contenido-legal-container">
+      <div className="contenido-box">
         <h2>Términos y Condiciones</h2>
         <p>Bienvenido a nuestra tienda. Al utilizar este sitio, aceptas los siguientes términos y condiciones:</p>
         <ul>

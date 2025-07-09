@@ -1,11 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  obtenerDetalleProducto,
-  actualizarProducto
-} from "../servicios/apiProductos";
-import { obtenerCategorias } from "../servicios/apiCategorias";
 import { obtenerParametros } from "../servicios/apiParametros";
 import { UserContext } from "../context/UserContext";
 import "../estilos/AdminProductos.css";
@@ -42,6 +37,10 @@ export default function AdminEditarProducto() {
   useEffect(() => {
     async function cargarDatos() {
       try {
+        const resCategorias = await fetch("http://localhost:3000/api/categoria");
+        const categoriasData = await resCategorias.json();
+        setCategorias(categoriasData);
+
         const {
           equipos,
           tallas,
@@ -57,16 +56,35 @@ export default function AdminEditarProducto() {
         setTiposCamiseta(tiposCamiseta);
         setTemporadas(temporadas);
 
-        const producto = await obtenerDetalleProducto(id);
-        setForm({ ...producto });
+        // Cargar producto por ID
+        const res = await fetch(`http://localhost:3000/api/producto/${id}`);
+        const producto = await res.json();
+
+        setForm({
+          sku: producto.sku,
+          descripcion_camiseta: producto.CAMISETum?.descripcion_camiseta || "",
+          precio: producto.precio,
+          stock: producto.stock,
+          imagen_url: producto.CAMISETum?.imagen_url || "",
+          id_equipo: producto.CAMISETum?.id_equipo || "",
+          id_temporada: producto.CAMISETum?.id_temporada || "",
+          id_categoria: producto.CAMISETum?.id_categoria || "",
+          id_marca: producto.CAMISETum?.id_marca || "",
+          id_tipo_camiseta: producto.CAMISETum?.id_tipo_camiseta || "",
+          id_genero: producto.id_genero,
+          id_talla: producto.id_talla
+        });
       } catch (error) {
         alert("Error al cargar datos");
       }
     }
+
     cargarDatos();
   }, [id]);
 
-  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -77,7 +95,19 @@ export default function AdminEditarProducto() {
     };
 
     try {
-      await editarProducto(id, prod, usuario);
+      const res = await fetch(`http://localhost:3000/api/producto/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          id_usuario: usuario.id_usuario,
+          rol: usuario.rol
+        },
+        body: JSON.stringify(prod)
+      });
+
+      if (!res.ok) throw new Error("Error al actualizar");
+
+      await res.json();
       navigate("/admin/productos");
     } catch (error) {
       alert("Error al editar producto");

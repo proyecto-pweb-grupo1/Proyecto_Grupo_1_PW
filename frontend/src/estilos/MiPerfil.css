@@ -5,6 +5,8 @@
   background-color: #1e1e1e;
   border-radius: 10px;
   color: #fff;
+  animation: fadeIn 0.6s ease-out;
+
 }
 
 .tabla-ordenes {

@@ -32,14 +32,24 @@ export default function AdminProductos() {
     setCargando(false);
   };
 
-  const handleCambiarEstado = async (idProducto) => {
-    if (window.confirm("¿Deseas cambiar el estado de este producto?")) {
-      try {
-        await cambiarEstadoProducto(idProducto, usuario);
-        await cargarProductos();
-      } catch (error) {
-        alert("Error al cambiar estado del producto.");
-      }
+  const handleCambiarEstado = async (e, idProducto) => {
+    e.preventDefault();
+
+    const index = productos.findIndex(p => p.id_producto === idProducto);
+    if (index === -1) return;
+
+    const productoOriginal = productos[index];
+
+    const nuevosProductos = [...productos];
+    nuevosProductos[index] = { ...productoOriginal, activo: !productoOriginal.activo };
+    setProductos(nuevosProductos);
+
+    try {
+      await cambiarEstadoProducto(idProducto, usuario);
+    } catch (error) {
+      nuevosProductos[index] = productoOriginal;
+      setProductos(nuevosProductos);
+      alert("Error al cambiar estado del producto.");
     }
   };
 
@@ -168,7 +178,10 @@ export default function AdminProductos() {
                       </Link>
                     </td>
                     <td>
-                      <button className="btn-eliminar" onClick={() => handleCambiarEstado(p.id_producto)}>
+                      <button
+                          className="btn-eliminar"
+                          onClick={(e) => handleCambiarEstado(e, p.id_producto)}
+                        >
                         <img src="/src/assets/dashboard/icon-eliminar.jpg" alt="Cambiar estado" />
                         {p.activo ? "Desactivar" : "Activar"}
                       </button>
@@ -182,7 +195,7 @@ export default function AdminProductos() {
             <button
               onClick={() => setPaginaActual(p => Math.max(p - 1, 1))}
               disabled={paginaActual === 1}
-              style={{ padding: "7px 18px", borderRadius: "7px", border: "1px solid #bbb", background: "#f3f3f3", cursor: paginaActual === 1 ? "not-allowed" : "pointer" }}
+              style={{ padding: "7px 18px", borderRadius: "7px", color: "#222" , border: "1px solid #bbb", background: "#f3f3f3", cursor: paginaActual === 1 ? "not-allowed" : "pointer" }}
             >
               {"<"} Anterior
             </button>
@@ -190,7 +203,7 @@ export default function AdminProductos() {
             <button
               onClick={() => setPaginaActual(p => Math.min(p + 1, totalPaginas))}
               disabled={paginaActual === totalPaginas}
-              style={{ padding: "7px 18px", borderRadius: "7px", border: "1px solid #bbb", background: "#f3f3f3", cursor: paginaActual === totalPaginas ? "not-allowed" : "pointer" }}
+              style={{ padding: "7px 18px", borderRadius: "7px", color: "#222" , border: "1px solid #bbb", background: "#f3f3f3", cursor: paginaActual === totalPaginas ? "not-allowed" : "pointer" }}
             >
               Siguiente {">"}
             </button>

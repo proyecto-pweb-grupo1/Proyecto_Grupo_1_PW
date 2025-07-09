@@ -47,17 +47,24 @@ export async function actualizarProducto(id, data, token) {
   return await res.json();
 }
 
-export async function cambiarEstadoProducto(id, usuario) {
-  const res = await fetch(`${API_URL}/estado/${id}`, {
-    method: 'PATCH',
+export async function cambiarEstadoProducto(idProducto, usuario) {
+  const response = await fetch(`http://localhost:3000/api/producto/${idProducto}/estado`, {
+    method: "PUT",
     headers: {
-      id_usuario: usuario?.id_usuario || '',
-      rol: usuario?.rol || ''
+      "Content-Type": "application/json",
+      "id_usuario": usuario.id_usuario
     }
   });
-  if (!res.ok) throw new Error("Error al cambiar estado del producto");
-  return await res.json();
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.mensaje || "Error al cambiar el estado del producto");
+  }
+
+  return data;
 }
+
 
 export async function obtenerProductosDestacados() {
   const res = await fetch(`${API_URL}/destacado`);

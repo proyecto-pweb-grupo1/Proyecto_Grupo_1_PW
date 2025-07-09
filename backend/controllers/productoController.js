@@ -38,7 +38,6 @@ export async function listarProductos(req, res) {
   res.json(filtrado);
 }
 
-
 export async function getProductosActivos(req, res) {
   const productos = await PRODUCTO.findAll({
     where: { activo: true },
@@ -75,11 +74,24 @@ export async function detalleProducto(req, res) {
 
 export async function agregarProducto(req, res) {
   try {
-    if ("id_producto" in req.body) delete req.body.id_producto;
+    const {
+      sku,
+      descripcion_camiseta,
+      precio,
+      stock,
+      imagen_url,
+      id_equipo,
+      id_temporada,
+      id_categoria,
+      id_marca,
+      id_tipo_camiseta,
+      id_genero,
+      id_talla
+    } = req.body;
 
-    const { id_camiseta, id_genero, id_talla, precio, stock, sku } = req.body;
-
-    if (!id_camiseta || !id_genero || !id_talla || !precio || !stock || !sku) {
+    if (!descripcion_camiseta || !sku || !precio || !stock || !imagen_url ||
+        !id_equipo || !id_temporada || !id_categoria || !id_marca || !id_tipo_camiseta ||
+        !id_genero || !id_talla) {
       return res.status(400).json({ mensaje: "Faltan campos requeridos" });
     }
 
@@ -88,18 +100,50 @@ export async function agregarProducto(req, res) {
       return res.status(409).json({ mensaje: `El SKU "${sku}" ya está registrado.` });
     }
 
-    const nuevo = await PRODUCTO.create(req.body);
-    res.status(201).json(nuevo);
+    let camisetaExistente = await CAMISETA.findOne({
+      where: {
+        descripcion_camiseta,
+        imagen_url,
+        id_equipo,
+        id_temporada,
+        id_categoria,
+        id_marca,
+        id_tipo_camiseta
+      }
+    });
+
+    if (!camisetaExistente) {
+      camisetaExistente = await CAMISETA.create({
+        descripcion_camiseta,
+        imagen_url,
+        id_equipo,
+        id_temporada,
+        id_categoria,
+        id_marca,
+        id_tipo_camiseta
+      });
+    }
+
+    const nuevoProducto = await PRODUCTO.create({
+      sku,
+      precio,
+      stock,
+      id_genero,
+      id_talla,
+      id_camiseta: camisetaExistente.id_camiseta
+    });
+
+    res.status(201).json(nuevoProducto);
 
   } catch (error) {
-    console.error("ERROR al crear producto:", error);
+    console.error("Error al agregar producto:", error);
 
     if (error instanceof UniqueConstraintError) {
-      return res.status(409).json({ mensaje: "Violación de restricción única (probablemente SKU duplicado)." });
+      return res.status(409).json({ mensaje: "Violación de restricción única (SKU duplicado)" });
     }
 
     if (error instanceof ValidationError) {
-      return res.status(400).json({ mensaje: "Error de validación de campos", detalles: error.errors });
+      return res.status(400).json({ mensaje: "Error de validación", detalles: error.errors });
     }
 
     res.status(500).json({ mensaje: "Error interno del servidor", error: error.message });
@@ -141,7 +185,6 @@ export async function listarProductosDestacados(req, res) {
     res.status(500).json({ mensaje: "Error al obtener productos destacados" });
   }
 }
-
 
 export async function listarProductosRecientes(req, res) {
   try {

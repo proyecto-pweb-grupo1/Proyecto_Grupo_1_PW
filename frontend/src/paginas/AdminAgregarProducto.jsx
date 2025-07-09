@@ -1,10 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { agregarProducto } from "../servicios/apiProductos";
-import { obtenerParametros } from "../servicios/apiParametros";
-
-import { obtenerCategorias } from "../servicios/apiCategorias";
 import { UserContext } from "../context/UserContext";
 import "../estilos/AdminProductos.css";
 
@@ -37,48 +33,76 @@ export default function AdminAgregarProducto() {
   const [temporadas, setTemporadas] = useState([]);
 
   useEffect(() => {
-  async function cargarDatos() {
-    try {
-      const {
-        equipos,
-        tallas,
-        generos,
-        marcas,
-        tiposCamiseta,
-        temporadas
-      } = await obtenerParametros();
+    async function cargarDatos() {
+      try {
+        const paramsRes = await fetch("http://localhost:3000/api/parametros");
+        const params = await paramsRes.json();
+        setEquipos(params.equipos);
+        setTallas(params.tallas);
+        setGeneros(params.generos);
+        setMarcas(params.marcas);
+        setTiposCamiseta(params.tiposCamiseta);
+        setTemporadas(params.temporadas);
 
-      setEquipos(equipos);
-      setTallas(tallas);
-      setGeneros(generos);
-      setMarcas(marcas);
-      setTiposCamiseta(tiposCamiseta);
-      setTemporadas(temporadas);
-    } catch (error) {
-      alert("Error al cargar parámetros");
+        const catRes = await fetch("http://localhost:3000/api/categoria");
+        const cats = await catRes.json();
+        setCategorias(cats);
+      } catch (error) {
+        alert("Error al cargar parámetros");
+      }
     }
-  }
-  cargarDatos();
-}, []);
+    cargarDatos();
+  }, []);
 
-
-  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const prod = {
-      ...form,
-      precio: parseFloat(form.precio),
-      stock: parseInt(form.stock, 10)
-    };
-
-    try {
-      await agregarProducto(prod, usuario);
-      navigate("/admin/productos");
-    } catch (error) {
-      alert("Error al agregar el producto.");
-    }
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  const prod = {
+    sku: form.sku.trim(),
+    descripcion_camiseta: form.descripcion_camiseta.trim(),
+    imagen_url: form.imagen_url.trim(),
+    id_equipo: parseInt(form.id_equipo),
+    id_temporada: parseInt(form.id_temporada),
+    id_categoria: parseInt(form.id_categoria),
+    id_marca: parseInt(form.id_marca),
+    id_tipo_camiseta: parseInt(form.id_tipo_camiseta),
+    id_genero: parseInt(form.id_genero),
+    id_talla: parseInt(form.id_talla),
+    precio: parseFloat(form.precio),
+    stock: parseInt(form.stock)
+  };
+
+  try {
+    const res = await fetch("http://localhost:3000/api/producto", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        id_usuario: usuario?.id_usuario,
+        rol: usuario?.rol
+      },
+      body: JSON.stringify(prod)
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.mensaje || "Error al agregar producto");
+    }
+
+    alert("Producto agregado exitosamente");
+    navigate("/admin/productos");
+  } catch (error) {
+    console.error("Error al agregar producto:", error.message);
+    alert(`No se pudo agregar: ${error.message}`);
+  }
+};
+
+
+
 
   const opcionesSidebar = [
     { nombre: "Dashboard", ruta: "/admin/dashboard", icono: "/src/assets/dashboard/icon-dashboard.png" },
@@ -89,6 +113,25 @@ export default function AdminAgregarProducto() {
 
   return (
     <div className="admin-productos-bg">
+      {sidebarOpen && (
+        <aside className="admin-dashboard-sidebar">
+          <img src="/src/assets/dashboard/logo-dashboard.png" alt="Logo" className="sidebar-logo" />
+          <nav>
+            {opcionesSidebar.map((op) => (
+              <a key={op.nombre} href={op.ruta} className="sidebar-link">
+                <img src={op.icono} alt={op.nombre} />
+                <span>{op.nombre}</span>
+              </a>
+            ))}
+          </nav>
+          <img src="/src/assets/dashboard/sidebar-futbol.png" className="sidebar-bg" alt="" />
+          <button className="sidebar-close-btn" onClick={() => setSidebarOpen(false)}>×</button>
+        </aside>
+      )}
+      {!sidebarOpen && (
+        <button className="sidebar-open-btn" onClick={() => setSidebarOpen(true)}>☰</button>
+      )}
+
       <div className="admin-productos-overlay">
         <motion.form
           className="admin-productos-form"
@@ -125,7 +168,6 @@ export default function AdminAgregarProducto() {
               <option value="">-- Seleccionar --</option>
               {equipos.map(e => <option key={e.id_equipo} value={e.id_equipo}>{e.nombre_equipo}</option>)}
             </select>
-
             <label>Temporada</label>
             <select name="id_temporada" value={form.id_temporada} onChange={handleChange} required>
               <option value="">-- Seleccionar --</option>
@@ -139,7 +181,6 @@ export default function AdminAgregarProducto() {
               <option value="">-- Seleccionar --</option>
               {categorias.map(c => <option key={c.id_categoria} value={c.id_categoria}>{c.nombre_categoria}</option>)}
             </select>
-
             <label>Marca</label>
             <select name="id_marca" value={form.id_marca} onChange={handleChange} required>
               <option value="">-- Seleccionar --</option>
@@ -147,30 +188,22 @@ export default function AdminAgregarProducto() {
             </select>
           </div>
 
-          <div className="form-row tres-cols">
-            <div className="input-group">
-              <label>Tipo Camiseta</label>
-              <select name="id_tipo_camiseta" value={form.id_tipo_camiseta} onChange={handleChange} required>
-                <option value="">-- Seleccionar --</option>
-                {tiposCamiseta.map(t => <option key={t.id_tipo_camiseta} value={t.id_tipo_camiseta}>{t.descripcion_tipo}</option>)}
-              </select>
-            </div>
-
-            <div className="input-group">
-              <label>Género</label>
-              <select name="id_genero" value={form.id_genero} onChange={handleChange} required>
-                <option value="">-- Seleccionar --</option>
-                {generos.map(g => <option key={g.id_genero} value={g.id_genero}>{g.descripcion_genero}</option>)}
-              </select>
-            </div>
-
-            <div className="input-group">
-              <label>Talla</label>
-              <select name="id_talla" value={form.id_talla} onChange={handleChange} required>
-                <option value="">-- Seleccionar --</option>
-                {tallas.map(t => <option key={t.id_talla} value={t.id_talla}>{t.descripcion_talla}</option>)}
-              </select>
-            </div>
+          <div className="form-row">
+            <label>Tipo Camiseta</label>
+            <select name="id_tipo_camiseta" value={form.id_tipo_camiseta} onChange={handleChange} required>
+              <option value="">-- Seleccionar --</option>
+              {tiposCamiseta.map(t => <option key={t.id_tipo_camiseta} value={t.id_tipo_camiseta}>{t.descripcion_tipo}</option>)}
+            </select>
+            <label>Género</label>
+            <select name="id_genero" value={form.id_genero} onChange={handleChange} required>
+              <option value="">-- Seleccionar --</option>
+              {generos.map(g => <option key={g.id_genero} value={g.id_genero}>{g.descripcion_genero}</option>)}
+            </select>
+            <label>Talla</label>
+            <select name="id_talla" value={form.id_talla} onChange={handleChange} required>
+              <option value="">-- Seleccionar --</option>
+              {tallas.map(t => <option key={t.id_talla} value={t.id_talla}>{t.descripcion_talla}</option>)}
+            </select>
           </div>
 
           <button className="admin-productos-guardar-btn" type="submit">

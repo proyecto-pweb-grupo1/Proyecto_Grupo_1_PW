@@ -97,35 +97,39 @@
   top: 100%;
   left: 0;
   margin-top: 6px;
-  background-color: white;
-  padding: 12px;
-  border-radius: 10px;
-  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+  background: rgb(128, 230, 159); 
+  padding: 0.6rem 0.8rem;
+  border-radius: 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
   min-width: 240px;
   display: flex;
   flex-direction: column;
-  z-index: 1000;
+  gap: 8px;
+  animation: fadeIn 0.4s ease-in-out;
 }
+
 
 .dropdown-item {
   background: none;
   border: none;
   text-align: left;
-  padding: 10px 12px;
+  padding: 0.5rem 1rem;
   display: flex;
   align-items: center;
   gap: 10px;
   border-radius: 6px;
-  font-size: 15px;
-  color: #003366;
+  font-size: 0.95rem;
+  color: #333;
   font-weight: 500;
-  transition: background 0.2s ease, transform 0.15s ease;
   cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
+  transition: background-color 0.2s ease, transform 0.15s ease;
 }
 
 .dropdown-item:hover {
-  background-color: #f0f4ff;
-  transform: translateX(4px);
+  background-color: #f2f2f2;
+  color: #0077cc;
 }
 
 .categoria-icono {
@@ -139,40 +143,55 @@
   font-size: 14px;
   padding: 8px 10px;
   color: #444;
+  
 }
 .dropdown-error {
   color: red;
+}
+
+.dropdown-user {
+  position: relative;
 }
 
 .dropdown-user-menu {
   position: absolute;
   top: 100%;
   right: 0;
-  z-index: 999;
-  background: white;
-  border-radius: 10px;
-  padding: 10px;
-  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.25);
+  background: rgb(161, 204, 242);
+  border-radius: 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  padding: 0.6rem 0.8rem;
+  z-index: 1000;
+  min-width: auto;
   display: flex;
   flex-direction: column;
   gap: 8px;
-  min-width: 200px;
-  color: #0d47a1;
+  animation: fadeIn 0.4s ease-in-out;
+  
 }
+
 
 .dropdown-user-menu button {
   background: none;
   border: none;
   text-align: left;
-  padding: 8px 14px;
-  font-size: 14px;
+  padding: 0.5rem 1rem;
+  font-size: 0.95rem;
+  color: #333;
+  font-weight: 500;
+  border-radius: 6px;
   cursor: pointer;
-  color: #0d47a1;
-  transition: background 0.2s ease;
+  font-family: 'Montserrat', sans-serif;
 }
 
 .dropdown-user-menu button:hover {
-  background-color: #e3f2fd;
+  background-color: #f2f2f2;
+  color: #0077cc;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .dashboard-admin-btn {

@@ -26,8 +26,8 @@ const AnimatedNumber = ({ value }) => {
       return 100000;
     };
 
-    const duration = 3000; // total animation duration (ms)
-    const steps = Math.ceil(Math.log10(end + 1) * 20); // estimate number of steps
+    const duration = 3000; 
+    const steps = Math.ceil(Math.log10(end + 1) * 20); 
     const stepTime = Math.max(Math.floor(duration / steps), 15);
 
     const timer = setInterval(() => {

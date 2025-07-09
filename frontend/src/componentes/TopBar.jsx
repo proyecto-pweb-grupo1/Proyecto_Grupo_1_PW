@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { useContext, useState, useEffect } from 'react';
+import { useContext, useState, useEffect, useRef } from 'react';
 import { UserContext } from '../context/UserContext';
 import { obtenerCategorias } from '../servicios/apiCategorias';
 import '../estilos/TopBar.css';
@@ -15,6 +15,9 @@ export default function TopBar() {
   const [categorias, setCategorias] = useState([]);
   const [catLoading, setCatLoading] = useState(false);
   const [catError, setCatError] = useState(null);
+
+  const timeoutUsuarioRef = useRef(null);
+  const timeoutCategoriasRef = useRef(null);
 
   const nombreUsuario = usuario?.nombre || usuario?.correo || "Usuario";
   const esAdmin = usuario?.rol === 'admin' || usuario?.id_rol === 2;
@@ -35,6 +38,26 @@ export default function TopBar() {
     }
   };
 
+  // Menú Usuario
+  const abrirMenuUsuario = () => {
+    clearTimeout(timeoutUsuarioRef.current);
+    setMostrarMenuUsuario(true);
+  };
+
+  const cerrarMenuUsuario = () => {
+    timeoutUsuarioRef.current = setTimeout(() => setMostrarMenuUsuario(false), 300);
+  };
+
+  // Menú Categorías
+  const abrirMenuCategorias = () => {
+    clearTimeout(timeoutCategoriasRef.current);
+    setMostrarDropdown(true);
+  };
+
+  const cerrarMenuCategorias = () => {
+    timeoutCategoriasRef.current = setTimeout(() => setMostrarDropdown(false), 300);
+  };
+
   return (
     <div className="topbar">
       <div className="topbar-left">
@@ -43,8 +66,8 @@ export default function TopBar() {
 
         <div
           className="topbar-dropdown"
-          onMouseEnter={() => setMostrarDropdown(true)}
-          onMouseLeave={() => setMostrarDropdown(false)}
+          onMouseEnter={abrirMenuCategorias}
+          onMouseLeave={cerrarMenuCategorias}
         >
           <button className="topbar-btn">Categorías ⏷</button>
 
@@ -122,9 +145,10 @@ export default function TopBar() {
         {usuario ? (
           <div
             className="dropdown-user"
-            style={{ position: 'relative' }}
+            onMouseEnter={abrirMenuUsuario}
+            onMouseLeave={cerrarMenuUsuario}
           >
-            <button className="topbar-btn" onClick={() => setMostrarMenuUsuario(prev => !prev)}>👤 {nombreUsuario} ⏷</button>
+            <button className="topbar-btn">👤 {nombreUsuario} ⏷</button>
             {mostrarMenuUsuario && (
               <div className="dropdown-user-menu">
                 <button onClick={() => navigate('/usuario/ordenes')}>📦 Mi Perfil</button>
