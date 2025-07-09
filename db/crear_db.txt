@@ -1,7 +1,0 @@
-SET client_encoding = 'UTF8';
-DROP DATABASE db_proyecto_grupo_1_pw;
-CREATE DATABASE db_proyecto_grupo_1_pw WITH ENCODING 'UTF8' LC_COLLATE='es_ES.UTF-8' LC_CTYPE='es_PE.UTF-8' TEMPLATE=template0;
-\c db_proyecto_grupo_1_pw
-
-SET client_encoding = 'UTF8';
-\i 'C:/db_proyecto_grupo_1_pw.sql'
