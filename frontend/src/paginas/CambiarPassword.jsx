@@ -1,6 +1,5 @@
-import '../estilos/EstilosAdmin.css';
-import React, { useState } from 'react';
-import { estaLogueado } from '../helpers/auth';
+import React, { useState, useContext, useEffect } from 'react';
+import { UserContext } from '../context/UserContext';
 import '../estilos/CambiarPassword.css';
 
 export default function CambiarPassword() {

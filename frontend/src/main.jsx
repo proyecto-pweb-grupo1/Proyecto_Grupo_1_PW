@@ -1,11 +1,7 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.jsx'
-import './estilos/general.css'
-
-if (!localStorage.getItem('usuarios')) {
-  localStorage.setItem('usuarios', JSON.stringify(usuarios));
-}
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
+import App from './App.jsx';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <BrowserRouter>
