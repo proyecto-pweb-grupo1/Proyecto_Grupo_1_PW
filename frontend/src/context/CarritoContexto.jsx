@@ -1,56 +1,88 @@
-import {createContext, useState, useContext} from "react";
-import {useEffect} from "react";
+import { createContext, useState, useEffect } from "react";
 
 export const CarritoContexto = createContext(null);
 
-export function CarritoProvider ({children}){
+export function CarritoProvider({ children }) {
   const [carrito, setCarrito] = useState([]);
-  const [wishlist, setWishlist] = useState([]);
-
-  const agregarAlCarrito = (producto) => {
-    setCarrito(prev => {
-      const existe = prev.find(item => item.id === producto.id);
-      if (existe) {
-        return prev.map(item =>
-            item.id === producto.id ? { ...item, cantidad: item.cantidad + 1 } : item
-        );
-      } else {
-        return [...prev, { ...producto, cantidad: 1 }];
-      }
-    });
-  };
+  const [guardados, setGuardados] = useState([]);
 
   useEffect(() => {
-    const guardado = localStorage.getItem("wishlist");
-    if (guardado) setWishlist(JSON.parse(guardado));
+    const carritoLocal = localStorage.getItem("carrito");
+    const guardadosLocal = localStorage.getItem("guardados");
+    if (carritoLocal) setCarrito(JSON.parse(carritoLocal));
+    if (guardadosLocal) setGuardados(JSON.parse(guardadosLocal));
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("wishlist", JSON.stringify(wishlist));
-  }, [wishlist]);
+    localStorage.setItem("carrito", JSON.stringify(carrito));
+    localStorage.setItem("guardados", JSON.stringify(guardados));
+  }, [carrito, guardados]);
 
-  const agregarAFavoritos = (producto) => {
-    setWishlist(prev => {
-      const existe = prev.some(item => item.id === producto.id);
-      return existe ? prev : [...prev, { ...producto }];
-    });
+  const agregarAlCarrito = (producto) => {
+    const existente = carrito.find((p) => p.id_producto === producto.id_producto);
+    if (existente) {
+      setCarrito(
+        carrito.map((p) =>
+          p.id_producto === producto.id_producto
+            ? { ...p, cantidad: p.cantidad + 1 }
+            : p
+        )
+      );
+    } else {
+      setCarrito([...carrito, { ...producto, cantidad: 1 }]);
+    }
   };
 
-  const eliminarDeFavoritos = (id) => {
-    setWishlist(prev => prev.filter(item => item.id !== id));
+  const cambiarCantidad = (id_producto, nuevaCantidad) => {
+    setCarrito(
+      carrito.map((p) =>
+        p.id_producto === id_producto
+          ? { ...p, cantidad: nuevaCantidad }
+          : p
+      )
+    );
   };
 
-  const limpiarFavoritos = () => setWishlist([])
+  const eliminarDelCarrito = (id_producto) => {
+    setCarrito(carrito.filter((p) => p.id_producto !== id_producto));
+  };
+
+  const moverAGuardados = (producto) => {
+    eliminarDelCarrito(producto.id_producto);
+    if (!guardados.some((p) => p.id_producto === producto.id_producto)) {
+      setGuardados([...guardados, producto]);
+    }
+  };
+
+  const moverAlCarrito = (producto) => {
+    setGuardados(guardados.filter((p) => p.id_producto !== producto.id_producto));
+    agregarAlCarrito(producto);
+  };
+
+  const eliminarGuardado = (id_producto) => {
+    setGuardados(guardados.filter((p) => p.id_producto !== id_producto));
+  };
+
+  const totalCarrito = carrito.reduce(
+    (acc, prod) => acc + prod.precio * prod.cantidad,
+    0
+  );
 
   return (
-      <CarritoContexto.Provider value={{
-        carrito, setCarrito,
-        wishlist, setWishlist,
-        eliminarDeFavoritos, limpiarFavoritos,
-        agregarAlCarrito, agregarAFavoritos}}>
-        {children}
-      </CarritoContexto.Provider>
+    <CarritoContexto.Provider
+      value={{
+        carrito,
+        guardados,
+        agregarAlCarrito,
+        cambiarCantidad,
+        eliminarDelCarrito,
+        moverAGuardados,
+        moverAlCarrito,
+        eliminarGuardado,
+        totalCarrito,
+      }}
+    >
+      {children}
+    </CarritoContexto.Provider>
   );
 }
-
-export const useCarrito = () => useContext(CarritoContexto);

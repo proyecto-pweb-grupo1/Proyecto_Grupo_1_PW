@@ -1,53 +1,29 @@
-// src/contextos/UserContext.jsx
-import { createContext, useState, useEffect, useContext } from "react";
+// context/UserContext.jsx
+import { createContext, useState, useEffect } from 'react';
 
-// Crear el contexto
 export const UserContext = createContext();
 
 export function UserProvider({ children }) {
   const [usuario, setUsuario] = useState(null);
 
   useEffect(() => {
-    const almacenado = localStorage.getItem("usuario");
-    if (almacenado) {
-      try {
-        setUsuario(JSON.parse(almacenado));
-      } catch (error) {
-        console.error("Error al parsear usuario:", error);
-        localStorage.removeItem("usuario");
-      }
-    }
+    const usuarioGuardado = localStorage.getItem('usuario');
+    if (usuarioGuardado) setUsuario(JSON.parse(usuarioGuardado));
   }, []);
 
-  const login = (datosUsuario) => {
-    localStorage.setItem("usuario", JSON.stringify(datosUsuario));
-    setUsuario(datosUsuario);
+  const login = (usuarioData) => {
+    setUsuario(usuarioData);
+    localStorage.setItem('usuario', JSON.stringify(usuarioData));
   };
 
-  // ✅ logout ahora puede recibir una función externa
-  const logout = (onLogoutCallback) => {
-    localStorage.removeItem("usuario");
+  const logout = () => {
     setUsuario(null);
-    if (typeof onLogoutCallback === "function") {
-      onLogoutCallback(); // como vaciarCarrito()
-    }
+    localStorage.removeItem('usuario');
   };
-
-  const estaLogueado = () => !!usuario;
-
-  const esAdmin = () => usuario?.rol?.toLowerCase() === "admin";
-
-  const obtenerId = () => usuario?.id || null;
 
   return (
-    <UserContext.Provider
-      value={{ usuario, login, logout, estaLogueado, esAdmin, obtenerId }}
-    >
+    <UserContext.Provider value={{ usuario, login, logout }}>
       {children}
     </UserContext.Provider>
   );
-}
-
-export function useUsuario() {
-  return useContext(UserContext);
 }
