@@ -1,10 +1,5 @@
-<<<<<<< HEAD:src/context/UserContext.jsx
 // src/contextos/UserContext.jsx
 import { createContext, useState, useEffect, useContext } from "react";
-=======
-// context/UserContext.jsx
-import { createContext, useState, useEffect } from 'react';
->>>>>>> e9f4664d83e787ac51129de6237decc951ca1ad7:frontend/src/context/UserContext.jsx
 
 // Crear el contexto
 export const UserContext = createContext();
@@ -13,7 +8,6 @@ export function UserProvider({ children }) {
   const [usuario, setUsuario] = useState(null);
 
   useEffect(() => {
-<<<<<<< HEAD:src/context/UserContext.jsx
     const almacenado = localStorage.getItem("usuario");
     if (almacenado) {
       try {
@@ -37,20 +31,6 @@ export function UserProvider({ children }) {
     if (typeof onLogoutCallback === "function") {
       onLogoutCallback(); // como vaciarCarrito()
     }
-=======
-    const usuarioGuardado = localStorage.getItem('usuario');
-    if (usuarioGuardado) setUsuario(JSON.parse(usuarioGuardado));
-  }, []);
-
-  const login = (usuarioData) => {
-    setUsuario(usuarioData);
-    localStorage.setItem('usuario', JSON.stringify(usuarioData));
-  };
-
-  const logout = () => {
-    setUsuario(null);
-    localStorage.removeItem('usuario');
->>>>>>> e9f4664d83e787ac51129de6237decc951ca1ad7:frontend/src/context/UserContext.jsx
   };
 
   const estaLogueado = () => !!usuario;

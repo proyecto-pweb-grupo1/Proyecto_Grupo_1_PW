@@ -15,14 +15,13 @@ export default function TopBar() {
   const [catLoading, setCatLoading] = useState(false);
   const [catError, setCatError] = useState(null);
 
-  const nombreUsuario = usuario?.nombre || usuario?.correo || "Usuario";
-  const esAdmin = usuario?.rol === 'admin' || usuario?.id_rol === 1;
+  const esAdmin = usuario?.toLowerCase().includes('admin');
 
   useEffect(() => {
     setCatLoading(true);
     setCatError(null);
     obtenerCategorias()
-      .then(data => setCategorias(data.slice(0, 3)))
+      .then(data => setCategorias(data.slice(0, 3))) // Solo las 3 primeras
       .catch(err => setCatError(err.message))
       .finally(() => setCatLoading(false));
   }, []);
@@ -47,16 +46,16 @@ export default function TopBar() {
         >
           <button className="topbar-btn">Categorías ⏷</button>
           {mostrarDropdown && (
-            <div className="dropdown-menu">
-              {catLoading && <p style={{ padding: '1rem' }}>Cargando...</p>}
-              {catError && <p style={{ color: 'red', padding: '1rem' }}>Error: {catError}</p>}
+            <div className="dropdown-menu" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              {catLoading && <p style={{padding:'1rem'}}>Cargando...</p>}
+              {catError && <p style={{color:'red',padding:'1rem'}}>Error: {catError}</p>}
               {!catLoading && !catError && categorias.length > 0 ? (
                 categorias.map(cat => (
-                  <button key={cat.id_categoria} onClick={() => navigate(`/categoria/${cat.id_categoria}`)}>
-                    {cat.nombre_categoria}
+                  <button key={cat.id} style={{ width: '100%', textAlign: 'left' }} onClick={() => navigate(`/categoria/${cat.id}`)}>
+                    {cat.nombre}
                   </button>
                 ))
-              ) : (!catLoading && !catError && <p style={{ padding: '1rem' }}>No hay categorías</p>)}
+              ) : (!catLoading && !catError && <p style={{padding:'1rem'}}>No hay categorías</p>)}
             </div>
           )}
         </div>
@@ -75,6 +74,7 @@ export default function TopBar() {
             value={termino}
             onChange={(e) => setTermino(e.target.value)}
             onKeyDown={handleBuscar}
+            style={{ paddingRight: '38px' }}
           />
           <button
             className="search-icon-btn"
@@ -85,8 +85,13 @@ export default function TopBar() {
                 setTermino('');
               }
             }}
+            style={{ position: 'absolute', right: 6, background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
           >
-            🔍
+            {/* SVG lupa icon */}
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="10" cy="10" r="7" stroke="#003366" strokeWidth="2" />
+              <line x1="15.2929" y1="15.7071" x2="20" y2="20.4142" stroke="#003366" strokeWidth="2" strokeLinecap="round" />
+            </svg>
           </button>
         </div>
         
@@ -110,23 +115,18 @@ export default function TopBar() {
             onMouseLeave={() => setMostrarMenuUsuario(false)}
             style={{ position: 'relative' }}
           >
-            <button className="topbar-btn">👤 {nombreUsuario} ⏷</button>
+            <button className="topbar-btn">👤 {usuario} ⏷</button>
             {mostrarMenuUsuario && (
               <div className="dropdown-menu dropdown-user-menu" style={{ position: 'absolute', right: 0, top: '100%', zIndex: 999 }}>
                 <button onClick={() => navigate('/usuario/orden')}>📦 Mis Órdenes</button>
                 <button onClick={() => navigate('/usuario/datos')}>📝 Mi Perfil</button>
                 <button onClick={() => navigate('/usuario/password')}>🔒 Cambiar Contraseña</button>
-
                 {esAdmin && (
                   <>
-                    <hr />
-                    <button onClick={() => navigate('/admin/dashboard')}>📊 Dashboard</button>
-                    <button onClick={() => navigate('/admin/categorias')}>📁 Ver Categorías</button>
+                    <button onClick={() => navigate('/admin/categorias')}>🗂️ Ver Categorías</button>
                     <button onClick={() => navigate('/admin/agregar-categoria')}>➕ Agregar Categoría</button>
-                    <button onClick={() => navigate('/admin/productos')}>🛍️ Ver Productos</button>
                   </>
                 )}
-                <hr />
                 <button onClick={() => { logout(); navigate('/'); }}>
                   🚪 Cerrar sesión
                 </button>
