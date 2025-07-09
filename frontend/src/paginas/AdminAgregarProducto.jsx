@@ -165,7 +165,7 @@ const handleSubmit = async (e) => {
     <div className="admin-productos-bg">
       {sidebarOpen && (
         <aside className="admin-dashboard-sidebar">
-          <img src="/src/assets/branding/logo-principal.png" alt="Logo" className="sidebar-logo" />
+          <img src="/src/assets/branding/logo-blanco.png" alt="Logo" className="sidebar-logo" />
           <nav>
             {opcionesSidebar.map((op) => (
               <a key={op.nombre} href={op.ruta} className="sidebar-link">

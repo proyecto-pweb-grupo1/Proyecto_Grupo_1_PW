@@ -132,7 +132,7 @@ export default function AdminEditarProducto() {
             exit={{ x: -220, opacity: 0 }}
             transition={{ duration: 0.3, type: "spring" }}
           >
-            <img src="/src/assets/branding/logo-principal.png" alt="Logo" className="sidebar-logo" />
+            <img src="/src/assets/branding/logo-blanco.png" alt="Logo" className="sidebar-logo" />
             <nav>
               {opcionesSidebar.map((op) => (
                 <a key={op.nombre} href={op.ruta} className="sidebar-link">

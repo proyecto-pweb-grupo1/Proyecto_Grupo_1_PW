@@ -84,7 +84,7 @@ export default function AdminProductos() {
             exit={{ x: -220, opacity: 0 }}
             transition={{ duration: 0.3, type: "spring" }}
           >
-            <img src="/src/assets/branding/logo-principal.png" alt="Logo" className="sidebar-logo" />
+            <img src="/src/assets/branding/logo-blanco.png" alt="Logo" className="sidebar-logo" />
             <nav>
               {opcionesSidebar.map((op) => (
                 <Link key={op.nombre} to={op.ruta} className="sidebar-link">

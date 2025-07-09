@@ -1,51 +1,65 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { obtenerProductosPorCategoria } from '../servicios/apiProductos';
-import { obtenerCategorias } from '../servicios/apiCategorias';
+import { obtenerProductos } from '../servicios/apiProductos';
 import '../estilos/CategoriaProductos.css';
-import '../estilos/PaginaPrincipal.css';
 import CamisetaCard from '../componentes/CamisetaCard';
 
 const opcionesOrden = [
+  { value: '', label: 'Sin orden' },
+  { value: 'precio_desc', label: 'Precio: mayor a menor' },
+  { value: 'precio_asc', label: 'Precio: menor a mayor' },
   { value: 'nombre_asc', label: 'Nombre: A-Z' },
   { value: 'nombre_desc', label: 'Nombre: Z-A' },
-  { value: 'precio_asc', label: 'Precio: menor a mayor' },
-  { value: 'precio_desc', label: 'Precio: mayor a menor' },
 ];
 
 export default function CategoriaProductos() {
   const { id } = useParams();
   const [productos, setProductos] = useState([]);
-  const [categoria, setCategoria] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [orden, setOrden] = useState('nombre_asc'); // valor por defecto válido
+  const [orden, setOrden] = useState('');
 
   useEffect(() => {
-    const cargarDatos = async () => {
+    const cargarProductos = async () => {
       setLoading(true);
       setError(null);
       try {
-        // Cargar productos y categorías en paralelo
-        const [productosData, categoriasData] = await Promise.all([
-          obtenerProductosPorCategoria(id, { orden, agrupado: 'true' }),
-          obtenerCategorias()
-        ]);
-        setProductos(productosData);
-
-        // Encontrar la categoría actual
-        const categoriaActual = categoriasData.find(cat => String(cat.id_categoria) === String(id));
-        setCategoria(categoriaActual);
-
+        const data = await obtenerProductos();
+        const filtrados = data
+          .filter((p) => String(p?.CAMISETum?.CATEGORIum?.id_categoria) === String(id))
+          .slice(0, 100); 
+        setProductos(filtrados);
       } catch (err) {
-        setError(err.message || 'Error al cargar datos');
+        setError('Error al cargar productos');
+        console.error(err);
       } finally {
         setLoading(false);
       }
     };
 
-    cargarDatos();
-  }, [id, orden]);
+    cargarProductos();
+  }, [id]);
+
+  const ordenarProductos = (lista, criterio) => {
+    switch (criterio) {
+      case 'precio_desc':
+        return [...lista].sort((a, b) => parseFloat(b.precio) - parseFloat(a.precio));
+      case 'precio_asc':
+        return [...lista].sort((a, b) => parseFloat(a.precio) - parseFloat(b.precio));
+      case 'nombre_asc':
+        return [...lista].sort((a, b) =>
+          a.CAMISETum?.descripcion_camiseta?.localeCompare(b.CAMISETum?.descripcion_camiseta)
+        );
+      case 'nombre_desc':
+        return [...lista].sort((a, b) =>
+          b.CAMISETum?.descripcion_camiseta?.localeCompare(a.CAMISETum?.descripcion_camiseta)
+        );
+      default:
+        return lista;
+    }
+  };
+
+  const productosOrdenados = ordenarProductos(productos, orden);
 
   return (
     <div className="contenedor-principal" style={{ padding: '2rem', display: 'flex', gap: '2rem' }}>
@@ -53,36 +67,36 @@ export default function CategoriaProductos() {
         <h3>Ordenar por</h3>
         <select
           value={orden}
-          onChange={e => setOrden(e.target.value)}
+          onChange={(e) => setOrden(e.target.value)}
           style={{ width: '100%', padding: '0.5rem', borderRadius: 8 }}
         >
-          {opcionesOrden.map(opt => (
-            <option key={opt.value} value={opt.value}>{opt.label}</option>
+          {opcionesOrden.map((opt) => (
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
+            </option>
           ))}
         </select>
       </div>
-      <div style={{ flex: 1 }}>
-        <h2>
-          {categoria ? `${categoria.nombre_categoria}` : `Productos de la categoría`}
-          {productos.length > 0 && <span style={{ color: '#666', fontSize: '0.9em' }}> ({productos.length} productos)</span>}
-        </h2>
 
+      <div style={{ flex: 1 }}>
+        <h2>Productos de la categoría</h2>
         {loading && <p>Cargando productos...</p>}
-        {error && <p style={{ color: 'red' }}>Error: {error}</p>}
+        {error && <p style={{ color: 'red' }}>{error}</p>}
 
         <div className="grid-camisetas">
-          {!loading && !error && productos.length > 0 ? (
-            productos.map(item => (
+          {!loading && !error && productosOrdenados.length > 0 ? (
+            productosOrdenados.map((item) => (
               <CamisetaCard
-                key={item.esGrupo ? `grupo-${item.id_camiseta}` : item.id_producto}
+                key={item.id_producto}
                 id={item.id_producto}
-                club={item.esGrupo ? item.descripcion_camiseta : item.CAMISETum?.descripcion_camiseta}
+                club={item.CAMISETum?.descripcion_camiseta || 'Sin nombre'}
                 precio={item.precio}
-                img={item.esGrupo ? item.imagen_url : item.CAMISETum?.imagen_url}
+                img={item.CAMISETum?.imagen_url}
               />
             ))
           ) : (
-            !loading && !error && <p>No hay productos disponibles en esta categoría.</p>
+            !loading &&
+            !error && <p>No hay productos disponibles en esta categoría.</p>
           )}
         </div>
       </div>
