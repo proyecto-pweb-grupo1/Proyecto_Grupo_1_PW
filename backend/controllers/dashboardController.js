@@ -1,4 +1,4 @@
-import { ORDEN, USUARIO } from "../models/index.js";
+import { PRODUCTO, USUARIO, ORDEN } from "../models/index.js";
 import { Op } from "sequelize";
 
 export async function resumenDashboard(req, res) {
@@ -35,4 +35,26 @@ export async function resumenDashboard(req, res) {
     totalIngresos,
     nuevosUsuarios
   });
+}
+
+export async function obtenerKPIs(req, res) {
+  try {
+    // Total de productos activos
+    const productos = await PRODUCTO.count({ where: { activo: true } });
+    // Stock total de productos activos
+    const stockRows = await PRODUCTO.findAll({
+      where: { activo: true },
+      attributes: ['stock']
+    });
+    const stock = stockRows.reduce((acc, p) => acc + (p.stock || 0), 0);
+    // Usuarios activos
+    const usuarios = await USUARIO.count({ where: { activo: true } });
+    // Total de órdenes
+    const ordenes = await ORDEN.count();
+
+    res.json({ productos, stock, usuarios, ordenes });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error al obtener KPIs" });
+  }
 }

@@ -26,14 +26,14 @@
   margin-bottom: 32px;
 }
 .admin-dashboard-logo {
-  width: 90px;
-  height: 90px;
+  width: 500px;
   margin-bottom: 10px;
-  border-radius: 18px;
-  box-shadow: 0 4px 14px #2228;
-  background: #fff;
   object-fit: contain;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
 }
+
 .admin-dashboard-header h1 {
   font-size: 2.7rem;
   color: #fff;

@@ -8,26 +8,47 @@ import { obtenerKPIs } from "../servicios/apiDashboard";
 
 const AnimatedNumber = ({ value }) => {
   const [display, setDisplay] = useState(0);
+
   useEffect(() => {
     let start = 0;
     const end = value || 0;
     if (start === end) return;
-    let increment = end > start ? 1 : -1;
+
     let current = start;
-    const duration = 900; // ms
-    const stepTime = Math.abs(Math.floor(duration / (end - start || 1)));
+    let increment = 1;
+
+    const getIncrement = (val) => {
+      if (val < 10) return 1;
+      if (val < 100) return 10;
+      if (val < 1000) return 100;
+      if (val < 10000) return 1000;
+      if (val < 100000) return 10000;
+      return 100000;
+    };
+
+    const duration = 3000; // total animation duration (ms)
+    const steps = Math.ceil(Math.log10(end + 1) * 20); // estimate number of steps
+    const stepTime = Math.max(Math.floor(duration / steps), 15);
+
     const timer = setInterval(() => {
-      current += increment;
+      increment = getIncrement(Math.abs(end - current));
+      if (current < end) {
+        current = Math.min(current + increment, end);
+      } else if (current > end) {
+        current = Math.max(current - increment, end);
+      }
       setDisplay(current);
-      if ((increment > 0 && current >= end) || (increment < 0 && current <= end)) {
+
+      if (current === end) {
         clearInterval(timer);
       }
-    }, stepTime > 15 ? stepTime : 15);
+    }, stepTime);
+
     return () => clearInterval(timer);
   }, [value]);
+
   return <span>{display}</span>;
 };
-
 
 export default function AdminDashboard() {
     const [kpis, setKpis] = useState({
@@ -118,7 +139,7 @@ export default function AdminDashboard() {
           transition={{ duration: 0.8, type: "spring" }}
           className="admin-dashboard-header"
         >
-          <img src="/src/assets/dashboard/logo-dashboard.png" alt="Logo" className="admin-dashboard-logo" />
+          <img src="/src/assets/branding/logo-banner.png" alt="Logo" className="admin-dashboard-logo" />
           <h1>Panel de Administración</h1>
           <p className="admin-dashboard-sub">Control total sobre inventario, ventas y operaciones</p>
         </motion.header>
