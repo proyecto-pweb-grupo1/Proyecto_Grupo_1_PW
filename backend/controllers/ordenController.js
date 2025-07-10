@@ -1,5 +1,6 @@
 import { ORDEN, DETALLE_ORDEN, DIRECCION, METODO_PAGO, METODO_ENVIO, ESTADO_ORDEN, PRODUCTO, CARRITO, CARRITO_ITEM } from "../models/index.js";
 import { sequelize } from "../config/database.js";
+import { CAMISETA } from "../models/index.js";
 
 export async function listarOrdenesPorUsuario(req, res) {
   const { id_usuario } = req.params;
@@ -28,7 +29,12 @@ export async function detalleOrdenUsuario(req, res) {
       ESTADO_ORDEN,
       {
         model: DETALLE_ORDEN,
-        include: [PRODUCTO]
+        include: [
+          {
+            model: PRODUCTO,
+            include: [CAMISETA] 
+          }
+        ]
       }
     ]
   });

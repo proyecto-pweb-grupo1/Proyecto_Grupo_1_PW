@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { UserContext } from '../context/UserContext';
-import '../estilos/DatosUsuario.css';
+import '../estilos/EditarPerfil.css';
 
 export default function DatosUsuario() {
   const { usuario } = useContext(UserContext);
@@ -45,7 +45,7 @@ export default function DatosUsuario() {
   return (
     <div className="perfil-container">
       <form onSubmit={guardar} className="perfil-form">
-        <h2>Mi Perfil</h2>
+        <h2>Editar Perfil</h2>
         {mensaje && <div className="perfil-mensaje">{mensaje}</div>}
 
         <label>Nombre:</label>

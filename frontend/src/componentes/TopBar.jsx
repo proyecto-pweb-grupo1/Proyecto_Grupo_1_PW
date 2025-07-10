@@ -127,8 +127,8 @@ export default function TopBar() {
             <button className="topbar-btn" onClick={() => setMostrarMenuUsuario(prev => !prev)}>👤 {nombreUsuario} ⏷</button>
             {mostrarMenuUsuario && (
               <div className="dropdown-user-menu">
-                <button onClick={() => navigate('/usuario/orden')}>📦 Mis Órdenes</button>
-                <button onClick={() => navigate('/usuario/datos')}>📝 Mi Perfil</button>
+                <button onClick={() => navigate('/usuario/ordenes')}>📦 Mi Perfil</button>
+                <button onClick={() => navigate('/usuario/datos')}>📝 Editar Perfil</button>
                 <button onClick={() => navigate('/usuario/password')}>🔒 Cambiar Contraseña</button>
                 {esAdmin && (
                   <>

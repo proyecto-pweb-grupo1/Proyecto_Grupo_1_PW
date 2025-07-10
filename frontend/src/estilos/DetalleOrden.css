@@ -5,7 +5,7 @@
 }
 
 .info-orden {
-  background-color: #1d1b31;
+  background-color: #222;
   padding: 1rem 2rem;
   border-radius: 10px;
   margin-bottom: 1rem;
@@ -62,4 +62,14 @@
   border-radius: 10px;
   box-shadow: 0 0 20px #000;
   margin-top: 2rem;
+}
+
+
+.etiqueta-cancelado {
+  background-color: #dc3545;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  display: inline-block;
 }

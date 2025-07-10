@@ -59,3 +59,24 @@
 .btn-volver:hover {
   background-color: #0056b3;
 }
+
+
+.boton-editar-perfil-container {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.btn-editar-perfil {
+  background-color: #f39c12;
+  color: white;
+  padding: 0.7rem 1.5rem;
+  border: none;
+  border-radius: 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-editar-perfil:hover {
+  background-color: #e67e22;
+}

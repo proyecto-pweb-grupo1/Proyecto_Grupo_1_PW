@@ -7,36 +7,29 @@ export default function DetalleOrden() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { usuario } = useContext(UserContext);
+
   const [orden, setOrden] = useState(null);
   const [mensaje, setMensaje] = useState('');
 
   useEffect(() => {
+    if (usuario === null) return;
+
+    if (!usuario?.id_usuario || usuario.id_rol === 1) {
+      setMensaje('Acceso no autorizado');
+      return;
+    }
+
     const cargarDetalle = async () => {
-      if (!usuario?.id_usuario) {
-        setMensaje('Usuario no autenticado');
-        return;
-      }
-
-      if (!id || isNaN(id)) {
-        setMensaje('ID de orden inválido');
-        return;
-      }
-
       try {
-        const res = await fetch(`http://localhost:3000/api/ordenes/detalle/${id}`, {
-          headers: {
-            id_usuario: usuario.id_usuario
-          }
+        const res = await fetch(`http://localhost:3000/api/orden/detalle/${id}`, {
+          headers: { id_usuario: usuario.id_usuario }
         });
 
-        if (res.ok) {
-          const data = await res.json();
-          setOrden(data);
-        } else {
-          setMensaje('No hay orden encontrada');
-        }
-      } catch (error) {
-        setMensaje('Error al cargar detalles de la orden');
+        const data = await res.json();
+        if (res.ok) setOrden(data);
+        else setMensaje('No se encontró la orden');
+      } catch {
+        setMensaje('Error al cargar detalles');
       }
     };
 
@@ -45,37 +38,28 @@ export default function DetalleOrden() {
 
   const cancelarOrden = async () => {
     try {
-      const res = await fetch(`http://localhost:3000/api/ordenes/cancelar/${id}`, {
+      const res = await fetch(`http://localhost:3000/api/orden/cancelar/${id}`, {
         method: 'PUT',
-        headers: {
-          id_usuario: usuario.id_usuario
-        }
+        headers: { id_usuario: usuario.id_usuario }
       });
 
       if (res.ok) {
-        setMensaje('Orden cancelada exitosamente');
+        alert('Orden cancelada');
         navigate('/usuario/ordenes');
       } else {
-        setMensaje('No se pudo cancelar la orden');
+        alert('No se pudo cancelar');
       }
     } catch {
-      setMensaje('Error en el servidor al cancelar');
+      alert('Error en el servidor');
     }
-  };
-
-  const agregarAlCarrito = (producto) => {
-    // Aquí puedes implementar lógica para agregar al carrito si ya tienes ese contexto
-    alert(`Producto ${producto.CAMISETUM?.descripcion_camiseta} agregado al carrito`);
   };
 
   if (mensaje) {
     return (
       <div className="detalle-orden-container">
-        <div className="mensaje-vacio">
+        <div className="mensaje-error">
           <h2>{mensaje}</h2>
-          <button className="btn-volver" onClick={() => navigate('/')}>
-            Volver al inicio
-          </button>
+          <button className="btn-volver" onClick={() => navigate('/')}>Volver al inicio</button>
         </div>
       </div>
     );
@@ -83,60 +67,66 @@ export default function DetalleOrden() {
 
   if (!orden) return null;
 
+  const estaCancelada = orden.ESTADO_ORDEN?.nombre_estado === 'Cancelado';
+
   return (
     <div className="detalle-orden-container">
-      <h2>Detalle de Orden</h2>
+      <h2>🧾 Detalle de Orden #{orden.id_orden}</h2>
 
       <div className="info-orden">
-        <p><strong>ID:</strong> {orden.id_orden}</p>
         <p><strong>Fecha:</strong> {new Date(orden.fecha).toLocaleString()}</p>
         <p><strong>Estado:</strong> {orden.ESTADO_ORDEN?.nombre_estado}</p>
+        <p><strong>Pago:</strong> {orden.METODO_PAGO?.nombre_metodo}</p>
+        <p><strong>Envío:</strong> {orden.METODO_ENVIO?.nombre_envio}</p>
       </div>
 
-      {orden.DETALLE_ORDENs?.length === 0 ? (
-        <div className="mensaje-vacio">
-          <p>No hay productos en esta orden.</p>
-        </div>
-      ) : (
-        <>
-          <table className="tabla-detalle">
-            <thead>
-              <tr>
-                <th>Producto</th>
-                <th>Cantidad</th>
-                <th>Precio</th>
-                <th>Subtotal</th>
-                <th>Acción</th>
-              </tr>
-            </thead>
-            <tbody>
-              {orden.DETALLE_ORDENs.map((item) => (
-                <tr key={item.id_detalle}>
-                  <td>{item.PRODUCTO?.CAMISETUM?.descripcion_camiseta || 'Sin descripción'}</td>
-                  <td>{item.cantidad}</td>
-                  <td>S/ {item.precio_unitario}</td>
-                  <td>S/ {item.subtotal}</td>
-                  <td>
-                    <button
-                      className="btn-agregar"
-                      onClick={() => agregarAlCarrito(item.PRODUCTO)}
-                    >
-                      Agregar al carrito
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      <div className="direccion-envio">
+        <h4>📦 Dirección de Envío</h4>
+        <p>{orden.DIRECCION?.direccion}, {orden.DIRECCION?.ciudad}, {orden.DIRECCION?.region}, {orden.DIRECCION?.pais}</p>
+        <p>📞 {orden.DIRECCION?.telefono}</p>
+      </div>
 
-          <div className="total-orden">
-            <strong>Total: S/ {orden.total}</strong>
-          </div>
-        </>
+      {estaCancelada && (
+        <div className="orden-cancelada">
+          ⚠️ Esta orden ha sido cancelada. No puedes modificarla ni repetir esta compra.
+        </div>
       )}
 
+      <table className="tabla-detalle">
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Precio</th>
+            <th>Subtotal</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          {orden.DETALLE_ORDENs.map((item) => (
+            <tr key={item.id_detalle}>
+              <td>{item.PRODUCTO?.CAMISETum?.descripcion_camiseta}</td>
+              <td>{item.cantidad}</td>
+              <td>S/ {item.precio_unitario}</td>
+              <td>S/ {item.subtotal}</td>
+              <td>
+                <span className="etiqueta-cancelado">
+                  {estaCancelada ? 'Cancelado' : '—'}
+                </span>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <div className="total-orden">
+        <strong>Total: S/ {orden.total}</strong>
+      </div>
+
       <div className="acciones-orden">
-        <button className="btn-cancelar" onClick={cancelarOrden}>Cancelar Orden</button>
+        {!estaCancelada && (
+          <button className="btn-cancelar" onClick={cancelarOrden}>Cancelar Orden</button>
+        )}
         <button className="btn-volver" onClick={() => navigate('/')}>Volver al inicio</button>
       </div>
     </div>

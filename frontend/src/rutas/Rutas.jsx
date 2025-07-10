@@ -9,10 +9,9 @@ import FinCompra from "../paginas/FinCompra";
 import Login from "../paginas/Login";
 import Register from "../paginas/Register";
 import RecuperarContraseña from "../paginas/RecuperarContraseña";
-import DatosUsuario from "../paginas/DatosUsuario";
+import DatosUsuario from "../paginas/EditarPerfil";
 import ListadoCategoriasAdmin from "../paginas/ListadoCategoriasAdmin";
 import AgregarCategoria from "../paginas/AgregarCategoria";
-import DetalleOrden from "../paginas/DetalleOrden";
 import CambiarPassword from "../paginas/CambiarPassword";
 import AdminDashboard from "../paginas/AdminDashboard";
 import AdminProductos from "../paginas/AdminProductos";
@@ -22,6 +21,8 @@ import CategoriaProductos from "../paginas/CategoriaProductos";
 import Terminos from "../paginas/Terminos";
 import Privacidad from "../paginas/Privacidad";
 import Contacto from "../paginas/Contacto";
+import ListaOrdenes from '../paginas/MiPerfil';
+import DetalleOrden from '../paginas/DetalleOrden';
 
 function Rutas() {
   return (
@@ -41,7 +42,7 @@ function Rutas() {
         <Route path="admin/categorias" element={<ListadoCategoriasAdmin />} />
         <Route path="admin/agregar-categoria" element={<AgregarCategoria />} />
         <Route path="usuario/password" element={<CambiarPassword />} />
-        <Route path="usuario/orden" element={<DetalleOrden />} />
+        <Route path="/usuario/ordenes" element={<ListaOrdenes />} />
         <Route path="/usuario/orden/:id" element={<DetalleOrden />} />
         <Route path="categoria/:id" element={<CategoriaProductos />} />
         <Route path="admin/dashboard" element={<AdminDashboard />} />

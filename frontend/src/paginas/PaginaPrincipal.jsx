@@ -39,7 +39,7 @@ export default function PaginaPrincipal() {
     cargarDatos();
   }, []);
 
-  const categoriasDestacadas = categorias.slice(0, 5);
+  const categoriasDestacadas = categorias.slice(0, 4);
 
   if (loading) return <p className="loading">Cargando tienda...</p>;
   if (error) return <p className="error">Error: {error}</p>;
