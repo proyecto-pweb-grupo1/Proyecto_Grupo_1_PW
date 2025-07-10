@@ -12,6 +12,7 @@ function generarSKU({ equipos, temporadas, tiposCamiseta, generos, tallas, form 
   const generoObj = generos.find(g => g.id_genero === Number(form.id_genero));
   const tallaObj = tallas.find(t => t.id_talla === Number(form.id_talla));
 
+  
   if (!equipoObj || !temporadaObj || !tipoObj || !generoObj || !tallaObj) return "";
 
   const normalizar = (texto, guion = false) =>

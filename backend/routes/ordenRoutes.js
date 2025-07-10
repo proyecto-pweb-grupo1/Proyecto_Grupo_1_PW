@@ -15,3 +15,4 @@ router.put("/cancelar/:id_orden", validarAutenticacion, cancelarOrden);
 router.post("/", validarAutenticacion, crearOrden);
 
 export default router;
+
