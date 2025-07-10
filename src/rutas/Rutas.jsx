@@ -15,7 +15,15 @@ import CategoriaProductos from "../paginas/CategoriaProductos";
 import Terminos from "../paginas/Terminos";
 import Privacidad from "../paginas/Privacidad";
 import Contacto from "../paginas/Contacto";
+import Carrito from "../paginas/Carrito";
+import Checkout from "../paginas/Checkout";
+import FinCompra from "../paginas/FinCompra";
 
+// Admin
+import AdminDashboard from "../paginas/AdminDashboard";
+import AdminProductos from "../paginas/AdminProductos";
+import AdminAgregarProducto from "../paginas/AdminAgregarProducto";
+import AdminEditarProducto from "../paginas/AdminEditarProducto";
 
 function Rutas() {
   return (
@@ -24,20 +32,41 @@ function Rutas() {
         <Route index element={<PaginaPrincipal />} />
         <Route path="detalle/:id" element={<DetalleProducto />} />
         <Route path="buscar" element={<ResultadosBusqueda />} />
+        <Route path="carrito" element={<Carrito />} />
+        <Route path="checkout" element={<Checkout />} />
+        <Route path="fincompra" element={<FinCompra />} />
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
         <Route path="recuperar" element={<RecuperarContraseña />} />
 
+        {/* Admin - categorías (ambas rutas de ambos archivos) */}
         <Route path="admin/categorias" element={<ListadoCategoriasAdmin />} />
         <Route path="admin/agregar-categoria" element={<AgregarCategoria />} />
+        <Route path="admin/categorias/agregar" element={<AgregarCategoria />} />
+
+        {/* Usuario - rutas de ambos archivos */}
         <Route path="usuario/datos" element={<DatosUsuario />} />
+        <Route path="usuario" element={<DatosUsuario />} />
         <Route path="usuario/password" element={<CambiarPassword />} />
+        <Route path="cambiar-password" element={<CambiarPassword />} />
         <Route path="usuario/orden" element={<DetalleOrden />} />
+        <Route path="orden/:id" element={<DetalleOrden />} />
+
+        {/* Categorías y otras páginas */}
         <Route path="categoria/:id" element={<CategoriaProductos />} />
         <Route path="terminos" element={<Terminos />} />
         <Route path="privacidad" element={<Privacidad />} />
         <Route path="contacto" element={<Contacto />} />
       </Route>
+
+      {/* Rutas exclusivas de admin fuera del layout principal */}
+      <Route path="/admin/dashboard" element={<AdminDashboard />} />
+      <Route path="/admin/productos" element={<AdminProductos />} />
+      <Route path="/admin/productos/agregar" element={<AdminAgregarProducto />} />
+      <Route path="/admin/productos/editar/:id" element={<AdminEditarProducto />} />
+      {/* También repetimos las rutas de categorías fuera por compatibilidad */}
+      <Route path="/admin/categorias" element={<ListadoCategoriasAdmin />} />
+      <Route path="/admin/categorias/agregar" element={<AgregarCategoria />} />
     </Routes>
   );
 }
