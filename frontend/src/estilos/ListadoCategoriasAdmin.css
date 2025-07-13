@@ -1,8 +1,7 @@
 .categorias-admin-container {
   padding: 2rem;
   min-height: 100vh;
-  background: linear-gradient(135deg, #1f1c2c, #928dab);
-  color: #fff;
+  color: #000000;
   font-family: 'Segoe UI', sans-serif;
   box-sizing: border-box;
 }
@@ -20,12 +19,14 @@
 }
 
 .categoria-card {
-  background: #292b40;
+  background: #269e52;
   border-radius: 12px;
   padding: 1rem;
   text-align: center;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  animation: fadeIn 0.6s ease-out;
+
 }
 
 .categoria-card img {

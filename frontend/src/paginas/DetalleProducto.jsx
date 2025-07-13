@@ -2,9 +2,9 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import fondoEstadio from '../assets/imagenes/fondoprincipal.png';
 import '../estilos/DetalleProducto.css';
-import { obtenerProductoPorId, obtenerProductos } from "../servicios/apiProductos";
+import { obtenerProductos } from "../servicios/apiProductos";
 
-function DetalleProducto() {
+export default function DetalleProducto() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [producto, setProducto] = useState(null);
@@ -15,11 +15,14 @@ function DetalleProducto() {
   useEffect(() => {
     setLoading(true);
     setError(null);
-    obtenerProductoPorId(id)
+
+    fetch(`http://localhost:3000/api/producto/${id}`)
+      .then(res => res.json())
       .then((data) => {
         setProducto(data);
-        if (data && data.CAMISETum?.id_categoria) {
-          obtenerProductos()
+
+        if (data?.CAMISETum?.id_categoria) {
+          obtenerProductos({ categoria: data.CAMISETum.nombre_categoria })
             .then((todos) => {
               const similaresFiltrados = todos.filter(
                 (item) =>
@@ -32,6 +35,7 @@ function DetalleProducto() {
         } else {
           setSimilares([]);
         }
+
         setLoading(false);
       })
       .catch(() => {
@@ -40,19 +44,15 @@ function DetalleProducto() {
       });
   }, [id]);
 
-  if (loading) return <h2>Cargando...</h2>;
-  if (error) return <h2>{error}</h2>;
-  if (!producto) return <h2>Producto no encontrado</h2>;
+  if (loading) return <h2 className="detalle-cargando">Cargando...</h2>;
+  if (error) return <h2 className="detalle-error">{error}</h2>;
+  if (!producto) return <h2 className="detalle-error">Producto no encontrado</h2>;
 
   return (
     <div
       className="fondo-estadio"
       style={{
-        backgroundImage: `url(${fondoEstadio})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        minHeight: '100vh',
-        padding: '2rem'
+        backgroundImage: `url(${fondoEstadio})`
       }}
     >
       <div className="detalle-container">
@@ -74,15 +74,13 @@ function DetalleProducto() {
               <div className="similar-card" key={item.id_producto}>
                 <img src={item.CAMISETum?.imagen_url || ''} alt={item.CAMISETum?.descripcion_camiseta} />
                 <p>{item.CAMISETum?.descripcion_camiseta}</p>
-                <p>${item.precio}</p>
+                <p className="precio">${item.precio}</p>
                 <button onClick={() => navigate(`/detalle/${item.id_producto}`)}>Ver detalle</button>
               </div>
-            )) : (<p style={{ padding: '1rem' }}>No hay productos similares.</p>)}
+            )) : (<p className="sin-similares">No hay productos similares.</p>)}
           </div>
         </div>
       </div>
     </div>
   );
 }
-
-export default DetalleProducto;

@@ -17,8 +17,18 @@ export default function DetalleOrden() {
         return;
       }
 
+      if (!id || isNaN(id)) {
+        setMensaje('ID de orden inválido');
+        return;
+      }
+
       try {
-        const res = await fetch(`http://localhost:3000/api/ordenes/${id}`);
+        const res = await fetch(`http://localhost:3000/api/ordenes/detalle/${id}`, {
+          headers: {
+            id_usuario: usuario.id_usuario
+          }
+        });
+
         if (res.ok) {
           const data = await res.json();
           setOrden(data);
@@ -35,18 +45,27 @@ export default function DetalleOrden() {
 
   const cancelarOrden = async () => {
     try {
-      const res = await fetch(`http://localhost:3000/api/ordenes/${id}`, {
-        method: 'DELETE'
+      const res = await fetch(`http://localhost:3000/api/ordenes/cancelar/${id}`, {
+        method: 'PUT',
+        headers: {
+          id_usuario: usuario.id_usuario
+        }
       });
+
       if (res.ok) {
-        setMensaje('✅ Orden cancelada exitosamente');
+        setMensaje('Orden cancelada exitosamente');
         navigate('/usuario/ordenes');
       } else {
-        setMensaje('❌ No se pudo cancelar la orden');
+        setMensaje('No se pudo cancelar la orden');
       }
     } catch {
-      setMensaje('❌ Error en el servidor al cancelar');
+      setMensaje('Error en el servidor al cancelar');
     }
+  };
+
+  const agregarAlCarrito = (producto) => {
+    // Aquí puedes implementar lógica para agregar al carrito si ya tienes ese contexto
+    alert(`Producto ${producto.CAMISETUM?.descripcion_camiseta} agregado al carrito`);
   };
 
   if (mensaje) {
@@ -74,7 +93,7 @@ export default function DetalleOrden() {
         <p><strong>Estado:</strong> {orden.ESTADO_ORDEN?.nombre_estado}</p>
       </div>
 
-      {orden.detalles.length === 0 ? (
+      {orden.DETALLE_ORDENs?.length === 0 ? (
         <div className="mensaje-vacio">
           <p>No hay productos en esta orden.</p>
         </div>
@@ -85,17 +104,26 @@ export default function DetalleOrden() {
               <tr>
                 <th>Producto</th>
                 <th>Cantidad</th>
-                <th>Precio Unitario</th>
+                <th>Precio</th>
                 <th>Subtotal</th>
+                <th>Acción</th>
               </tr>
             </thead>
             <tbody>
-              {orden.detalles.map((item) => (
+              {orden.DETALLE_ORDENs.map((item) => (
                 <tr key={item.id_detalle}>
-                  <td>{item.PRODUCTO?.CAMISETA?.descripcion_camiseta}</td>
+                  <td>{item.PRODUCTO?.CAMISETUM?.descripcion_camiseta || 'Sin descripción'}</td>
                   <td>{item.cantidad}</td>
                   <td>S/ {item.precio_unitario}</td>
                   <td>S/ {item.subtotal}</td>
+                  <td>
+                    <button
+                      className="btn-agregar"
+                      onClick={() => agregarAlCarrito(item.PRODUCTO)}
+                    >
+                      Agregar al carrito
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>

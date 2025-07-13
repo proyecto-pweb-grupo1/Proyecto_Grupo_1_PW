@@ -1,8 +1,9 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useContext, useState, useEffect } from 'react';
 import { UserContext } from '../context/UserContext';
-import { obtenerCategorias } from '../servicios/apiProductos';
+import { obtenerCategorias } from '../servicios/apiCategorias';
 import '../estilos/TopBar.css';
+import '../estilos/index.css';
 
 export default function TopBar() {
   const navigate = useNavigate();
@@ -25,7 +26,6 @@ export default function TopBar() {
       .then(data => setCategorias(data))
       .catch(err => setCatError(err.message))
       .finally(() => setCatLoading(false));
-
   }, []);
 
   const handleBuscar = (e) => {
@@ -47,51 +47,38 @@ export default function TopBar() {
           onMouseLeave={() => setMostrarDropdown(false)}
         >
           <button className="topbar-btn">Categorías ⏷</button>
+
           {mostrarDropdown && (
-            <div className="dropdown-menu" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              {catLoading && <p style={{padding:'1rem'}}>Cargando...</p>}
-              {catError && <p style={{color:'red',padding:'1rem'}}>Error: {catError}</p>}
+            <div className="dropdown-menu">
+              {catLoading && <p className="dropdown-info">Cargando...</p>}
+              {catError && <p className="dropdown-error">Error: {catError}</p>}
               {!catLoading && !catError && categorias.length > 0 ? (
                 categorias.map(cat => (
                   <button
                     key={cat.id_categoria}
-                    style={{
-                      width: '100%',
-                      textAlign: 'left',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '8px',
-                      padding: '4px 0'
-                    }}
+                    className="dropdown-item"
                     onClick={() => navigate(`/categoria/${cat.id_categoria}`)}
                   >
                     {cat.icono_url &&
                       <img
                         src={cat.icono_url}
                         alt={cat.nombre_categoria}
-                        style={{
-                          width: '1.1em',
-                          height: '1.1em',
-                          objectFit: 'contain',
-                          marginRight: '6px',
-                          verticalAlign: 'middle',
-                          background: 'transparent',
-                          filter: 'drop-shadow(0 0 1px #2222)'
-                        }}
+                        className="categoria-icono"
                       />
                     }
-                    <span style={{ fontSize: '1em', lineHeight: '1' }}>{cat.nombre_categoria}</span>
+                    <span>{cat.nombre_categoria}</span>
                   </button>
                 ))
-              ) : (!catLoading && !catError && <p style={{padding:'1rem'}}>No hay categorías</p>)}
-
+              ) : (
+                <p className="dropdown-info">No hay categorías</p>
+              )}
             </div>
           )}
         </div>
       </div>
 
       <div className="topbar-center">
-        <h1 className="titulo-header">Tienda Oficial de Camisetas</h1>
+        <h1 className="titulo-header">Tienda de Camisetas Gepeto</h1>
       </div>
 
       <div className="topbar-right">
@@ -114,21 +101,16 @@ export default function TopBar() {
                 setTermino('');
               }
             }}
-            style={{ position: 'absolute', right: 6, background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
           >
-            {/* SVG lupa icon */}
             <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="10" cy="10" r="7" stroke="#003366" strokeWidth="2" />
               <line x1="15.2929" y1="15.7071" x2="20" y2="20.4142" stroke="#003366" strokeWidth="2" strokeLinecap="round" />
             </svg>
           </button>
         </div>
-        
+
         {esAdmin && (
-          <button
-            className="dashboard-admin-btn"
-            onClick={() => navigate('/admin/dashboard')}
-          >
+          <button className="dashboard-admin-btn" onClick={() => navigate('/admin/dashboard')}>
             🛠️ Dashboard Admin
           </button>
         )}
@@ -140,13 +122,11 @@ export default function TopBar() {
         {usuario ? (
           <div
             className="dropdown-user"
-            onMouseEnter={() => setMostrarMenuUsuario(true)}
-            onMouseLeave={() => setMostrarMenuUsuario(false)}
             style={{ position: 'relative' }}
           >
-            <button className="topbar-btn">👤 {nombreUsuario} ⏷</button>
+            <button className="topbar-btn" onClick={() => setMostrarMenuUsuario(prev => !prev)}>👤 {nombreUsuario} ⏷</button>
             {mostrarMenuUsuario && (
-              <div className="dropdown-menu dropdown-user-menu" style={{ position: 'absolute', right: 0, top: '100%', zIndex: 999 }}>
+              <div className="dropdown-user-menu">
                 <button onClick={() => navigate('/usuario/orden')}>📦 Mis Órdenes</button>
                 <button onClick={() => navigate('/usuario/datos')}>📝 Mi Perfil</button>
                 <button onClick={() => navigate('/usuario/password')}>🔒 Cambiar Contraseña</button>

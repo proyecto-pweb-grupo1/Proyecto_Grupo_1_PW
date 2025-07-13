@@ -1,5 +1,4 @@
 import '../estilos/Footer.css';
-import '../estilos/general.css';
 
 export default function Terminos() {
   return (

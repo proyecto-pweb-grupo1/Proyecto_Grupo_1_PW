@@ -11,7 +11,12 @@ export default function DatosUsuario() {
 
   useEffect(() => {
     if (usuario?.id_usuario) {
-      fetch(`http://localhost:3000/api/usuarios/${usuario.id_usuario}`)
+      fetch(`http://localhost:3000/api/usuario/${usuario.id_usuario}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'id_usuario': usuario.id_usuario
+        }
+      })
         .then(res => res.json())
         .then(data => {
           setNombre(data.nombre);
@@ -24,14 +29,17 @@ export default function DatosUsuario() {
   const guardar = async (e) => {
     e.preventDefault();
 
-    const res = await fetch(`http://localhost:3000/api/usuarios/${usuario.id_usuario}`, {
+    const res = await fetch(`http://localhost:3000/api/usuario/${usuario.id_usuario}`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'id_usuario': usuario.id_usuario  
+      },
       body: JSON.stringify({ nombre, apellido, correo })
     });
 
-    if (res.ok) setMensaje('✅ Datos actualizados correctamente');
-    else setMensaje('❌ Error al actualizar');
+    if (res.ok) setMensaje('Datos actualizados correctamente');
+    else setMensaje('Error al actualizar');
   };
 
   return (

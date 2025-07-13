@@ -1,0 +1,13 @@
+body, html, #root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  background-image: url('../assets/imagenes/fondoprincipal.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  color: #fff;
+  font-family: 'Segoe UI', sans-serif;
+}

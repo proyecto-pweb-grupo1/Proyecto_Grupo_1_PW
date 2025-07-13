@@ -9,7 +9,6 @@ export default function CambiarPassword() {
   const [mensaje, setMensaje] = useState('');
   const [loading, setLoading] = useState(true);
 
-  // Validar que el usuario esté presente
   useEffect(() => {
     setLoading(false);
   }, []);
@@ -28,28 +27,32 @@ export default function CambiarPassword() {
     }
 
     if (nueva !== confirmar) {
-      setMensaje('❌ Las contraseñas no coinciden');
+      setMensaje('Las contraseñas no coinciden');
       return;
     }
 
     try {
-      const res = await fetch(`http://localhost:3000/api/usuarios/${usuario.id_usuario}/password`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nuevaPassword: nueva })
-      });
+      const res = await fetch(`http://localhost:3000/api/usuario/${usuario.id_usuario}/password`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'id_usuario': usuario.id_usuario
+      },
+      body: JSON.stringify({ password: nueva })
+    });
+
 
       if (res.ok) {
-        setMensaje('✅ Contraseña actualizada exitosamente');
+        setMensaje('Contraseña actualizada exitosamente');
         setNueva('');
         setConfirmar('');
       } else {
         const data = await res.json();
-        setMensaje(data?.error || '❌ Error al actualizar');
+        setMensaje(data?.error || 'Error al actualizar');
       }
     } catch (error) {
       console.error(error);
-      setMensaje('❌ Error al conectar con el servidor');
+      setMensaje('Error al conectar con el servidor');
     }
   };
 

@@ -1,154 +1,59 @@
-.contenedor-principal {
+.pagina-principal {
   min-height: 100vh;
-  padding: 2rem;
-  background-size: cover;
-  background-position: center;
-}
-
-.titulo-pagina {
-  text-align: center;
-  color: white;
-  margin-bottom: 2rem;
-  font-size: 2rem;
-}
-
-.grid-camisetas {
+  padding: 2rem 1rem;
   display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 2rem;
+  flex-direction: column;
+  gap: 3rem;
 }
 
-.card-camiseta {
-  background-color: white;
-  border-radius: 1rem;
-  width: 150px;
+.titulo-seccion,
+.titulo-explorar-categoria {
+  color: #0bdb49;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 2rem 1rem 1rem;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
   text-align: center;
-  padding: 1rem;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-}
-.card-camiseta h3, .card-camiseta p {
-  color: #222 !important;
-  text-shadow: none !important;
-}
-.card-camiseta h3 {
-  margin-bottom: 0.5rem;
-  color: #222; 
-  font-weight: bold;
-}
-.card-camiseta p {
-  margin-bottom: 1rem;
-  color: #222; 
-  font-weight: bold;
-}
-.titulo-seccion {
-  color: white;
-  text-align: left;
-  font-size: 24px;
-  font-weight: bold;
-  margin: 2rem 0 1rem 2rem;
 }
 
-.titulo-explorar-categoria{
-  color: white;
-  text-align: left;
-  font-size: 24px;
-  font-weight: bold;
-  margin: 2rem 0 1rem 2rem;
+.seccion-contenido {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .categorias-grid {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  gap: 3rem;
+  padding: 1rem 0;
+}
+
+.grid-camisetas {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  justify-items: center;
   gap: 2rem;
-  margin-top: 1rem;
+  padding: 1rem;
 }
 
-.card-categoria {
-  background: white;
-  border-radius: 1rem;
-  width: 160px;
-  height: 180px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 0 10px rgba(0,0,0,0.09);
+.loading,
+.error {
   text-align: center;
-  transition: transform 0.3s cubic-bezier(.36,1.66,.52,1.01), box-shadow 0.25s;
-  padding: 1rem 0.5rem;
-  cursor: pointer;
-  overflow: visible;
-  border: none;
+  padding: 2rem;
+  font-size: 1.2rem;
 }
 
-.card-categoria:active,
-.card-categoria:hover {
-  transform: translateY(-6px) scale(1.045) rotate(-1deg);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.17);
+.loading {
+  color: #fff;
 }
 
-.card-categoria img {
-  width: 100px;
-  height: 100px;
-  object-fit: contain;
-  object-position: center;
-  display: block;
-  margin: 0 auto 1rem auto;
-  background: none !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-  outline: none !important;
-  padding: 0;
-  filter: drop-shadow(0 1px 5px rgba(30,30,30,0.04));
-  transition: filter 0.2s;
-  z-index: 1;
-}
-
-.card-categoria h3 {
-  margin: 0;
-  font-size: 1.08rem;
-  color: #222;
-  font-weight: bold;
-  z-index: 2;
-}
-@media (max-width: 500px) {
-  .categorias-grid {
-    gap: 1rem;
-  }
-  .card-categoria {
-    width: 115px;
-    height: 115px;
-    padding: 0.5rem 0.15rem;
-  }
-  .card-categoria img {
-    width: 54px;
-    height: 54px;
-  }
-}
-
-
-.card-camiseta img {
-  width: 100%;
-  height: 150px;
-  object-fit: contain;
-  margin-bottom: 1rem;
-}
-
-.card-camiseta h3 {
-  margin-bottom: 0.5rem;
-}
-
-.card-camiseta p {
-  margin-bottom: 1rem;
-}
-
-.card-camiseta button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 0.5rem;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
+.error {
+  color: #ff4d4d;
+  background-color: #fff0f0;
+  border: 1px solid #ffcccc;
+  border-radius: 8px;
+  max-width: 600px;
+  margin: 2rem auto;
 }

@@ -1,0 +1,61 @@
+.lista-ordenes-container {
+  max-width: 900px;
+  margin: 30px auto;
+  padding: 20px;
+  background-color: #1e1e1e;
+  border-radius: 10px;
+  color: #fff;
+}
+
+.tabla-ordenes {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.tabla-ordenes th,
+.tabla-ordenes td {
+  border: 1px solid #444;
+  padding: 12px;
+  text-align: center;
+}
+
+.tabla-ordenes th {
+  background-color: #333;
+}
+
+.tabla-ordenes td {
+  background-color: #2a2a2a;
+}
+
+.tabla-ordenes button {
+  padding: 6px 12px;
+  background-color: #007bff;
+  border: none;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.tabla-ordenes button:hover {
+  background-color: #0056b3;
+}
+
+.mensaje-vacio {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.btn-volver {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  margin-top: 20px;
+  cursor: pointer;
+}
+
+.btn-volver:hover {
+  background-color: #0056b3;
+}

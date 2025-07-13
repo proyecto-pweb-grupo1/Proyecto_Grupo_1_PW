@@ -1,93 +1,45 @@
-#listaCarrito {
-    max-width: 900px;
-    margin: 3rem auto;
-    background-color: #f9f9f9;
-    padding: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    color: #333;
-    font-family: 'Segoe UI', sans-serif;
+.carrito-container {
+  max-width: 1000px;
+  margin: auto;
+  padding: 2rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
-#listaCarrito h2 {
-    text-align: center;
-    margin-bottom: 2rem;
-    font-size: 2rem;
-    color: #111;
+.carrito-lista,
+.carrito-guardado {
+  list-style: none;
+  padding: 0;
 }
 
-#listaCarrito ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+.carrito-lista li,
+.carrito-guardado li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid #eee;
 }
 
-#listaCarrito li {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    margin-bottom: 1.5rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid #ccc;
+.carrito-lista img,
+.carrito-guardado img {
+  width: 100px;
+  height: auto;
+  border-radius: 8px;
 }
 
-#listaCarrito img {
-    width: 70px;
-    height: auto;
-    margin-right: 1rem;
-    border-radius: 8px;
+button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: #007acc;
+  color: white;
+  font-weight: bold;
 }
 
-#listaCarrito button {
-    margin: 0 0.3rem;
-    padding: 0.4rem 0.8rem;
-    font-size: 1rem;
-    background-color: #0057b8;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-}
-
-#listaCarrito button:hover {
-    background-color: #003f8c;
-}
-
-#listaCarrito button:last-child {
-    background-color: #c0392b;
-}
-
-#listaCarrito button:last-child:hover {
-    background-color: #922b21;
-}
-
-#listaCarrito p {
-    font-size: 1.1rem;
-    margin: 0.6rem 0;
-}
-
-#listaCarrito > button {
-    display: block;
-    margin: 2rem auto 0;
-    background-color: #27ae60;
-    padding: 0.8rem 2rem;
-    font-size: 1.1rem;
-}
-
-#listaCarrito > button:hover {
-    background-color: #1e8449;
-}
-
-@media (max-width: 600px) {
-    #listaCarrito li {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.5rem;
-    }
-
-    #listaCarrito img {
-        margin-bottom: 0.5rem;
-    }
+button:hover {
+  background-color: #005fa3;
 }

@@ -1,7 +1,7 @@
 .camiseta-card {
-  background-color: #ffffffee;
+  background-color: #f6b827be;
   border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
   overflow: hidden;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   cursor: pointer;
@@ -10,39 +10,37 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  width: 100%;
+  max-width: 180px;
+  animation: fadeIn 0.6s ease-out;
+
 }
 
 .camiseta-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+
 }
+
 
 .camiseta-img {
   width: 100%;
-  max-height: 200px;
-  object-fit: contain;
+  max-height: 220px;
+  object-fit: cover;
   border-radius: 8px;
   margin-bottom: 0.8rem;
-  background-color: #f9f9f9;
+  background-color: #f5f5f5;
 }
 
 .camiseta-club {
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   font-weight: 600;
-  color: #2c3e50;
+  color: #05182b;
   margin-bottom: 0.5rem;
 }
 
 .camiseta-precio {
   font-size: 1rem;
-  color: #27ae60;
+  color: #2737ae;
   font-weight: bold;
-}
-
-/* Responsive grid para usarse en el contenedor */
-.grid-camisetas {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 1.5rem;
-  margin-top: 1.5rem;
 }

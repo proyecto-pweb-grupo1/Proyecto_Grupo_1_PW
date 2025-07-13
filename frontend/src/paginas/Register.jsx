@@ -15,12 +15,12 @@ export default function Register() {
     e.preventDefault();
 
     if (!nombre || !apellido || !correo || !password || !confirmPassword) {
-      setError('⚠️ Por favor, completa todos los campos.');
+      setError('Por favor, completa todos los campos.');
       return;
     }
 
     if (password !== confirmPassword) {
-      setError('❌ Las contraseñas no coinciden.');
+      setError('Las contraseñas no coinciden.');
       return;
     }
 
@@ -36,14 +36,13 @@ export default function Register() {
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.message || '❌ Error al registrar usuario');
+        setError(data.message || 'Error al registrar usuario');
         return;
       }
 
-      // ✅ Registro exitoso
       navigate('/login');
     } catch (err) {
-      setError('❌ Error de conexión con el servidor');
+      setError('Error de conexión con el servidor');
     }
   };
 

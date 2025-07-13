@@ -3,7 +3,7 @@
   max-width: 900px;
   margin: 2.5rem auto;
   color: #333;
-  background-color: #fff;
+  background-color: #95dbb8;
   border-radius: 28px;
   box-shadow: 0 6px 32px rgba(0,0,0,0.13);
 }
@@ -15,19 +15,21 @@
   align-items: center;
   margin-bottom: 2rem;
   border-radius: 22px;
-  background: #f7f9fc;
+  background: #acddd4;
   box-shadow: 0 2px 12px rgba(0,0,0,0.07);
   padding: 2rem 1.5rem;
 }
 
 .detalle-imagen {
-  max-width: 320px;
-  min-width: 220px;
   width: 100%;
-  border-radius: 18px;
-  background: #fff;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  max-width: 320px;
+  height: auto;
+  max-height: 400px;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
+
 
 .detalle-info {
   flex: 1;

@@ -1,67 +1,94 @@
-import { useContext } from "react";
-import { CarritoContexto } from "../context/CarritoContexto";
-import { Link } from "react-router-dom";
+import { useEffect, useState, useContext } from "react";
+import { UserContext } from "../context/UserContext";
 import "../estilos/Carrito.css";
+import { useNavigate } from "react-router-dom";
 
 function Carrito() {
-  const {
-    carrito,
-    guardados,
-    cambiarCantidad,
-    eliminarDelCarrito,
-    moverAGuardados,
-    moverAlCarrito,
-    eliminarGuardado,
-    vaciarCarrito,
-    total
-  } = useContext(CarritoContexto);
+  const { usuario } = useContext(UserContext);
+  const [items, setItems] = useState([]);
+  const [guardados, setGuardados] = useState([]);
+  const [total, setTotal] = useState(0);
+  const navigate = useNavigate();
+
+  const cargarCarrito = async () => {
+    if (!usuario) return;
+    const res = await fetch(`http://localhost:3000/api/carrito/${usuario.id_usuario}`);
+    const data = await res.json();
+    const activos = data.filter(i => !i.guardado);
+    const inactivos = data.filter(i => i.guardado);
+    setItems(activos);
+    setGuardados(inactivos);
+    calcularTotal(activos);
+  };
+
+  const calcularTotal = (lista) => {
+    const total = lista.reduce((acc, item) => acc + item.cantidad * parseFloat(item.PRODUCTO.precio), 0);
+    setTotal(total.toFixed(2));
+  };
+
+  const eliminar = async (id_producto) => {
+    await fetch("http://localhost:3000/api/carrito/eliminar", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id_usuario: usuario.id_usuario, id_producto })
+    });
+    cargarCarrito();
+  };
+
+  const guardar = async (id_producto) => {
+    await fetch("http://localhost:3000/api/carrito/guardar", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id_usuario: usuario.id_usuario, id_producto })
+    });
+    cargarCarrito();
+  };
+
+  useEffect(() => {
+    cargarCarrito();
+  }, [usuario]);
 
   return (
     <div className="carrito-container">
-      <h2>🛒 Carrito de Compras</h2>
-
-      {carrito.length === 0 ? (
-        <p>Tu carrito está vacío.</p>
+      <h2>🛒 Carrito de compras</h2>
+      {items.length === 0 ? (
+        <p>No hay productos en el carrito.</p>
       ) : (
         <>
-          {carrito.map((item) => (
-            <div className="item-carrito" key={item.id_producto}>
-              <img src={item.camiseta?.imagen_url} alt={item.camiseta?.descripcion_camiseta} />
-              <div>
-                <h3>{item.camiseta?.descripcion_camiseta}</h3>
-                <p>Precio: ${item.precio}</p>
-                <input
-                  type="number"
-                  value={item.cantidad}
-                  min="1"
-                  onChange={(e) => cambiarCantidad(item.id_producto, parseInt(e.target.value))}
-                />
-                <button onClick={() => eliminarDelCarrito(item.id_producto)}>❌ Eliminar</button>
-                <button onClick={() => moverAGuardados(item)}>📦 Guardar para después</button>
-              </div>
-            </div>
-          ))}
-          <h3>Total: ${total.toFixed(2)}</h3>
-          <button onClick={vaciarCarrito} className="boton-cancelar">Cancelar carrito</button>
-          <Link to="/checkout" className="boton-pagar">Completar Orden</Link>
+          <ul className="carrito-lista">
+            {items.map((item) => (
+              <li key={item.id_producto}>
+                <img src={item.PRODUCTO.CAMISETum?.imagen_url || ''} alt="" />
+                <div>
+                  <h4>{item.PRODUCTO.CAMISETum?.descripcion_camiseta}</h4>
+                  <p>${item.PRODUCTO.precio} x {item.cantidad}</p>
+                </div>
+                <button onClick={() => guardar(item.id_producto)}>Guardar para después</button>
+                <button onClick={() => eliminar(item.id_producto)}>Eliminar</button>
+              </li>
+            ))}
+          </ul>
+          <h3>Total: ${total}</h3>
+          <button onClick={() => navigate("/checkout")}>Completar Orden</button>
         </>
       )}
 
       {guardados.length > 0 && (
-        <div className="guardados">
-          <h2>📦 Guardados para después</h2>
-          {guardados.map((item) => (
-            <div className="item-guardado" key={item.id_producto}>
-              <img src={item.camiseta?.imagen_url} alt={item.camiseta?.descripcion_camiseta} />
-              <div>
-                <h3>{item.camiseta?.descripcion_camiseta}</h3>
-                <p>${item.precio}</p>
-                <button onClick={() => moverAlCarrito(item)}>↩️ Mover al carrito</button>
-                <button onClick={() => eliminarGuardado(item.id_producto)}>🗑️ Eliminar</button>
-              </div>
-            </div>
-          ))}
-        </div>
+        <>
+          <h3>Guardados para después</h3>
+          <ul className="carrito-guardado">
+            {guardados.map((item) => (
+              <li key={item.id_producto}>
+                <img src={item.PRODUCTO.CAMISETum?.imagen_url || ''} alt="" />
+                <div>
+                  <h4>{item.PRODUCTO.CAMISETum?.descripcion_camiseta}</h4>
+                  <p>${item.PRODUCTO.precio}</p>
+                </div>
+                <button onClick={() => eliminar(item.id_producto)}>Eliminar</button>
+              </li>
+            ))}
+          </ul>
+        </>
       )}
     </div>
   );

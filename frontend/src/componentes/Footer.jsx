@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import '../estilos/Footer.css';
+import '../estilos/index.css';
 
 export default function Footer() {
   return (

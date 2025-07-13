@@ -1,126 +1,72 @@
-.Contenido {
-    min-height: 100vh;
-    padding: 2rem;
-    background-size: cover;
-    background-position: center;
-    color: white;
-    overflow-x: hidden;
+.checkout-container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.Contenido h1 {
-    text-align: center;
-    font-size: 2.5rem;
-    margin-bottom: 2rem;
+.checkout-grid {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
 }
 
-.Resumen {
-    max-width: 1000px;
-    width: 90vw;
-    margin: 0 auto;
-    padding: 2rem;
-    background-color: rgba(255, 255, 255, 0.9);
-    color: black;
-    border-radius: 1rem;
-    box-sizing: border-box;
-    overflow-x: hidden;
+.checkout-form {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
-.Resumen ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+.checkout-form input,
+.checkout-form select {
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
 }
 
-.Resumen li {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 0.5rem 0;
-    border-bottom: 1px solid #ccc;
-    max-width: 100%;
-    box-sizing: border-box;
-    overflow-wrap: break-word;
+.qr-img {
+  width: 200px;
+  margin-top: 1rem;
 }
 
-.Resumen img {
-    width: 60px;
-    height: 60px;
-    object-fit: contain;
-    flex-shrink: 0;
+.checkout-resumen {
+  flex: 1;
+  background: #f9f9f9;
+  padding: 1.5rem;
+  border-radius: 10px;
 }
 
-.info-producto {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    min-width: 0;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
+.checkout-resumen ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
-
-.BotonLimpiar {
-    background-color: #dc3545;
-    color: white;
-    padding: 0.6rem 1.2rem;
-    border: none;
-    border-radius: 0.5rem;
-    cursor: pointer;
-    font-weight: bold;
-    display: block;
-    margin: 1rem auto;
+.checkout-resumen li {
+  margin-bottom: 0.75rem;
 }
 
-.BotonLimpiar:hover {
-    background-color: #c82333;
+.checkout-resumen p {
+  font-size: 1.2rem;
+  margin-top: 1rem;
 }
 
-.Formulario {
-    background-color: rgba(255, 255, 255, 0.95);
-    color: black;
-    padding: 2rem;
-    border-radius: 1rem;
-    max-width: 600px;
-    margin: 0 auto;
-    box-sizing: border-box;
+.checkout-resumen button {
+  margin-top: 1rem;
+  width: 100%;
+  background-color: #0077cc;
+  color: #fff;
+  padding: 0.9rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
 }
 
-.Formulario input[type="text"] {
-    width: 100%;
-    padding: 0.6rem;
-    margin: 0.5rem 0;
-    border-radius: 0.4rem;
-    border: 1px solid #ccc;
-    box-sizing: border-box;
-}
-
-.Formulario h3,
-.Formulario h4 {
-    margin-top: 2rem;
-    margin-bottom: 1rem;
-    color: #222;
-}
-
-.Formulario label {
-    display: block;
-    margin-bottom: 0.5rem;
-}
-
-.Formulario button {
-    margin-top: 1rem;
-    background-color: #007bff;
-    color: white;
-    padding: 0.6rem 1.2rem;
-    border: none;
-    border-radius: 0.5rem;
-    cursor: pointer;
-}
-
-.Formulario button:hover {
-    background-color: #0056b3;
-}
-
-.Formulario p {
-    margin-top: 1rem;
+.checkout-resumen button:hover {
+  background-color: #005ea6;
 }

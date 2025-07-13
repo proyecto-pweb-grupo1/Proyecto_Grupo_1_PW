@@ -20,7 +20,7 @@ export default function Login() {
     }
 
     try {
-      const res = await fetch('http://localhost:3000/api/usuarios/login', {
+      const res = await fetch('http://localhost:3000/api/auth/login', {
         method: 'POST',
         body: JSON.stringify({ correo, password }),
         headers: { 'Content-Type': 'application/json' }

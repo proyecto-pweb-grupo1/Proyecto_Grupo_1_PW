@@ -3,10 +3,7 @@ import {Link} from "react-router-dom";
 import {motion} from "framer-motion";
 import "../estilos/AdminDashboard.css";
 
-import {obtenerProductos} from "../servicios/apiProductos";
-import {obtenerUsuarios} from "../servicios/apiUsuarios";
-import {obtenerOrdenes} from "../servicios/apiOrdenes";
-import { obtenerKPIs } from "../servicios/apiProductos";
+import { obtenerKPIs } from "../servicios/apiDashboard";
 
 
 const AnimatedNumber = ({ value }) => {

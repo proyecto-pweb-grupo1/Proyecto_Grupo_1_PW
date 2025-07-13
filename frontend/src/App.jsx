@@ -1,8 +1,9 @@
 import React from 'react';
-import { BrowserRouter } from "react-router-dom";
 import { UserProvider } from './context/UserContext';
 import { CarritoProvider } from './context/CarritoContexto';
 import Rutas from "./rutas/Rutas";
+import  "./estilos/index.css";
+
 
 function App() {
   return (

@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../context/UserContext';
 import '../estilos/AgregarCategoria.css';
 
 export default function AgregarCategoria() {
@@ -7,19 +8,29 @@ export default function AgregarCategoria() {
   const [imagenUrl, setImagenUrl] = useState('');
   const [mensaje, setMensaje] = useState('');
   const navigate = useNavigate();
+  const { usuario } = useContext(UserContext);
+  console.log("Usuario desde contexto:", usuario);
+
+  if (!usuario) {
+    return <p>Cargando usuario...</p>;
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!nombre.trim() || !imagenUrl.trim()) {
-      setMensaje('❌ Por favor completa todos los campos');
+      setMensaje('Por favor completa todos los campos');
       return;
     }
 
     try {
-      const res = await fetch('http://localhost:3000/api/categorias', {
+      const res = await fetch('http://localhost:3000/api/categoria', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'id_usuario': usuario.id_usuario,
+          'rol': usuario.rol  
+        },
         body: JSON.stringify({
           nombre_categoria: nombre.trim(),
           imagen_url: imagenUrl.trim()
@@ -29,16 +40,16 @@ export default function AgregarCategoria() {
       const data = await res.json();
 
       if (res.ok) {
-        setMensaje('✅ Categoría agregada con éxito');
+        setMensaje('Categoría agregada con éxito');
         setNombre('');
         setImagenUrl('');
       } else {
-        setMensaje(`❌ ${data.mensaje || 'Error desconocido al agregar'}`);
+        setMensaje(data.mensaje || 'Error al agregar categoría');
       }
 
     } catch (error) {
       console.error(error);
-      setMensaje('❌ Error de red al agregar');
+      setMensaje('Error de red al agregar');
     }
   };
 

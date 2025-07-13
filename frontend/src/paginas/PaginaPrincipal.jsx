@@ -1,104 +1,96 @@
 import React, { useEffect, useState } from 'react';
-import fondoEstadio from '../assets/imagenes/fondoprincipal.png';
 import '../estilos/PaginaPrincipal.css';
+import '../estilos/index.css';
 import CamisetaCard from '../componentes/CamisetaCard';
 import CategoriaCard from '../componentes/CategoriaCard';
 import BannerCarousel from '../componentes/BannerCarousel';
-import { obtenerCategorias, obtenerProductosDestacados } from '../servicios/apiProductos';
-
-
+import { obtenerProductosDestacados, obtenerProductosNuevos } from '../servicios/apiProductos';
+import { obtenerCategorias } from '../servicios/apiCategorias';
 
 export default function PaginaPrincipal() {
   const [categorias, setCategorias] = useState([]);
-  const [productos, setProductos] = useState([]);
+  const [productosTop, setProductosTop] = useState([]);
+  const [productosNuevos, setProductosNuevos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    setLoading(true);
-    setError(null);
-    Promise.all([obtenerCategorias(), obtenerProductosDestacados()])
-      .then(([cats, prodsDest]) => {
-        console.log("categorias:", cats);
-        console.log("productosDestacados:", prodsDest);
-        setCategorias(cats);
-        setProductos(prodsDest); // solo productos destacados
-      })
-      .catch(err => {
-        setError(err.message);
-        console.error("ERROR EN useEffect:", err);
-      })
-      .finally(() => setLoading(false));
+    const cargarDatos = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const [cats, top, nuevos] = await Promise.all([
+          obtenerCategorias(),
+          obtenerProductosDestacados(),
+          obtenerProductosNuevos()
+        ]);
+
+        setCategorias(Array.isArray(cats) ? cats : []);
+        setProductosTop(Array.isArray(top) ? top : []);
+        setProductosNuevos(Array.isArray(nuevos) ? nuevos : []);
+      } catch (err) {
+        setError(err.message || 'Error al cargar la tienda');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    cargarDatos();
   }, []);
 
+  const categoriasDestacadas = categorias.slice(0, 5);
 
-
-  const categoriasDestacadas = [...categorias].slice(0, 5);
-  const productosTop = [...productos]
-    .filter(p => p.activo !== false)
-    .sort((a, b) => b.ventas - a.ventas)
-    .slice(0, 12);
-
-  const productosNuevos = [...productos]
-    .filter(p => p.activo !== false)
-    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-    .slice(0, 6);
-
-  if (loading) return <p style={{ padding: '2rem' }}>Cargando tienda...</p>;
-  if (error) return <p style={{ color: 'red', padding: '2rem' }}>Error: {error}</p>;
+  if (loading) return <p className="loading">Cargando tienda...</p>;
+  if (error) return <p className="error">Error: {error}</p>;
 
   return (
-    <div
-      className="contenedor-principal"
-      style={{
-        backgroundImage: `url(${fondoEstadio})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        padding: '2rem',
-      }}
-    >
+    <div className="pagina-principal">
       <BannerCarousel />
 
-      <section className="explora-categorias">
+      <section className="explora-categorias seccion-contenido">
         <h2 className="titulo-explorar-categoria">Categorías destacadas</h2>
         <div className="categorias-grid">
           {categoriasDestacadas.map((cat) => (
             <CategoriaCard
               key={cat.id_categoria}
-              id={cat.id_categoria}
               nombre={cat.nombre_categoria}
               imagen={cat.imagen_url}
+              ruta={`/categoria/${cat.id_categoria}`}
             />
           ))}
-
-
         </div>
       </section>
 
-      <h2 className="titulo-seccion">
-        Productos destacados
-        <button
-          style={{ marginLeft: '1rem', fontSize: '1rem', cursor: 'pointer', border: 'none', background: 'none', color: '#1976d2', textDecoration: 'underline' }}
-          onClick={() => window.location.href = "/productos"}
-        >
-          Ver todos
-        </button>
-      </h2>
+      <section className="seccion-contenido">
+        <h2 className="titulo-seccion">Top 12 camisetas destacadas</h2>
+        <div className="grid-camisetas">
+          {productosTop.map((item) => (
+            <CamisetaCard
+              key={item.id_producto}
+              id={item.id_producto}
+              club={item.CAMISETum?.descripcion_camiseta}
+              precio={item.precio}
+              img={item.CAMISETum?.imagen_url}
+            />
+          ))}
+        </div>
+      </section>
 
-
-
-      <h2 className="titulo-seccion">Novedades</h2>
-      <div className="grid-camisetas">
-        {productosNuevos.map((item) => (
-          <CamisetaCard
-            key={item.id_producto}
-            id={item.id_producto}
-            club={item.CAMISETum?.descripcion_camiseta || item.nombre || 'Producto'}
-            precio={item.precio}
-            img={item.CAMISETum?.imagen_url || item.imagen_url || '/img/default.png'}
-          />
-        ))}
-      </div>
+      <section className="seccion-contenido">
+        <h2 className="titulo-seccion">Novedades</h2>
+        <div className="grid-camisetas">
+          {productosNuevos.map((item) => (
+            <CamisetaCard
+              key={item.id_producto}
+              id={item.id_producto}
+              club={item.CAMISETum?.descripcion_camiseta || 'Producto'}
+              precio={item.precio}
+              img={item.CAMISETum?.imagen_url || '/img/default.png'}
+            />
+          ))}
+        </div>
+      </section>
     </div>
   );
 }

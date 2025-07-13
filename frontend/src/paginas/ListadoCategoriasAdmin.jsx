@@ -9,7 +9,7 @@ export default function ListadoCategoriasAdmin() {
   useEffect(() => {
     const fetchCategorias = async () => {
       try {
-        const res = await fetch('http://localhost:3000/api/categorias');
+        const res = await fetch('http://localhost:3000/api/categoria');
         const data = await res.json();
         setCategorias(data);
       } catch (error) {

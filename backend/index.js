@@ -1,47 +1,46 @@
-import express from 'express';
-import cors from 'cors';
-import { sequelize } from './config/database.js';
-import catalogoRoutes from './rutas/datosReferencia.js';
-import authRutas from "./rutas/authRutas.js"; 
-import usuariosRoutes from './rutas/usuariosRoutes.js';
-import productosRutas from './rutas/productos.js';
-import carritoRutas from "./rutas/carritoRoutes.js";
-import categoriasRutas from './rutas/categorias.js';
-import ordenesRoutes from './rutas/ordenesRoutes.js';
-import metricasRouter from './rutas/metricas.js';
-import camisetasRoutes from './rutas/camisetas.js';
+import express from "express";
+import cors from "cors";
+import { sequelize } from "./config/database.js";
+import authRoutes from "./routes/authRoutes.js";
+import usuarioRoutes from "./routes/usuarioRoutes.js";
+import carritoRoutes from "./routes/carritoRoutes.js";
+import guardadoRoutes from "./routes/guardadoRoutes.js";
+import ordenRoutes from "./routes/ordenRoutes.js";
+import categoriaRoutes from "./routes/categoriaRoutes.js";
+import productoRoutes from "./routes/productoRoutes.js";
+import dashboardRoutes from "./routes/dashboardRoutes.js";
+import usuarioAdminRoutes from "./routes/usuarioAdminRoutes.js";
+import ordenAdminRoutes from "./routes/ordenAdminRoutes.js";
+import serieRoutes from "./routes/serieRoutes.js";
+import parametrosRoutes from "./routes/parametrosRoutes.js";
 
 const app = express();
-
 app.use(cors());
 app.use(express.json());
 
-app.use('/api', catalogoRoutes);
-app.use("/api/auth", authRutas);
-app.use("/api/usuarios", usuariosRoutes);
-app.use('/api/categorias', categoriasRutas);
-app.use("/api/productos", productosRutas);
-app.use("/api/carrito", carritoRutas);
-app.use('/api/ordenes', ordenesRoutes);
-app.use('/api/metricas', metricasRouter);
-app.use('/api/camisetas', camisetasRoutes);
-
-app.get('/', (req, res) => {
-  res.send('🚀 Backend funcionando. Usa las rutas /api/* para consumir datos.');
-});
-
-const PORT = process.env.PORT || 3000;
+app.use("/api/auth", authRoutes);
+app.use("/api/usuario", usuarioRoutes);
+app.use("/api/carrito", carritoRoutes);
+app.use("/api/guardado", guardadoRoutes);
+app.use("/api/orden", ordenRoutes);
+app.use("/api/categoria", categoriaRoutes);
+app.use("/api/producto", productoRoutes);
+app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/usuario-admin", usuarioAdminRoutes);
+app.use("/api/orden-admin", ordenAdminRoutes);
+app.use("/api/serie", serieRoutes);
+app.use("/api/parametros", parametrosRoutes);
 
 try {
   await sequelize.authenticate();
-  console.log('✅ Conectado a la base de datos PostgreSQL');
+  console.log("Conexión establecida con la base de datos.");
 
   await sequelize.sync();
-  console.log('✅ Modelos sincronizados');
+  app.listen(3000, () => {
+    console.log("Servidor corriendo en http://localhost:3000");
 
-  app.listen(PORT, () => {
-    console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
   });
+
 } catch (error) {
-  console.error('❌ Error al iniciar el servidor:', error);
+  console.error("Error al conectar con la base de datos:", error);
 }

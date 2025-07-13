@@ -1,11 +1,11 @@
-// src/paginas/AdminProductos.jsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   obtenerProductos,
-  eliminarProducto,
+  cambiarEstadoProducto
 } from "../servicios/apiProductos";
+import { UserContext } from "../context/UserContext";
 import "../estilos/AdminProductos.css";
 
 export default function AdminProductos() {
@@ -15,10 +15,10 @@ export default function AdminProductos() {
   const [cargando, setCargando] = useState(true);
   const [paginaActual, setPaginaActual] = useState(1);
   const itemsPorPagina = 50;
+  const { usuario } = useContext(UserContext);
 
   useEffect(() => {
     cargarProductos();
-    // eslint-disable-next-line
   }, []);
 
   const cargarProductos = async () => {
@@ -26,41 +26,22 @@ export default function AdminProductos() {
     try {
       const res = await obtenerProductos();
       setProductos(Array.isArray(res) ? res : []);
-    } catch (e) {
+    } catch {
       setProductos([]);
     }
     setCargando(false);
   };
 
-  const handleEliminar = async (idProducto) => {
-    if (window.confirm("¿Seguro que quieres eliminar este producto?")) {
+  const handleCambiarEstado = async (idProducto) => {
+    if (window.confirm("¿Deseas cambiar el estado de este producto?")) {
       try {
-        await eliminarProducto(idProducto);
+        await cambiarEstadoProducto(idProducto, usuario);
         await cargarProductos();
-      } catch (e) {
-        alert(e.message || "No se pudo eliminar");
+      } catch (error) {
+        alert("Error al cambiar estado del producto.");
       }
     }
   };
-
-  // Adaptación para búsqueda real usando campos de producto + camiseta relacionada
-  const productosFiltrados = productos.filter((p) => {
-    // p.CAMISETA puede estar como p.CAMISETA o p.camiseta, depende del backend. Usar ambos:
-    const camiseta = p.CAMISETA || p.camiseta || {};
-    return (
-      (p.sku && p.sku.toLowerCase().includes(busqueda.toLowerCase())) ||
-      (camiseta.descripcion_camiseta &&
-        camiseta.descripcion_camiseta.toLowerCase().includes(busqueda.toLowerCase())) ||
-      (p.id_producto + "").includes(busqueda)
-    );
-  });
-
-  const totalPaginas = Math.ceil(productosFiltrados.length / itemsPorPagina);
-
-  const productosPaginados = productosFiltrados.slice(
-    (paginaActual - 1) * itemsPorPagina,
-    paginaActual * itemsPorPagina
-  );
 
   const opcionesSidebar = [
     { nombre: "Dashboard", ruta: "/admin/dashboard", icono: "/src/assets/dashboard/icon-dashboard.png" },
@@ -68,6 +49,19 @@ export default function AdminProductos() {
     { nombre: "Órdenes", ruta: "/admin/ordenes", icono: "/src/assets/dashboard/icon-ordenes.png" },
     { nombre: "Usuarios", ruta: "/admin/usuarios", icono: "/src/assets/dashboard/icon-usuarios.png" },
   ];
+
+  const productosFiltrados = productos.filter(
+    p =>
+      p.sku?.toLowerCase().includes(busqueda.toLowerCase()) ||
+      p.CAMISETum?.descripcion_camiseta?.toLowerCase().includes(busqueda.toLowerCase()) ||
+      (p.id_producto + "").includes(busqueda)
+  );
+
+  const totalPaginas = Math.ceil(productosFiltrados.length / itemsPorPagina);
+  const productosPaginados = productosFiltrados.slice(
+    (paginaActual - 1) * itemsPorPagina,
+    paginaActual * itemsPorPagina
+  );
 
   return (
     <div className="admin-productos-bg">
@@ -144,7 +138,7 @@ export default function AdminProductos() {
                 <th>Precio</th>
                 <th>Stock</th>
                 <th>Editar</th>
-                <th>Eliminar</th>
+                <th>Estado</th>
               </tr>
             </thead>
             <tbody>
@@ -157,39 +151,30 @@ export default function AdminProductos() {
                   <td colSpan={8}><span className="no-productos">No hay productos</span></td>
                 </tr>
               ) : (
-                productosPaginados.map((p) => {
-                  const camiseta = p.CAMISETA || p.camiseta || {};
-                  // Si imagen_url viene desde la camiseta relacionada:
-                  const imgUrl = camiseta.imagen_url || "/src/assets/dashboard/icon-productos.png";
-                  return (
-                    <motion.tr key={p.id_producto} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
-                      <td>{p.id_producto}</td>
-                      <td>
-                        <img
-                          src={imgUrl}
-                          alt="Camiseta"
-                          className="producto-imagen-mini"
-                        />
-                      </td>
-                      <td>{p.sku}</td>
-                      <td>{camiseta.descripcion_camiseta}</td>
-                      <td>S/ {Number(p.precio).toFixed(2)}</td>
-                      <td>{p.stock}</td>
-                      <td>
-                        <Link to={`/admin/productos/editar/${p.id_producto}`} className="btn-editar">
-                          <img src="/src/assets/dashboard/icon-editar.png" alt="Editar" />
-                          Editar
-                        </Link>
-                      </td>
-                      <td>
-                        <button className="btn-eliminar" onClick={() => handleEliminar(p.id_producto)}>
-                          <img src="/src/assets/dashboard/icon-eliminar.jpg" alt="Eliminar" />
-                          Eliminar
-                        </button>
-                      </td>
-                    </motion.tr>
-                  );
-                })
+                productosPaginados.map((p) => (
+                  <motion.tr key={p.id_producto} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
+                    <td>{p.id_producto}</td>
+                    <td>
+                      <img src={p.CAMISETum?.imagen_url || "/src/assets/dashboard/icon-productos.png"} alt="Camiseta" className="producto-imagen-mini" />
+                    </td>
+                    <td>{p.sku}</td>
+                    <td>{p.CAMISETum?.descripcion_camiseta}</td>
+                    <td>S/ {Number(p.precio).toFixed(2)}</td>
+                    <td>{p.stock}</td>
+                    <td>
+                      <Link to={`/admin/productos/editar/${p.id_producto}`} className="btn-editar">
+                        <img src="/src/assets/dashboard/icon-editar.png" alt="Editar" />
+                        Editar
+                      </Link>
+                    </td>
+                    <td>
+                      <button className="btn-eliminar" onClick={() => handleCambiarEstado(p.id_producto)}>
+                        <img src="/src/assets/dashboard/icon-eliminar.jpg" alt="Cambiar estado" />
+                        {p.activo ? "Desactivar" : "Activar"}
+                      </button>
+                    </td>
+                  </motion.tr>
+                ))
               )}
             </tbody>
           </table>
