@@ -61,14 +61,14 @@ function Carrito() {
                 <img src={item.PRODUCTO.CAMISETum?.imagen_url || ''} alt="" />
                 <div>
                   <h4>{item.PRODUCTO.CAMISETum?.descripcion_camiseta}</h4>
-                  <p>${item.PRODUCTO.precio} x {item.cantidad}</p>
+                  <p>S/ {parseFloat(item.PRODUCTO.precio || 0).toFixed(2)} x {item.cantidad}</p>
                 </div>
                 <button onClick={() => guardar(item.id_producto)}>Guardar para después</button>
                 <button onClick={() => eliminar(item.id_producto)}>Eliminar</button>
               </li>
             ))}
           </ul>
-          <h3>Total: ${total}</h3>
+          <h3>Total: S/ {parseFloat(total || 0).toFixed(2)}</h3>
           <button onClick={() => navigate("/checkout")}>Completar Orden</button>
         </>
       )}
@@ -82,7 +82,7 @@ function Carrito() {
                 <img src={item.PRODUCTO.CAMISETum?.imagen_url || ''} alt="" />
                 <div>
                   <h4>{item.PRODUCTO.CAMISETum?.descripcion_camiseta}</h4>
-                  <p>${item.PRODUCTO.precio}</p>
+                  <p>S/ {parseFloat(item.PRODUCTO.precio || 0).toFixed(2)}</p>
                 </div>
                 <button onClick={() => eliminar(item.id_producto)}>Eliminar</button>
               </li>

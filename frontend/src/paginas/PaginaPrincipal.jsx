@@ -63,33 +63,42 @@ export default function PaginaPrincipal() {
       </section>
 
       <section className="seccion-contenido">
-        <h2 className="titulo-seccion">Top 12 camisetas destacadas</h2>
+        <h2 className="titulo-seccion">Top 10 camisetas destacadas</h2>
         <div className="grid-camisetas">
-          {productosTop.map((item) => (
-            <CamisetaCard
-              key={item.id_producto}
-              id={item.id_producto}
-              club={item.CAMISETum?.descripcion_camiseta}
-              precio={item.precio}
-              img={item.CAMISETum?.imagen_url}
-            />
-          ))}
+          {productosTop.map((item) => {
+            // Verificar si es un producto agrupado
+            const esGrupo = item.esGrupo || (item.descripcion_camiseta && !item.CAMISETum);
+            
+            return (
+              <CamisetaCard
+                key={esGrupo ? `grupo-${item.id_camiseta || item.id_producto}` : item.id_producto}
+                id={item.id_producto}
+                club={esGrupo ? item.descripcion_camiseta : item.CAMISETum?.descripcion_camiseta}
+                precio={item.precio}
+                img={esGrupo ? item.imagen_url : item.CAMISETum?.imagen_url}
+              />
+            );
+          })}
         </div>
       </section>
 
       <section className="seccion-contenido">
         <h2 className="titulo-seccion">Novedades</h2>
         <div className="grid-camisetas">
-          {productosNuevos.map((item) => (
-            <CamisetaCard
-              key={item.id_producto}
-              id={item.id_producto}
-              club={item.CAMISETum?.descripcion_camiseta || 'Producto'}
-              precio={item.precio}
-              img={item.CAMISETum?.imagen_url || '/img/default.png'}
-  
-            />
-          ))}
+          {productosNuevos.map((item) => {
+            // Verificar si es un producto agrupado
+            const esGrupo = item.esGrupo || (item.descripcion_camiseta && !item.CAMISETum);
+            
+            return (
+              <CamisetaCard
+                key={esGrupo ? `grupo-${item.id_camiseta || item.id_producto}` : item.id_producto}
+                id={item.id_producto}
+                club={esGrupo ? item.descripcion_camiseta : (item.CAMISETum?.descripcion_camiseta || 'Producto')}
+                precio={item.precio}
+                img={esGrupo ? item.imagen_url : (item.CAMISETum?.imagen_url || '/img/default.png')}
+              />
+            );
+          })}
         </div>
       </section>
     </div>
