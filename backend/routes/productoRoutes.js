@@ -7,7 +7,9 @@ import {
   actualizarProducto,
   cambiarEstadoProducto,
   listarProductosDestacados,
-  listarProductosRecientes
+  listarProductosRecientes,
+  buscarProductos,
+  obtenerTallasCamiseta
 } from "../controllers/productoController.js";
 import { validarAutenticacion } from "../middlewares/validarAutenticacion.js";
 import { validarRolAdmin } from "../middlewares/validarRolAdmin.js";
@@ -15,9 +17,11 @@ import { validarRolAdmin } from "../middlewares/validarRolAdmin.js";
 const router = express.Router();
 
 router.get("/", listarProductos);
+router.get("/buscar", buscarProductos);
 router.get("/destacado", listarProductosDestacados);
 router.get("/reciente", listarProductosRecientes);
 router.get("/activos", getProductosActivos);
+router.get("/camiseta/:idCamiseta/tallas", obtenerTallasCamiseta);
 router.get("/:id", detalleProducto);
 router.post("/", validarAutenticacion, validarRolAdmin, agregarProducto);
 router.put("/:id", validarAutenticacion, validarRolAdmin, actualizarProducto);

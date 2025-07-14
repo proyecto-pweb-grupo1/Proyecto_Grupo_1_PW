@@ -65,7 +65,6 @@ export async function cambiarEstadoProducto(idProducto, usuario) {
   return data;
 }
 
-
 export async function obtenerProductosDestacados() {
   const res = await fetch(`${API_URL}/destacado`);
   if (!res.ok) throw new Error("Error al obtener productos destacados");
@@ -75,6 +74,19 @@ export async function obtenerProductosDestacados() {
 export async function obtenerProductosNuevos() {
   const res = await fetch(`${API_URL}/reciente`);
   if (!res.ok) throw new Error("Error al obtener productos recientes");
+  return await res.json();
+}
+
+export async function buscarProductos(termino, orden = 'nombre') {
+  const params = new URLSearchParams({ q: termino, orden });
+  const res = await fetch(`${API_URL}/buscar?${params}`);
+  if (!res.ok) throw new Error("Error al buscar productos");
+  return await res.json();
+}
+
+export async function obtenerTallasCamiseta(idCamiseta) {
+  const res = await fetch(`${API_URL}/camiseta/${idCamiseta}/tallas`);
+  if (!res.ok) throw new Error("Error al obtener tallas de la camiseta");
   return await res.json();
 }
 
