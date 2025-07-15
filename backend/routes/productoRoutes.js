@@ -9,7 +9,8 @@ import {
   listarProductosDestacados,
   listarProductosRecientes,
   buscarProductos,
-  obtenerTallasCamiseta
+  obtenerTallasCamiseta,
+  obtenerProductosPorCategoria
 } from "../controllers/productoController.js";
 import { validarAutenticacion } from "../middlewares/validarAutenticacion.js";
 import { validarRolAdmin } from "../middlewares/validarRolAdmin.js";
@@ -21,6 +22,7 @@ router.get("/buscar", buscarProductos);
 router.get("/destacado", listarProductosDestacados);
 router.get("/reciente", listarProductosRecientes);
 router.get("/activos", getProductosActivos);
+router.get("/categoria/:id", obtenerProductosPorCategoria);
 router.get("/camiseta/:idCamiseta/tallas", obtenerTallasCamiseta);
 router.get("/:id", detalleProducto);
 router.post("/", validarAutenticacion, validarRolAdmin, agregarProducto);

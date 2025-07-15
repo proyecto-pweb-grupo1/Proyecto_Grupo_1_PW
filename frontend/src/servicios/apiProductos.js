@@ -90,3 +90,10 @@ export async function obtenerTallasCamiseta(idCamiseta) {
   return await res.json();
 }
 
+export async function obtenerProductosPorCategoria(idCategoria, params = {}) {
+  const query = new URLSearchParams(params).toString();
+  const res = await fetch(`${API_URL}/categoria/${idCategoria}?${query}`);
+  if (!res.ok) throw new Error("Error al obtener productos por categoría");
+  return await res.json();
+}
+
