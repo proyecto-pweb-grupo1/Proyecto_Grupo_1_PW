@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import '../estilos/CamisetaCard.css';
 
-export default function CamisetaCard({ id, club, precio, img }) {
+export default function CamisetaCard({ id, club, precio, img, esGrupo = false }) {
   const navigate = useNavigate();
   const [imgError, setImgError] = useState(false);
 
@@ -10,11 +10,15 @@ export default function CamisetaCard({ id, club, precio, img }) {
     setImgError(true);
   };
 
+  const handleClick = () => {
+    // Siempre navegar al detalle del producto
+    navigate(`/detalle/${id}`);
+  };
   
   const precioFormateado = precio ? parseFloat(precio).toFixed(2) : '0.00';
 
   return (
-    <div className="camiseta-card" onClick={() => navigate(`/detalle/${id}`)}>
+    <div className="camiseta-card" onClick={handleClick}>
       {imgError ? (
         <div className="camiseta-img-placeholder">
           <span>Imagen no disponible</span>

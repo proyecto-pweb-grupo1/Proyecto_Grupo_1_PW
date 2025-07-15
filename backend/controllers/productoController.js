@@ -380,7 +380,7 @@ export async function buscarProductos(req, res) {
 
     const termino = q.toLowerCase();
     
-    // Obtener todos los productos activos con sus relaciones
+    
     const productos = await PRODUCTO.findAll({
       where: { activo: true },
       include: [
@@ -393,7 +393,7 @@ export async function buscarProductos(req, res) {
       ]
     });
 
-    // Filtrar en JavaScript (más simple y confiable)
+    
     const productosFiltrados = productos.filter(p => {
       const camiseta = p.CAMISETum;
       const descripcion = camiseta?.descripcion_camiseta?.toLowerCase() || '';
@@ -476,5 +476,75 @@ export async function obtenerTallasCamiseta(req, res) {
   } catch (error) {
     console.error("Error al obtener tallas:", error);
     res.status(500).json({ mensaje: "Error al obtener tallas de la camiseta" });
+  }
+}
+
+export async function obtenerProductosPorCategoria(req, res) {
+  try {
+    const { id } = req.params;
+    const { agrupado = 'true', orden = 'nombre' } = req.query;
+    
+    const productos = await PRODUCTO.findAll({
+      where: { activo: true },
+      include: [
+        {
+          model: CAMISETA,
+          where: { id_categoria: id },
+          include: [CATEGORIA, MARCA, TIPO_CAMISETA, EQUIPO, TEMPORADA]
+        },
+        GENERO,
+        TALLA
+      ]
+    });
+
+    // Limpiar URLs de imagen inválidas
+    const productosLimpios = productos.map(p => {
+      const producto = p.toJSON();
+      if (producto.CAMISETum && !esUrlImagenValida(producto.CAMISETum.imagen_url)) {
+        producto.CAMISETum.imagen_url = '/placeholder-image.jpg';
+      }
+      return producto;
+    });
+
+    // Agrupar o no según el parámetro
+    let resultado;
+    if (agrupado === 'true') {
+      const productosAgrupados = agruparProductosPorCamiseta(productosLimpios);
+      
+      // Ordenar grupos
+      resultado = productosAgrupados.sort((a, b) => {
+        if (orden === 'precio_asc') {
+          return parseFloat(a.precio) - parseFloat(b.precio);
+        }
+        if (orden === 'precio_desc') {
+          return parseFloat(b.precio) - parseFloat(a.precio);
+        }
+        if (orden === 'nombre_desc') {
+          return b.descripcion_camiseta.localeCompare(a.descripcion_camiseta);
+        }
+        // Por defecto: nombre ascendente
+        return a.descripcion_camiseta.localeCompare(b.descripcion_camiseta);
+      });
+    } else {
+      // Ordenar productos individuales
+      resultado = productosLimpios.sort((a, b) => {
+        if (orden === 'precio_asc') {
+          return parseFloat(a.precio) - parseFloat(b.precio);
+        }
+        if (orden === 'precio_desc') {
+          return parseFloat(b.precio) - parseFloat(a.precio);
+        }
+        if (orden === 'nombre_desc') {
+          return (b.CAMISETum?.descripcion_camiseta || '').localeCompare(a.CAMISETum?.descripcion_camiseta || '');
+        }
+        // Por defecto: nombre ascendente
+        return (a.CAMISETum?.descripcion_camiseta || '').localeCompare(b.CAMISETum?.descripcion_camiseta || '');
+      });
+    }
+
+    res.json(resultado);
+  } catch (error) {
+    console.error("Error al obtener productos por categoría:", error);
+    res.status(500).json({ mensaje: "Error al obtener productos por categoría", error: error.message });
   }
 }

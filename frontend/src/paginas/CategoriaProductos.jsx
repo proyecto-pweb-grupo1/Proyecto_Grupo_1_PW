@@ -1,66 +1,89 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { obtenerProductos } from '../servicios/apiProductos';
+import { obtenerProductosPorCategoria } from '../servicios/apiProductos';
+import { obtenerCategorias } from '../servicios/apiCategorias';
 import '../estilos/PaginaPrincipal.css';
 import CamisetaCard from '../componentes/CamisetaCard';
 
 const opcionesOrden = [
-  { value: '', label: 'Sin orden' },
-  { value: 'precio_desc', label: 'Precio: mayor a menor' },
-  { value: 'precio_asc', label: 'Precio: menor a mayor' },
-  { value: 'nombre_asc', label: 'Nombre: A-Z' },
+  { value: 'nombre', label: 'Nombre: A-Z' },
   { value: 'nombre_desc', label: 'Nombre: Z-A' },
+  { value: 'precio_asc', label: 'Precio: menor a mayor' },
+  { value: 'precio_desc', label: 'Precio: mayor a menor' },
 ];
 
 export default function CategoriaProductos() {
   const { id } = useParams();
   const [productos, setProductos] = useState([]);
+  const [categoria, setCategoria] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [orden, setOrden] = useState('');
+  const [orden, setOrden] = useState('nombre');
 
   useEffect(() => {
-    setLoading(true);
-    setError(null);
-    obtenerProductos()
-      .then(data => setProductos(data.filter(p => String(p.categoriaId) === String(id))))
-      .catch(err => setError(err.message))
-      .finally(() => setLoading(false));
-  }, [id]);
+    const cargarDatos = async () => {
+      setLoading(true);
+      setError(null);
+      
+      try {
+        // Cargar productos y categorías en paralelo
+        const [productosData, categoriasData] = await Promise.all([
+          obtenerProductosPorCategoria(id, { orden, agrupado: 'true' }),
+          obtenerCategorias()
+        ]);
+        
+        setProductos(productosData);
+        
+        // Encontrar la categoría actual
+        const categoriaActual = categoriasData.find(cat => cat.id_categoria === parseInt(id));
+        setCategoria(categoriaActual);
+        
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  function ordenarProductos(lista, orden) {
-    if (orden === 'precio_desc') return [...lista].sort((a, b) => b.precio - a.precio);
-    if (orden === 'precio_asc') return [...lista].sort((a, b) => a.precio - b.precio);
-    if (orden === 'nombre_asc') return [...lista].sort((a, b) => a.nombre.localeCompare(b.nombre));
-    if (orden === 'nombre_desc') return [...lista].sort((a, b) => b.nombre.localeCompare(a.nombre));
-    return lista;
-  }
+    cargarDatos();
+  }, [id, orden]);
 
-  const productosOrdenados = ordenarProductos(productos, orden);
+  const handleOrdenChange = (nuevoOrden) => {
+    setOrden(nuevoOrden);
+  };
 
   return (
     <div className="contenedor-principal" style={{ padding: '2rem', display: 'flex', gap: '2rem' }}>
       <div style={{ minWidth: 220 }}>
         <h3>Ordenar por</h3>
-        <select value={orden} onChange={e => setOrden(e.target.value)} style={{ width: '100%', padding: '0.5rem', borderRadius: 8 }}>
+        <select 
+          value={orden} 
+          onChange={e => handleOrdenChange(e.target.value)} 
+          style={{ width: '100%', padding: '0.5rem', borderRadius: 8 }}
+        >
           {opcionesOrden.map(opt => (
             <option key={opt.value} value={opt.value}>{opt.label}</option>
           ))}
         </select>
       </div>
       <div style={{ flex: 1 }}>
-        <h2>Productos de la categoría</h2>
+        <h2>
+          {categoria ? `${categoria.nombre_categoria}` : `Productos de la categoría`}
+          {productos.length > 0 && <span style={{ color: '#666', fontSize: '0.9em' }}> ({productos.length} productos)</span>}
+        </h2>
+        
         {loading && <p>Cargando productos...</p>}
         {error && <p style={{color:'red'}}>Error: {error}</p>}
+        
         <div className="grid-camisetas">
-          {!loading && !error && productosOrdenados.length > 0 ? (
-            productosOrdenados.map((item) => (
+          {!loading && !error && productos.length > 0 ? (
+            productos.map((item) => (
               <CamisetaCard
-                key={item.id}
-                id={item.id}
-                club={item.nombre}
+                key={item.esGrupo ? `grupo-${item.id_camiseta}` : item.id_producto}
+                id={item.id_producto}
+                club={item.esGrupo ? item.descripcion_camiseta : item.CAMISETum?.descripcion_camiseta}
                 precio={item.precio}
-                img={item.imagen_url}
+                img={item.esGrupo ? item.imagen_url : item.CAMISETum?.imagen_url}
               />
             ))
           ) : (!loading && !error && <p>No hay productos en esta categoría.</p>)}
